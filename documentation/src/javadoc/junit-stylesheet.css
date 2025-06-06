@@ -30,6 +30,9 @@
     /* Text colors for links */
     --link-color: #dc524a;
     --link-color-active: #b62b23;
+    /* Table of contents */
+    --toc-background-color: var(--section-background-color);
+    --toc-link-color: #000;
     /* Snippet colors */
     --snippet-background-color: #ebecee;
     --snippet-text-color: var(--block-text-color);
@@ -39,10 +42,6 @@
     --table-border-color: #999;
     /* Highlight color for active search tag target */
     --search-tag-highlight-color: #ffff00;
-    /* Adjustments for icon and active background colors of copy-to-clipboard buttons */
-    --copy-button-background-color-active: rgba(168, 168, 168, 0.3);
-    /* Colors for invalid tag notifications */
-    --invalid-tag-background-color: #ffe6e6;
 }
 
 .title {
