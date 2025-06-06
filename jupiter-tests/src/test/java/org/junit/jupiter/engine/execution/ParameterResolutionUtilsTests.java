@@ -48,8 +48,7 @@ class ParameterResolutionUtilsTests {
 
 	private final MethodSource instance = mock();
 
-	@Nullable
-	private Method method;
+	private @Nullable Method method;
 
 	private final ExtensionContext extensionContext = mock();
 

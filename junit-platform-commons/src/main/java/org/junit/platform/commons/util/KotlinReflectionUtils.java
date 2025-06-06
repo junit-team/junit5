@@ -30,10 +30,8 @@ import org.junit.platform.commons.function.Try;
 @API(status = INTERNAL, since = "6.0")
 public class KotlinReflectionUtils {
 
-	@Nullable
-	private static final Class<? extends Annotation> kotlinMetadata;
-	@Nullable
-	private static final Class<?> kotlinCoroutineContinuation;
+	private static final @Nullable Class<? extends Annotation> kotlinMetadata;
+	private static final @Nullable Class<?> kotlinCoroutineContinuation;
 	private static final boolean kotlinReflectPresent;
 	private static final boolean kotlinxCoroutinesPresent;
 

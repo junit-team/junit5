@@ -45,11 +45,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String displayName;
 
-	@Nullable
-	private final TestSource source;
+	private final @Nullable TestSource source;
 
-	@Nullable
-	private TestDescriptor parent;
+	private @Nullable TestDescriptor parent;
 
 	/**
 	 * The synchronized set of children associated with this {@code TestDescriptor}.

@@ -172,8 +172,7 @@ public class Event {
 	private final EventType type;
 	private final TestDescriptor testDescriptor;
 
-	@Nullable
-	private final Object payload;
+	private final @Nullable Object payload;
 
 	/**
 	 * Construct an {@code Event} with the supplied arguments.

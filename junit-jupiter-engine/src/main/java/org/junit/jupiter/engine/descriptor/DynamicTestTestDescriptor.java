@@ -38,8 +38,7 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 
-	@Nullable
-	private DynamicTest dynamicTest;
+	private @Nullable DynamicTest dynamicTest;
 
 	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, @Nullable TestSource source,
 			JupiterConfiguration configuration) {

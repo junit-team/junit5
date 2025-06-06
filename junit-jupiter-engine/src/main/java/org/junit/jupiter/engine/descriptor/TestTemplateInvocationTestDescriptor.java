@@ -43,8 +43,7 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	public static final String SEGMENT_TYPE = "test-template-invocation";
 	private static final VoidMethodInterceptorCall interceptorCall = InvocationInterceptor::interceptTestTemplateMethod;
 
-	@Nullable
-	private TestTemplateInvocationContext invocationContext;
+	private @Nullable TestTemplateInvocationContext invocationContext;
 
 	private final int index;
 

@@ -52,11 +52,9 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 
-	@Nullable
-	private final NamespacedHierarchicalStore<N> parentStore;
+	private final @Nullable NamespacedHierarchicalStore<N> parentStore;
 
-	@Nullable
-	private final CloseAction<N> closeAction;
+	private final @Nullable CloseAction<N> closeAction;
 
 	private volatile boolean closed = false;
 

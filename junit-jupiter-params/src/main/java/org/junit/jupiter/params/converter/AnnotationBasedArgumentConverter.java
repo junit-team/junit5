@@ -36,8 +36,7 @@ import org.junit.platform.commons.util.Preconditions;
 public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 		implements ArgumentConverter, AnnotationConsumer<A> {
 
-	@Nullable
-	private A annotation;
+	private @Nullable A annotation;
 
 	public AnnotationBasedArgumentConverter() {
 	}

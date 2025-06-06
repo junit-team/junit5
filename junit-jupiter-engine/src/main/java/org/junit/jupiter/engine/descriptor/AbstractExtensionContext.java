@@ -55,8 +55,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExtensionContext.class);
 
-	@Nullable
-	private final ExtensionContext parent;
+	private final @Nullable ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
 	private final Set<String> tags;

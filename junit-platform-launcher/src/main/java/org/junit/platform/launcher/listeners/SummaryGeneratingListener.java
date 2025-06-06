@@ -35,11 +35,9 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = MAINTAINED, since = "1.0")
 public class SummaryGeneratingListener implements TestExecutionListener {
 
-	@Nullable
-	private TestPlan testPlan;
+	private @Nullable TestPlan testPlan;
 
-	@Nullable
-	private MutableTestExecutionSummary summary;
+	private @Nullable MutableTestExecutionSummary summary;
 
 	public SummaryGeneratingListener() {
 

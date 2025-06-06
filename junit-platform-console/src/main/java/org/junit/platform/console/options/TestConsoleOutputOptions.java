@@ -30,18 +30,15 @@ public class TestConsoleOutputOptions {
 
 	private boolean ansiColorOutputDisabled;
 
-	@Nullable
-	private Path colorPalettePath;
+	private @Nullable Path colorPalettePath;
 
 	private boolean isSingleColorPalette;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
 
-	@Nullable
-	private Path stdoutPath;
+	private @Nullable Path stdoutPath;
 
-	@Nullable
-	private Path stderrPath;
+	private @Nullable Path stderrPath;
 
 	public boolean isAnsiColorOutputDisabled() {
 		return this.ansiColorOutputDisabled;
