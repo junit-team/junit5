@@ -54,7 +54,8 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
-	public <K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(K key, Function<? super K, ? extends V> defaultCreator) {
+	public <K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(K key,
+			Function<? super K, ? extends V> defaultCreator) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
 		Supplier<@Nullable Object> action = () -> this.valuesStore.getOrComputeIfAbsent(this.namespace, key,
@@ -63,8 +64,8 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
-	public <K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(K key, Function<? super K, ? extends V> defaultCreator,
-			Class<V> requiredType) {
+	public <K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(K key,
+			Function<? super K, ? extends V> defaultCreator, Class<V> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");

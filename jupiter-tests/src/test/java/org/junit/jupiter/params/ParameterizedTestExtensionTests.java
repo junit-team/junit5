@@ -293,7 +293,8 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public <T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer) {
+			public <T> Optional<T> getConfigurationParameter(String key,
+					Function<? super String, ? extends @Nullable T> transformer) {
 				return configurationSupplier.apply(key).map(transformer);
 			}
 

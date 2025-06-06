@@ -242,7 +242,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
-	public <V> Optional<V> getConfigurationParameter(String key, Function<String, V> transformer) {
+	public <V> Optional<V> getConfigurationParameter(String key,
+			Function<? super String, ? extends @Nullable V> transformer) {
 		return this.configuration.getRawConfigurationParameter(key, transformer);
 	}
 

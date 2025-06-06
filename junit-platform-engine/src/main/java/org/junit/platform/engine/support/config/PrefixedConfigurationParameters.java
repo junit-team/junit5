@@ -58,7 +58,7 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	}
 
 	@Override
-	public <T> Optional<T> get(String key, Function<String, ? extends @Nullable T> transformer) {
+	public <T> Optional<T> get(String key, Function<? super String, ? extends @Nullable T> transformer) {
 		return delegate.get(prefixed(key), transformer);
 	}
 

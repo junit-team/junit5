@@ -220,7 +220,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(N namespace, K key,
-			Function<? super K, ? extends V> defaultCreator, Class<V> requiredType) throws NamespacedHierarchicalStoreException {
+			Function<? super K, ? extends V> defaultCreator, Class<V> requiredType)
+			throws NamespacedHierarchicalStoreException {
 
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);

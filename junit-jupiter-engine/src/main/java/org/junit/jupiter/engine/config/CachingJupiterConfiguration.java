@@ -59,7 +59,7 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public <T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer) {
+	public <T> Optional<T> getRawConfigurationParameter(String key, Function<? super String, ? extends T> transformer) {
 		return delegate.getRawConfigurationParameter(key, transformer);
 	}
 

@@ -57,7 +57,7 @@ public interface JupiterConfiguration {
 
 	Optional<String> getRawConfigurationParameter(String key);
 
-	<T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer);
+	<T> Optional<T> getRawConfigurationParameter(String key, Function<? super String, ? extends T> transformer);
 
 	boolean isParallelExecutionEnabled();
 
