@@ -21,7 +21,11 @@ tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
 		disableAllChecks = true
 		nullaway {
-			enable()
+			if (java.toolchain.implementation.orNull == JvmImplementation.J9) {
+				disable()
+			} else {
+				enable()
+			}
 			isJSpecifyMode = true
 		}
 	}
