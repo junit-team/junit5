@@ -95,8 +95,7 @@ public enum OS {
 
 	private static final Logger logger = LoggerFactory.getLogger(OS.class);
 
-	@Nullable
-	private static final OS CURRENT_OS = determineCurrentOs();
+	private static final @Nullable OS CURRENT_OS = determineCurrentOs();
 
 	/**
 	 * {@return the current operating system, if known; otherwise, {@code null}}

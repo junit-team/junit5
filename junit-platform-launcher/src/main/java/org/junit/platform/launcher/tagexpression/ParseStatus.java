@@ -62,8 +62,7 @@ class ParseStatus {
 		return new ParseStatus(errorMessage);
 	}
 
-	@Nullable
-	final String errorMessage;
+	final @Nullable String errorMessage;
 
 	private ParseStatus(@Nullable String errorMessage) {
 		this.errorMessage = errorMessage;

@@ -23,6 +23,8 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.Nullable;
+import org.junit.platform.commons.util.FunctionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -138,8 +140,9 @@ public final class TestExecutionResultConditions {
 	 * to the supplied {@link String}.
 	 */
 	public static Condition<Throwable> message(String expectedMessage) {
-		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is '%s'",
-			expectedMessage);
+		return new Condition<>(
+			FunctionUtils.<Throwable, @Nullable String> where(Throwable::getMessage, isEqual(expectedMessage)),
+			"message is '%s'", expectedMessage);
 	}
 
 	/**
@@ -148,7 +151,9 @@ public final class TestExecutionResultConditions {
 	 * the supplied {@link Predicate}.
 	 */
 	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
-		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message matches predicate");
+		return new Condition<>(
+			FunctionUtils.<Throwable, @Nullable String> where(Throwable::getMessage, expectedMessagePredicate),
+			"message matches predicate");
 	}
 
 	private static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {

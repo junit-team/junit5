@@ -54,19 +54,15 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private final Node<C> node;
 	private final Runnable finalizer;
 
-	@Nullable
-	private C parentContext;
+	private @Nullable C parentContext;
 
-	@Nullable
-	private C context;
+	private @Nullable C context;
 
-	@Nullable
-	private SkipResult skipResult;
+	private @Nullable SkipResult skipResult;
 
 	private boolean started;
 
-	@Nullable
-	private ThrowableCollector throwableCollector;
+	private @Nullable ThrowableCollector throwableCollector;
 
 	NodeTestTask(NodeTestTaskContext taskContext, TestDescriptor testDescriptor) {
 		this(taskContext, testDescriptor, NOOP);
@@ -257,7 +253,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					testDescriptor, () -> unfinishedTasks.remove(uniqueId));
 				nodeTestTask.setParentContext(context);
 				unfinishedTasks.put(uniqueId, DynamicTaskState.unscheduled());
-				Future<Void> future = taskContext.executorService().submit(nodeTestTask);
+				Future<@Nullable Void> future = taskContext.executorService().submit(nodeTestTask);
 				unfinishedTasks.computeIfPresent(uniqueId, (__, state) -> DynamicTaskState.scheduled(future));
 				return future;
 			}
@@ -289,7 +285,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			return UNSCHEDULED;
 		}
 
-		static DynamicTaskState scheduled(Future<Void> future) {
+		static DynamicTaskState scheduled(Future<@Nullable Void> future) {
 			return future::get;
 		}
 

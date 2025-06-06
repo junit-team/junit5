@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +50,7 @@ class TimeoutInvocationFactory {
 	}
 
 	private ScheduledExecutorService getThreadExecutorForSameThreadInvocation() {
-		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
+		return requireNonNull(store.getOrComputeIfAbsent(SingleThreadExecutorResource.class)).get();
 	}
 
 	@SuppressWarnings({ "deprecation", "try" })

@@ -15,7 +15,7 @@ runs:
       id: setup-gradle-jdk
       with:
         distribution: temurin
-        java-version: 21
+        java-version: 24
         check-latest: true
     - uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
       with:

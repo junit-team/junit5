@@ -34,8 +34,7 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 
 	private final ThrowableCollector throwableCollector;
 
-	@Nullable
-	private TestInstances testInstances;
+	private @Nullable TestInstances testInstances;
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,

@@ -68,8 +68,7 @@ public class FileSource implements FileSystemSource {
 
 	private final File file;
 
-	@Nullable
-	private final FilePosition filePosition;
+	private final @Nullable FilePosition filePosition;
 
 	private FileSource(File file, @Nullable FilePosition filePosition) {
 		this.file = file;

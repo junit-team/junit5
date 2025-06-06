@@ -1493,7 +1493,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			implements BeforeClassTemplateInvocationCallback, AfterClassTemplateInvocationCallback {
 
 		private final String prefix;
-		private final Function<String, Throwable> exceptionFactory;
+		private final Function<String, @Nullable Throwable> exceptionFactory;
 
 		@SuppressWarnings("unused")
 		ClassTemplateInvocationCallbacks() {
@@ -1504,7 +1504,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			this(prefix, __ -> null);
 		}
 
-		ClassTemplateInvocationCallbacks(String prefix, Function<String, Throwable> exceptionFactory) {
+		ClassTemplateInvocationCallbacks(String prefix, Function<String, @Nullable Throwable> exceptionFactory) {
 			this.prefix = prefix;
 			this.exceptionFactory = exceptionFactory;
 		}

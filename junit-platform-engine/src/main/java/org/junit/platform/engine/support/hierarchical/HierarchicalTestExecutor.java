@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import java.util.concurrent.Future;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -46,7 +47,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		this.throwableCollectorFactory = throwableCollectorFactory;
 	}
 
-	Future<Void> execute() {
+	Future<@Nullable Void> execute() {
 		TestDescriptor rootTestDescriptor = this.request.getRootTestDescriptor();
 		EngineExecutionListener executionListener = this.request.getEngineExecutionListener();
 		NodeExecutionAdvisor executionAdvisor = new NodeTreeWalker().walk(rootTestDescriptor);

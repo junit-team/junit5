@@ -61,13 +61,12 @@ class AssertAllAssertionsTests {
 		assertPrecondition("individual executables must not be null", () -> assertAll((Executable) null));
 	}
 
-	@SuppressWarnings({ "NullAway" })
 	@Test
 	void assertAllWithNullInExecutableCollection() {
 		assertPrecondition("individual executables must not be null", () -> assertAll(asList((Executable) null)));
 	}
 
-	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+	@SuppressWarnings("DataFlowIssue")
 	@Test
 	void assertAllWithNullInExecutableStream() {
 		assertPrecondition("individual executables must not be null", () -> assertAll(Stream.of((Executable) null)));

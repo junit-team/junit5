@@ -127,6 +127,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public Future<@Nullable Void> submit(TestTask testTask) {
 		ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
 		if (!isAlreadyRunningInForkJoinPool()) {

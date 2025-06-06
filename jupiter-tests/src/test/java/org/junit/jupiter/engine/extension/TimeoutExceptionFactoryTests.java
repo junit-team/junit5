@@ -58,7 +58,7 @@ class TimeoutExceptionFactoryTests {
 
 		@Test
 		@DisplayName("method signature is null")
-		void methodSignatureIsnull() {
+		void methodSignatureIsNull() {
 			assertThatThrownBy(() -> create(null, tenMillisDuration, suppressedException)) //
 					.hasMessage("method signature must not be null");
 		}

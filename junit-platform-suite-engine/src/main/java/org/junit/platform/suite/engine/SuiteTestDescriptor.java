@@ -73,11 +73,9 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	private final Class<?> suiteClass;
 	private final LifecycleMethods lifecycleMethods;
 
-	@Nullable
-	private LauncherDiscoveryResult launcherDiscoveryResult;
+	private @Nullable LauncherDiscoveryResult launcherDiscoveryResult;
 
-	@Nullable
-	private SuiteLauncher launcher;
+	private @Nullable SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
 			OutputDirectoryProvider outputDirectoryProvider, EngineDiscoveryListener discoveryListener,

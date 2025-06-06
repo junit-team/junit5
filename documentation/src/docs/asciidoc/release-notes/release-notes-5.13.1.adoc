@@ -42,6 +42,8 @@ on GitHub.
   in their enclosing class. This undesired change in behavior has now been reverted so
   that tests in `@Nested` test classes are always executed _after_ tests in enclosing test
   classes again.
+* Fix support for `AnnotationBasedArgumentsProvider` implementations that override the
+  deprecated `provideArguments(ExtensionContext, Annotation)` method.
 
 [[release-notes-5.13.1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

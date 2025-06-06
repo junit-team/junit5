@@ -1869,7 +1869,6 @@ class ReflectionUtilsTests {
 	@Nested
 	class ReadFieldTests {
 
-		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToReadFieldValueOfNonexistentStaticField() {
 			assertThrows(NoSuchFieldException.class,

@@ -110,6 +110,8 @@ tasks.withType<Test>().configureEach {
 	systemProperty("log4j2.julLoggerAdapter", "org.apache.logging.log4j.jul.CoreLoggerAdapter")
 	// Avoid overhead (see https://logging.apache.org/log4j/2.x/manual/jmx.html#enabling-jmx)
 	systemProperty("log4j2.disableJmx", "true")
+	// https://github.com/raphw/byte-buddy/issues/1803
+	systemProperty("net.bytebuddy.safe", true)
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
 	if (buildParameters.testing.enableJFR) {

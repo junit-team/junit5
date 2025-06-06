@@ -128,8 +128,8 @@ public final class TagFilter {
 	}
 
 	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions) {
-		Supplier<String> inclusionReason = () -> inclusionReasonExpressionSatisfy(tagExpressions);
-		Supplier<String> exclusionReason = () -> exclusionReasonExpressionNotSatisfy(tagExpressions);
+		Supplier<@Nullable String> inclusionReason = () -> inclusionReasonExpressionSatisfy(tagExpressions);
+		Supplier<@Nullable String> exclusionReason = () -> exclusionReasonExpressionNotSatisfy(tagExpressions);
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
 			Set<TestTag> tags = descriptor.getTags();
@@ -148,8 +148,8 @@ public final class TagFilter {
 	}
 
 	private static PostDiscoveryFilter excludeMatching(List<String> tagExpressions) {
-		Supplier<String> inclusionReason = () -> inclusionReasonExpressionNotSatisfy(tagExpressions);
-		Supplier<String> exclusionReason = () -> exclusionReasonExpressionSatisfy(tagExpressions);
+		Supplier<@Nullable String> inclusionReason = () -> inclusionReasonExpressionNotSatisfy(tagExpressions);
+		Supplier<@Nullable String> exclusionReason = () -> exclusionReasonExpressionSatisfy(tagExpressions);
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
 			Set<TestTag> tags = descriptor.getTags();

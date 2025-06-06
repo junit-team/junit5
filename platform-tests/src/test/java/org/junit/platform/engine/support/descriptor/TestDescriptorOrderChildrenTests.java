@@ -116,6 +116,7 @@ public interface TestDescriptorOrderChildrenTests {
 		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	default void orderChildrenOrdererReturnsNull() {
 		var testDescriptor = createTestDescriptorWithChildren();

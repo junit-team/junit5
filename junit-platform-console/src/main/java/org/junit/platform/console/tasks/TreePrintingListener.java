@@ -34,8 +34,7 @@ class TreePrintingListener implements DetailsPrintingListener {
 	private final Map<UniqueId, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
 	private final TreePrinter treePrinter;
 
-	@Nullable
-	private TreeNode root;
+	private @Nullable TreeNode root;
 
 	TreePrintingListener(PrintWriter out, ColorPalette colorPalette, Theme theme) {
 		this.treePrinter = new TreePrinter(out, theme, colorPalette);

@@ -52,11 +52,9 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private final ConcurrentMap<CompositeKey<N>, StoredValue> storedValues = new ConcurrentHashMap<>(4);
 
-	@Nullable
-	private final NamespacedHierarchicalStore<N> parentStore;
+	private final @Nullable NamespacedHierarchicalStore<N> parentStore;
 
-	@Nullable
-	private final CloseAction<N> closeAction;
+	private final @Nullable CloseAction<N> closeAction;
 
 	private volatile boolean closed = false;
 
@@ -190,7 +188,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if this store has already been
 	 * closed
 	 */
-	public <K, V> @Nullable Object getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator) {
+	public <K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(N namespace, K key,
+			Function<? super K, ? extends V> defaultCreator) {
 		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
@@ -218,8 +217,9 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 * be cast to the required type, or if this store has already been closed
 	 */
-	public <K, V> @Nullable V getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator,
-			Class<V> requiredType) throws NamespacedHierarchicalStoreException {
+	public <K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(N namespace, K key,
+			Function<? super K, ? extends V> defaultCreator, Class<V> requiredType)
+			throws NamespacedHierarchicalStoreException {
 
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);

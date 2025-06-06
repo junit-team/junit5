@@ -46,9 +46,8 @@ class GraalVmStarterTests {
 
 		var result = ProcessStarters.gradlew() //
 				.workingDir(copyToWorkspace(Projects.GRAALVM_STARTER, workspace)) //
-				.putEnvironment("GRAALVM_HOME",
-					graalVmHome.orElseThrow(TestAbortedException::new).toString()).addArguments(
-						"-Dmaven.repo=" + MavenRepo.dir()) //
+				.putEnvironment("GRAALVM_HOME", graalVmHome.orElseThrow(TestAbortedException::new).toString()) //
+				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
 					"--warning-mode=fail", "--refresh-dependencies") //
 				.redirectOutput(outputFiles) //

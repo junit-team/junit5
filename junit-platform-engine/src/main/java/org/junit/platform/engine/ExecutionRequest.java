@@ -43,11 +43,9 @@ public class ExecutionRequest {
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
 
-	@Nullable
-	private final OutputDirectoryProvider outputDirectoryProvider;
+	private final @Nullable OutputDirectoryProvider outputDirectoryProvider;
 
-	@Nullable
-	private final NamespacedHierarchicalStore<Namespace> requestLevelStore;
+	private final @Nullable NamespacedHierarchicalStore<Namespace> requestLevelStore;
 
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.11")

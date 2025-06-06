@@ -189,7 +189,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	void instanceLevelWithNullField() {
 		Class<?> testClass = InstanceLevelExtensionRegistrationWithNullFieldTestCase.class;
 
-		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).testEvents().debug().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, null))));
 	}
 

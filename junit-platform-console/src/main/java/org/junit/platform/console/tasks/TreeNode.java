@@ -32,14 +32,11 @@ class TreeNode {
 	private final long creation;
 	long duration;
 
-	@Nullable
-	private String reason;
+	private @Nullable String reason;
 
-	@Nullable
-	private TestIdentifier identifier;
+	private @Nullable TestIdentifier identifier;
 
-	@Nullable
-	private TestExecutionResult result;
+	private @Nullable TestExecutionResult result;
 
 	final Queue<ReportEntry> reports = new ConcurrentLinkedQueue<>();
 	final Queue<FileEntry> files = new ConcurrentLinkedQueue<>();

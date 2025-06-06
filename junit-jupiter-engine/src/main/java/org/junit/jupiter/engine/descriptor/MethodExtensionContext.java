@@ -32,8 +32,7 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 
 	private final ThrowableCollector throwableCollector;
 
-	@Nullable
-	private TestInstances testInstances;
+	private @Nullable TestInstances testInstances;
 
 	MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration,

@@ -134,11 +134,9 @@ public class ClassSource implements TestSource {
 
 	private final String className;
 
-	@Nullable
-	private final FilePosition filePosition;
+	private final @Nullable FilePosition filePosition;
 
-	@Nullable
-	private Class<?> javaClass;
+	private @Nullable Class<?> javaClass;
 
 	private ClassSource(String className) {
 		this(className, null);

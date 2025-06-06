@@ -121,8 +121,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private boolean includeClassNamePatternsUsed;
 	private boolean filterStandardClassNamePatterns = false;
 
-	@Nullable
-	private ConfigurationParameters parentConfigurationParameters;
+	private @Nullable ConfigurationParameters parentConfigurationParameters;
 
 	private boolean enableParentConfigurationParameters = true;
 

@@ -47,8 +47,7 @@ public class CommandResult<T> {
 
 	private final int exitCode;
 
-	@Nullable
-	private final T value;
+	private final @Nullable T value;
 
 	private CommandResult(int exitCode, @Nullable T value) {
 		this.exitCode = exitCode;

@@ -241,7 +241,7 @@ class ResolverFacade {
 				.call(() -> configurationErrorOrSuccess(errors,
 					() -> new DefaultArgumentSetLifecycleMethodParameterResolver(originalResolverFacade,
 						lifecycleMethodResolverFacade, parameterDeclarationMapping))) //
-				.getOrThrow(cause -> new ExtensionConfigurationException(
+				.getNonNullOrThrow(cause -> new ExtensionConfigurationException(
 					"Invalid @%s lifecycle method declaration: %s".formatted(
 						annotation.annotationType().getSimpleName(), method.toGenericString()),
 					cause));

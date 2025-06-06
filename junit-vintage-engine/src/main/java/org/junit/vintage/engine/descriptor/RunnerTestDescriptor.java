@@ -56,8 +56,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private final boolean ignored;
 	private boolean wasFiltered;
 
-	@Nullable
-	private List<Filter> filters = new ArrayList<>();
+	private @Nullable List<Filter> filters = new ArrayList<>();
 
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner, boolean ignored) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));

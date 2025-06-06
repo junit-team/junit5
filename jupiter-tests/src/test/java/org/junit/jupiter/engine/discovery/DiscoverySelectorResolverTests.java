@@ -100,8 +100,7 @@ class DiscoverySelectorResolverTests extends AbstractJupiterTestEngineTests {
 	private final JupiterConfiguration configuration = mock();
 	private final LauncherDiscoveryListener discoveryListener = mock();
 
-	@Nullable
-	private TestDescriptor engineDescriptor;
+	private @Nullable TestDescriptor engineDescriptor;
 
 	@BeforeEach
 	void setUp() {

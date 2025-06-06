@@ -20,11 +20,9 @@ import org.junit.platform.commons.JUnitException;
 
 class StandardStreamsHandler implements AutoCloseable {
 
-	@Nullable
-	private PrintStream stdout;
+	private @Nullable PrintStream stdout;
 
-	@Nullable
-	private PrintStream stderr;
+	private @Nullable PrintStream stderr;
 
 	public StandardStreamsHandler() {
 	}

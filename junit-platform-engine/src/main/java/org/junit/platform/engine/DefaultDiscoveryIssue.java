@@ -24,11 +24,9 @@ final class DefaultDiscoveryIssue implements DiscoveryIssue {
 	private final Severity severity;
 	private final String message;
 
-	@Nullable
-	private final TestSource source;
+	private final @Nullable TestSource source;
 
-	@Nullable
-	private final Throwable cause;
+	private final @Nullable Throwable cause;
 
 	DefaultDiscoveryIssue(Builder builder) {
 		this.severity = builder.severity;

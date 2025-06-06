@@ -29,8 +29,7 @@ import org.junit.platform.engine.support.hierarchical.Node;
  */
 final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor> {
 
-	@Nullable
-	private final TestInstances testInstances;
+	private final @Nullable TestInstances testInstances;
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration,

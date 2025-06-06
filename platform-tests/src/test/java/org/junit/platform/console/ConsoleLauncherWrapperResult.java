@@ -29,8 +29,7 @@ class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 	final String err;
 	final int code;
 
-	@Nullable
-	private final TestExecutionSummary summary;
+	private final @Nullable TestExecutionSummary summary;
 
 	ConsoleLauncherWrapperResult(String[] args, String out, String err, CommandResult<?> result) {
 		this.args = args;

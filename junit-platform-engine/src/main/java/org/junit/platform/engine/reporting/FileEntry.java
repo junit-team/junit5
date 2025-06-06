@@ -46,8 +46,7 @@ public final class FileEntry {
 	private final LocalDateTime timestamp = LocalDateTime.now();
 	private final Path path;
 
-	@Nullable
-	private final String mediaType;
+	private final @Nullable String mediaType;
 
 	private FileEntry(Path path, @Nullable String mediaType) {
 		this.path = Preconditions.notNull(path, "path must not be null");

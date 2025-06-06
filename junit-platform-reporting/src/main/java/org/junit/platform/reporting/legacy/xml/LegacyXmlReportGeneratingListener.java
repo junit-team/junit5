@@ -50,8 +50,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	private final PrintWriter out;
 	private final Clock clock;
 
-	@Nullable
-	private XmlReportData reportData;
+	private @Nullable XmlReportData reportData;
 
 	public LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());

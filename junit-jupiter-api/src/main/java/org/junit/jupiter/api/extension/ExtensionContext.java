@@ -345,7 +345,7 @@ public interface ExtensionContext {
 	 * @see org.junit.platform.engine.ConfigurationParameters
 	 */
 	@API(status = STABLE, since = "5.10")
-	<T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer);
+	<T> Optional<T> getConfigurationParameter(String key, Function<? super String, ? extends @Nullable T> transformer);
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an
@@ -614,9 +614,8 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
-		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@API(status = STABLE, since = "5.1")
-		default <V> V getOrComputeIfAbsent(Class<V> type) {
+		default <V> @Nullable V getOrComputeIfAbsent(Class<V> type) {
 			return getOrComputeIfAbsent(type, ReflectionSupport::newInstance, type);
 		}
 
@@ -650,7 +649,8 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
-		<K, V> @Nullable Object getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator);
+		<K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(K key,
+				Function<? super K, ? extends V> defaultCreator);
 
 		/**
 		 * Get the value of the specified required type that is stored under the
@@ -681,7 +681,8 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
-		<K, V> @Nullable V getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator, Class<V> requiredType);
+		<K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(K key,
+				Function<? super K, ? extends V> defaultCreator, Class<V> requiredType);
 
 		/**
 		 * Store a {@code value} for later retrieval under the supplied {@code key}.
