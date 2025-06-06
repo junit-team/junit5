@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 
 plugins {
     `kotlin-dsl`
@@ -10,5 +10,8 @@ java {
 }
 
 kotlin {
-    compilerOptions.jvmTarget = JvmTarget.JVM_17
+    compilerOptions {
+        jvmTarget = JVM_17
+        freeCompilerArgs.add("-Xjdk-release=17")
+    }
 }
