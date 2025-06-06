@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class FileSource implements FileSystemSource {
 	 * @param file the source file; must not be {@code null}
 	 */
 	public static FileSource from(File file) {
-		return canonicalized(file, null);
+		return from(file, null);
 	}
 
 	/**
@@ -55,20 +56,14 @@ public class FileSource implements FileSystemSource {
 	 * @param filePosition the position in the source file; may be {@code null}
 	 */
 	public static FileSource from(File file, @Nullable FilePosition filePosition) {
-		return canonicalized(file, filePosition);
-	}
-
-	/**
-	 * Create a new {@code FileSource} from an existing instance but with a different
-	 * {@link FilePosition}. This avoids redundant canonical path resolution.
-	 *
-	 * @param source the existing {@code FileSource}; must not be {@code null}
-	 * @param filePosition the new {@code FilePosition}; may be {@code null}
-	 * @return a new {@code FileSource} with same file and updated position
-	 */
-	public static FileSource withPosition(FileSource source, @Nullable FilePosition filePosition) {
-		Preconditions.notNull(source, "source must not be null");
-		return direct(source.file, filePosition);
+		Preconditions.notNull(file, "file must not be null");
+		try {
+			File canonicalFile = file.getCanonicalFile();
+			return new FileSource(canonicalFile, filePosition);
+		}
+		catch (IOException ex) {
+			throw new JUnitException("Failed to retrieve canonical path for file: " + file, ex);
+		}
 	}
 
 	private final File file;
@@ -79,21 +74,6 @@ public class FileSource implements FileSystemSource {
 	private FileSource(File file, @Nullable FilePosition filePosition) {
 		this.file = file;
 		this.filePosition = filePosition;
-	}
-	
-	private static FileSource canonicalized(File file, @Nullable FilePosition filePosition) {
-		Preconditions.notNull(file, "file must not be null");
-		try {
-			return new FileSource(file.getCanonicalFile(), filePosition);
-		}
-		catch (IOException ex) {
-			throw new JUnitException("Failed to retrieve canonical path for file: " + file, ex);
-		}
-	}
-
-	private static FileSource direct(File file, @Nullable FilePosition filePosition) {
-		Preconditions.notNull(file, "file must not be null");
-		return new FileSource(file, filePosition);
 	}
 
 	/**
@@ -121,6 +101,20 @@ public class FileSource implements FileSystemSource {
 	 */
 	public final Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
+	}
+
+	/**
+	* Return a new {@code FileSource} based on this instance but with a different
+	* {@link FilePosition}. This avoids redundant canonical path resolution
+	* by reusing the already-canonical file.
+	*
+	* @param filePosition the new {@code FilePosition}; must not be {@code null}
+	* @return a new {@code FileSource} with the same file and updated position
+	*/
+	@API(status = EXPERIMENTAL, since = "1.14")
+	public FileSource withPosition(FilePosition filePosition) {
+		Preconditions.notNull(filePosition, "position must not be null");
+		return new FileSource(this.file, filePosition);
 	}
 
 	@Override
