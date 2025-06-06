@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -319,7 +320,7 @@ public class NamespacedHierarchicalStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			List<Object> values;
+			List<@Nullable Object> values;
 
 			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
 				values = executeConcurrently(threads, //

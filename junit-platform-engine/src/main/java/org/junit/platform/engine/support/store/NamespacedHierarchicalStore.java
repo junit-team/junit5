@@ -191,7 +191,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * closed
 	 */
 	public <K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(N namespace, K key,
-			Function<K, V> defaultCreator) {
+			Function<? super K, ? extends V> defaultCreator) {
 		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
@@ -220,7 +220,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(N namespace, K key,
-			Function<K, V> defaultCreator, Class<V> requiredType) throws NamespacedHierarchicalStoreException {
+			Function<? super K, ? extends V> defaultCreator, Class<V> requiredType) throws NamespacedHierarchicalStoreException {
 
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);
