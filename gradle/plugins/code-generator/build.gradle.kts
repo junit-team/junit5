@@ -18,5 +18,8 @@ tasks.compileJava {
 }
 
 kotlin {
-	compilerOptions.jvmTarget = JVM_21
+	compilerOptions {
+		jvmTarget = JVM_21
+		freeCompilerArgs.add("-Xjdk-release=21")
+	}
 }
