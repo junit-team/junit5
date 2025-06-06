@@ -110,7 +110,7 @@ public class FileSource implements FileSystemSource {
 	* @param filePosition the new {@code FilePosition}; must not be {@code null}
 	* @return a new {@code FileSource} with the same file and updated position
 	*/
-	@API(status = EXPERIMENTAL, since = "1.14")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public FileSource withPosition(FilePosition filePosition) {
 		Preconditions.notNull(filePosition, "position must not be null");
 		return new FileSource(this.file, filePosition);
