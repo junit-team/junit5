@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.store;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -320,11 +320,12 @@ public class NamespacedHierarchicalStoreTests {
 		void simulateRaceConditionInGetOrComputeIfAbsent() throws Exception {
 			int threads = 10;
 			AtomicInteger counter = new AtomicInteger();
-			List<@Nullable Object> values;
+			List<Object> values;
 
 			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
 				values = executeConcurrently(threads, //
-					() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+					() -> requireNonNull(
+						localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet())));
 			}
 
 			assertEquals(1, counter.get());

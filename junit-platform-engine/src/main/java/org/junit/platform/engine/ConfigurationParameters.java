@@ -117,7 +117,7 @@ public interface ConfigurationParameters {
 	 * @see #CONFIG_FILE_NAME
 	 */
 	@API(status = STABLE, since = "1.3")
-	default <T> Optional<T> get(String key, Function<String, ? extends @Nullable T> transformer) {
+	default <T> Optional<T> get(String key, Function<? super String, ? extends @Nullable T> transformer) {
 		Preconditions.notNull(transformer, "transformer must not be null");
 		return get(key).map(input -> {
 			try {

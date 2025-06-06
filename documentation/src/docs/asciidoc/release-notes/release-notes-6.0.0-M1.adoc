@@ -76,6 +76,11 @@ repository on GitHub.
   property has been removed. JUnit now always adheres to standard Java semantics regarding
   whether a given field or method is visible or overridden according to the rules of the
   Java language.
+* The type bounds of the following methods have been changed to be more flexible and allow
+  nullable and non-nullable types:
+  - `ConfigurationParameters.get(String, Function)`
+  - `NamespacedHierarchicalStore.getOrComputeIfAbsent(N, K, Function)`
+  - `NamespacedHierarchicalStore.getOrComputeIfAbsent(N, K, Function, Class)`
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -112,6 +117,11 @@ repository on GitHub.
   `callsInPlace(executable, AT_MOST_ONCE)` which might result in compilation errors.
 * The `junit-jupiter-migrationsupport` artifact and its contained classes are now
   deprecated and will be removed in the next major version.
+* The type bounds of the following methods have been changed to be more flexible and allow
+  nullable and non-nullable types:
+  - `ExtensionContext.getConfigurationParameter(String, Function)`
+  - `ExtensionContext.getOrComputeIfAbsent(K, Function)`
+  - `ExtensionContext.getOrComputeIfAbsent(K, Function, Class)`
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
