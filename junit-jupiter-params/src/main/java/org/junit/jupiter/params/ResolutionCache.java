@@ -29,14 +29,14 @@ interface ResolutionCache {
 	ResolutionCache DISABLED = (__, resolver) -> resolver.get();
 
 	@Nullable
-	Object resolve(ParameterDeclaration declaration, Supplier<@Nullable Object> resolver);
+	Object resolve(ParameterDeclaration declaration, Supplier<?> resolver);
 
 	class Concurrent implements ResolutionCache {
 
 		private final Map<ParameterDeclaration, Object> cache = new ConcurrentHashMap<>();
 
 		@Override
-		public @Nullable Object resolve(ParameterDeclaration declaration, Supplier<@Nullable Object> resolver) {
+		public @Nullable Object resolve(ParameterDeclaration declaration, Supplier<?> resolver) {
 			return cache.computeIfAbsent(declaration, __ -> resolver.get());
 		}
 	}
