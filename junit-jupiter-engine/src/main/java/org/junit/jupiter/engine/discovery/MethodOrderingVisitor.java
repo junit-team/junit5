@@ -10,12 +10,14 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static java.util.Comparator.comparing;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -40,6 +42,9 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 	private final JupiterConfiguration configuration;
 	private final Condition<MethodBasedTestDescriptor> noOrderAnnotation;
 
+	// Not a static field to avoid initialization at build time for GraalVM
+	private final UnaryOperator<List<TestDescriptor>> methodsBeforeNestedClassesOrderer;
+
 	MethodOrderingVisitor(JupiterConfiguration configuration, DiscoveryIssueReporter issueReporter) {
 		super(issueReporter);
 		this.configuration = configuration;
@@ -51,6 +56,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 						.source(MethodSource.from(testDescriptor.getTestMethod())) //
 						.build();
 			});
+		this.methodsBeforeNestedClassesOrderer = createMethodsBeforeNestedClassesOrderer();
 	}
 
 	@Override
@@ -80,6 +86,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 
 	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass,
 			Optional<MethodOrderer> methodOrderer) {
+
 		DescriptorWrapperOrderer<?, DefaultMethodDescriptor> descriptorWrapperOrderer = createDescriptorWrapperOrderer(
 			testClass, methodOrderer);
 
@@ -88,6 +95,11 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 			toValidationAction(methodOrderer), //
 			DefaultMethodDescriptor::new, //
 			descriptorWrapperOrderer);
+
+		if (methodOrderer.isEmpty()) {
+			// If there is an orderer, this is ensured by the call above
+			classBasedTestDescriptor.orderChildren(methodsBeforeNestedClassesOrderer);
+		}
 
 		// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
 		// to be invoked after MethodOrderer#orderMethods().
@@ -124,6 +136,14 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 			return Optional.empty();
 		}
 		return Optional.of(noOrderAnnotation::check);
+	}
+
+	private static UnaryOperator<List<TestDescriptor>> createMethodsBeforeNestedClassesOrderer() {
+		var methodsFirst = comparing(MethodBasedTestDescriptor.class::isInstance).reversed();
+		return children -> {
+			children.sort(methodsFirst);
+			return children;
+		};
 	}
 
 }
