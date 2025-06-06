@@ -6882,7 +6882,7 @@ by the following example.</p>
         <span class="n">textFile</span><span class="o">.</span><span class="na">path</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">writeString</span><span class="o">(</span><span class="n">filePath</span><span class="o">,</span> <span class="n">textFile</span><span class="o">.</span><span class="na">content</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="nd">@SuppressWarnings</span><span class="o">({</span> <span class="s">"DataFlowIssue"</span><span class="o">,</span> <span class="s">"NullAway"</span> <span class="o">})</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"DataFlowIssue"</span><span class="o">)</span>
     <span class="nd">@AfterParameterizedClassInvocation</span>
     <span class="kd">static</span> <span class="kt">void</span> <span class="nf">afterInvocation</span><span class="o">(</span><span class="nc">TextFile</span> <span class="n">textFile</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
         <span class="kt">var</span> <span class="n">actualContent</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readString</span><span class="o">(</span><span class="n">textFile</span><span class="o">.</span><span class="na">path</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
@@ -6891,7 +6891,7 @@ by the following example.</p>
         <span class="c1">// File will be deleted automatically by @TempDir support</span>
     <span class="o">}</span>
 
-    <span class="nd">@SuppressWarnings</span><span class="o">({</span> <span class="s">"DataFlowIssue"</span><span class="o">,</span> <span class="s">"NullAway"</span> <span class="o">})</span>
+    <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"DataFlowIssue"</span><span class="o">)</span>
     <span class="nd">@Test</span>
     <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">assertTrue</span><span class="o">(</span><span class="nc">Files</span><span class="o">.</span><span class="na">exists</span><span class="o">(</span><span class="n">textFile</span><span class="o">.</span><span class="na">path</span><span class="o">));</span> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -11701,7 +11701,7 @@ instance of the extension via the <code>docs</code> field if necessary.</p>
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
 and <a href="#extensions-registration-programmatic">programmatic extension registration</a> support
 using annotations, JUnit Jupiter also supports <em>global extension registration</em> via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism, allowing third-party extensions to be auto-detected and
+<code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism, allowing third-party extensions to be auto-detected and
 automatically registered based on what is available in the classpath.</p>
 </div>
 <div class="paragraph">
@@ -11726,7 +11726,7 @@ following system property.</p>
 <p><code>-Djunit.jupiter.extensions.autodetection.enabled=true</code></p>
 </div>
 <div class="paragraph">
-<p>When auto-detection is enabled, extensions discovered via the <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism
+<p>When auto-detection is enabled, extensions discovered via the <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism
 will be added to the extension registry after JUnit Jupiter&#8217;s global extensions (e.g.,
 support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
@@ -14786,7 +14786,7 @@ details.</p>
 <div class="paragraph">
 <p>In addition to specifying post-discovery filters as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code>
 passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/PostDiscoveryFilter.html">PostDiscoveryFilter</a></code> implementations will be discovered
-at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically applied by the
+at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically applied by the
 <code>Launcher</code> in addition to those that are part of the request.</p>
 </div>
 <div class="paragraph">
@@ -14802,7 +14802,7 @@ file is loaded and applied automatically.</p>
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSession.html">LauncherSession</a></code> is opened (before a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> first discovers and executes tests)
 and closed (when no more tests will be discovered or executed). They can be registered
 programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.html">LauncherConfig</a></code> that is passed to the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>, or
-they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
+they can be discovered at runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically
 registered with <code>LauncherSession</code> (unless automatic registration is disabled.)</p>
 </div>
 <div class="sect4">
@@ -15058,7 +15058,7 @@ by adding the file to <code>src/test/resources</code>):</p>
 <p>In order to intercept the creation of instances of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> and
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherSessionListener.html">LauncherSessionListener</a></code> and calls to the <code>discover</code> and <code>execute</code> methods of the
 former, clients can register custom implementations of <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherInterceptor.html">LauncherInterceptor</a></code> via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism by setting the
+<code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism by setting the
 <code>junit.platform.launcher.interceptors.enabled</code> <a href="#running-tests-config-params">configuration parameter</a> to <code>true</code>.</p>
 </div>
 <div class="admonitionblock note">
@@ -15134,7 +15134,7 @@ the JUnit Platform to load test classes and engine implementations.</p>
 <p>In addition to specifying discovery listeners as part of a <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> or
 registering them programmatically via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API, custom
 <code>LauncherDiscoveryListener</code> implementations can be discovered at runtime via Java&#8217;s
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code>Launcher</code> created via
+<code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the <code>Launcher</code> created via
 the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
@@ -15149,7 +15149,7 @@ and registered automatically.</p>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution listeners
 programmatically, custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations will be discovered at
-runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the
+runtime via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism and automatically registered with the
 <code>Launcher</code> created via the <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherFactory.html">LauncherFactory</a></code>.</p>
 </div>
 <div class="paragraph">
@@ -15192,7 +15192,7 @@ execution listeners should be deactivated (i.e. not registered) for the current 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
+<p>Only listeners registered via the <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism within the
 <code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
 deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
 <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/LauncherDiscoveryRequest.html">LauncherDiscoveryRequest</a></code> cannot be deactivated via the
@@ -15557,7 +15557,7 @@ implement the <code>Node</code> interface, including support for parallel execut
 <div class="sect3">
 <h4 id="test-engines-registration"><a class="anchor" href="#test-engines-registration"></a>6.5.3. Registering a TestEngine</h4>
 <div class="paragraph">
-<p><code>TestEngine</code> registration is supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
+<p><code>TestEngine</code> registration is supported via Java&#8217;s <code><a href="https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader</a></code> mechanism.</p>
 </div>
 <div class="paragraph">
 <p>For example, the <code>junit-jupiter-engine</code> module registers its
@@ -16239,7 +16239,7 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try.&ZeroWidthSpace;getNonNullOrThrow(Function&lt;? super @Nullable Exception, E&gt;)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try.&ZeroWidthSpace;getNonNullOrThrow(Function&lt;@Nullable Exception, E&gt;)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
 </tr>
 </tbody>
