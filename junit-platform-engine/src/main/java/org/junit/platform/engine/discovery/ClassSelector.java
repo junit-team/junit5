@@ -48,13 +48,11 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 @API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {
 
-	@Nullable
-	private final ClassLoader classLoader;
+	private final @Nullable ClassLoader classLoader;
 
 	private final String className;
 
-	@Nullable
-	private Class<?> javaClass;
+	private @Nullable Class<?> javaClass;
 
 	ClassSelector(@Nullable ClassLoader classLoader, String className) {
 		this.className = className;

@@ -60,17 +60,14 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 @API(status = STABLE, since = "1.0")
 public class MethodSelector implements DiscoverySelector {
 
-	@Nullable
-	private final ClassLoader classLoader;
+	private final @Nullable ClassLoader classLoader;
 	private final String className;
 	private final String methodName;
 	private final String parameterTypeNames;
 
-	@Nullable
-	private volatile Class<?> javaClass;
+	private volatile @Nullable Class<?> javaClass;
 
-	@Nullable
-	private volatile Method javaMethod;
+	private volatile @Nullable Method javaMethod;
 
 	private volatile Class<?> @Nullable [] parameterTypes;
 

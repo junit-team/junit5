@@ -47,8 +47,7 @@ public class TestDiscoveryOptions {
 	private boolean scanClasspath;
 	private List<Path> additionalClasspathEntries = emptyList();
 
-	@Nullable
-	private List<Path> selectedClasspathEntries = emptyList();
+	private @Nullable List<Path> selectedClasspathEntries = emptyList();
 
 	private boolean scanModulepath;
 

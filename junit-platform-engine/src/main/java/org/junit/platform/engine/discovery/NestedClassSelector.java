@@ -53,8 +53,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
-	@Nullable
-	private final ClassLoader classLoader;
+	private final @Nullable ClassLoader classLoader;
 
 	private final List<ClassSelector> enclosingClassSelectors;
 	private final ClassSelector nestedClassSelector;

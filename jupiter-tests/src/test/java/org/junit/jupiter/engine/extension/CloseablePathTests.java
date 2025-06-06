@@ -89,8 +89,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 	private final AnnotatedElementContext elementContext = mock();
 	private final ExtensionContext extensionContext = mock();
 
-	@Nullable
-	private CloseablePath closeablePath;
+	private @Nullable CloseablePath closeablePath;
 
 	@Target(METHOD)
 	@Retention(RUNTIME)

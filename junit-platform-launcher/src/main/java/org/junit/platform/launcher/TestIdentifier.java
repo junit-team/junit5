@@ -58,14 +58,12 @@ public final class TestIdentifier implements Serializable {
 	// These are effectively final but not technically due to late initialization when deserializing
 	private /* final */ UniqueId uniqueId;
 
-	@Nullable
-	private /* final */ UniqueId parentId;
+	private /* final */ @Nullable UniqueId parentId;
 
 	private /* final */ String displayName;
 	private /* final */ String legacyReportingName;
 
-	@Nullable
-	private /* final */ TestSource source;
+	private /* final */ @Nullable TestSource source;
 	private /* final */ Set<TestTag> tags;
 	private /* final */ Type type;
 

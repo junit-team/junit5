@@ -46,8 +46,7 @@ public class FileSelector implements DiscoverySelector {
 
 	private final String path;
 
-	@Nullable
-	private final FilePosition position;
+	private final @Nullable FilePosition position;
 
 	FileSelector(String path, @Nullable FilePosition position) {
 		this.path = path;

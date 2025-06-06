@@ -996,16 +996,13 @@ class AnnotationUtilsTests {
 	// -------------------------------------------------------------------------
 
 	@Annotation1
-	@Nullable
-	private Boolean privateDirectlyAnnotatedField;
+	private @Nullable Boolean privateDirectlyAnnotatedField;
 
 	@Annotation1
-	@Nullable
-	public String directlyAnnotatedField;
+	public @Nullable String directlyAnnotatedField;
 
 	@ComposedAnnotation
-	@Nullable
-	public Integer metaAnnotatedField;
+	public @Nullable Integer metaAnnotatedField;
 
 	interface InterfaceWithAnnotatedFields {
 

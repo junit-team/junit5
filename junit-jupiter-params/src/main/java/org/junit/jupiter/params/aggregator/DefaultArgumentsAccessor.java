@@ -62,8 +62,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	@Override
-	@Nullable
-	public Object get(int index) {
+	public @Nullable Object get(int index) {
 		Preconditions.condition(index >= 0 && index < this.arguments.length,
 			() -> "index must be >= 0 and < %d".formatted(this.arguments.length));
 		return this.arguments[index];

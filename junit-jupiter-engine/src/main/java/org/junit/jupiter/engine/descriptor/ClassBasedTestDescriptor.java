@@ -93,11 +93,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 	protected final ClassInfo classInfo;
 
-	@Nullable
-	private LifecycleMethods lifecycleMethods;
+	private @Nullable LifecycleMethods lifecycleMethods;
 
-	@Nullable
-	private TestInstanceFactory testInstanceFactory;
+	private @Nullable TestInstanceFactory testInstanceFactory;
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
 			JupiterConfiguration configuration) {

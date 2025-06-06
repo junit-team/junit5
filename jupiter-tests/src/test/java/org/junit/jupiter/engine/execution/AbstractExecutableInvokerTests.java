@@ -41,8 +41,7 @@ abstract class AbstractExecutableInvokerTests {
 
 	protected final MethodSource instance = mock();
 
-	@Nullable
-	protected Method method;
+	protected @Nullable Method method;
 
 	protected final ExtensionContext extensionContext = mock();
 

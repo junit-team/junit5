@@ -111,11 +111,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
 
-	@Nullable
-	private ConfigurationParameters parentConfigurationParameters;
+	private @Nullable ConfigurationParameters parentConfigurationParameters;
 
-	@Nullable
-	private OutputDirectoryProvider outputDirectoryProvider;
+	private @Nullable OutputDirectoryProvider outputDirectoryProvider;
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
