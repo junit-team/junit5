@@ -21,9 +21,8 @@ dependencies {
 	implementation(libs.plugins.spotless.markerCoordinates)
 }
 
-java {
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+tasks.compileJava {
+	options.release = 21
 }
 
 kotlin {
