@@ -268,7 +268,7 @@ class CsvArgumentsProviderTests {
 				""").build();
 
 		assertThat(headersToValues(annotation)).containsExactly(//
-				array("FRUIT = apple", "null = 1")//
+			array("FRUIT = apple", "null = 1")//
 		);
 	}
 
@@ -360,8 +360,8 @@ class CsvArgumentsProviderTests {
 				""").build();
 
 		assertThat(headersToValues(annotation)).containsExactly(//
-				array("FRUIT = apple", "RANK = 1"),//
-				array("FRUIT = banana", "RANK = 2")//
+			array("FRUIT = apple", "RANK = 1"), //
+			array("FRUIT = banana", "RANK = 2")//
 		);
 	}
 
@@ -371,8 +371,8 @@ class CsvArgumentsProviderTests {
 				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build();
 
 		assertThat(headersToValues(annotation)).containsExactly(//
-				array("FRUIT = apple", "RANK = 1"),//
-				array("FRUIT = banana", "RANK = 2")//
+			array("FRUIT = apple", "RANK = 1"), //
+			array("FRUIT = banana", "RANK = 2")//
 		);
 	}
 
