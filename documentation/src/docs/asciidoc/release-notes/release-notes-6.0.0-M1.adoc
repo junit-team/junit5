@@ -124,8 +124,9 @@ repository on GitHub.
   of exceptions thrown when parsing malformed CSV input may differ in rare cases.
   While overall parsing behavior remains consistent, this may affect
   custom error handling that relies on specific exception types or messages.
-* The `nullValues()` parameter in `CsvSource` and `CsvFileSource` is now applied
-  to header fields as well as to regular fields.
+* Parameters such as `ignoreLeadingAndTrailingWhitespace()`, `nullValues()`,
+  and others in `CsvSource` and `CsvFileSource` now apply to header fields as well
+  as to regular fields.
 * The `junit-jupiter-migrationsupport` artifact and its contained classes are now
   deprecated and will be removed in the next major version.
 * The type bounds of the following methods have been changed to be more flexible and allow
