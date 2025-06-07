@@ -1,0 +1,77 @@
+/*
+ * CSS customizations for JUnit
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono:400,700|Open+Sans:300,300i,400,400i,700,700i');
+
+:root {
+    /* body, block and code fonts */
+    --body-font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    --block-font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    --code-font-family: "Fira Mono", monospace;
+    /* Text colors for body and block elements */
+    --body-text-color: #333;
+    --block-text-color: #333;
+    /* Background colors for various structural elements */
+    --section-background-color: #f8f8f8;
+    /* Colors for navigation bar and table captions */
+    --navbar-background-color: #25a162;
+    /* Background color for subnavigation and various headers */
+    --subnav-background-color: #e8e8e8;
+    /* Background and text colors for selected tabs and navigation items */
+    --selected-background-color: #dc524a;
+    --selected-text-color: #fff;
+    --selected-link-color: #651410;
+    /* Background colors for generated tables */
+    --even-row-color: #fff;
+    --odd-row-color: #eee;
+    /* Text color for page title */
+    --title-color: #333;
+    /* Text colors for links */
+    --link-color: #dc524a;
+    --link-color-active: #b62b23;
+    /* Snippet colors */
+    --snippet-background-color: #ebecee;
+    --snippet-text-color: var(--block-text-color);
+    --snippet-highlight-color: #fcdbd9;
+    /* Border colors for structural elements and user defined tables */
+    --border-color: #ddd;
+    --table-border-color: #999;
+    /* Highlight color for active search tag target */
+    --search-tag-highlight-color: #ffff00;
+    /* Adjustments for icon and active background colors of copy-to-clipboard buttons */
+    --copy-button-background-color-active: rgba(168, 168, 168, 0.3);
+    /* Colors for invalid tag notifications */
+    --invalid-tag-background-color: #ffe6e6;
+}
+
+.title {
+    font-weight: 300;
+    font-size: 32px;
+    margin-top: 0;
+}
+
+ul.nav-list {
+    padding-left: 10px;
+}
+
+.top-nav a:hover, .bottom-nav a:hover {
+    text-decoration:underline;
+    color:inherit;
+}
+
+.nav-bar-cell1-rev {
+    background-color:#fff;
+    color:#dc524a;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+hr {
+    color: transparent;
+    border-top: 1px solid var(--border-color);
+}
+
+dt {
+    font-weight: bold;
+}
