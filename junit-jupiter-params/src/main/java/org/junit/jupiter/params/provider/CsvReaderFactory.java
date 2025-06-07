@@ -123,6 +123,7 @@ class CsvReaderFactory {
 		// @formatter:off
 		if (useHeadersInDisplayName) {
 			return NamedCsvRecordHandler.builder()
+					.allowDuplicateHeaderFields(true)
 					.maxFields(MAX_FIELDS)
 					.maxFieldSize(maxFieldSize)
 					.maxRecordSize(Integer.MAX_VALUE)
