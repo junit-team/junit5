@@ -61,6 +61,7 @@ class CsvReaderFactory {
 		String delimiter = selectDelimiter(csvSource.delimiter(), csvSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+				.skipEmptyLines(true)
 				.fieldSeparator(delimiter)
 				.trimWhitespacesAroundQuotes(true)
 				.allowExtraFields(true)
@@ -85,6 +86,7 @@ class CsvReaderFactory {
 		String delimiter = selectDelimiter(csvFileSource.delimiter(), csvFileSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+				.skipEmptyLines(true)
 				.fieldSeparator(delimiter)
 				.trimWhitespacesAroundQuotes(true)
 				.allowExtraFields(true)
