@@ -1,9 +1,9 @@
 [[release-notes-5.13.1]]
 == 5.13.1
 
-*Date of Release:* ❓
+*Date of Release:* June 7, 2025
 
-*Scope:* ❓
+*Scope:* Bug fixes and enhancements since 5.13.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/97?closed=1+[5.13.1] milestone page in the JUnit repository
@@ -13,20 +13,7 @@ on GitHub.
 [[release-notes-5.13.1-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.13.1-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.1-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.1-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-5.13.1-junit-jupiter]]
@@ -45,31 +32,8 @@ on GitHub.
 * Fix support for `AnnotationBasedArgumentsProvider` implementations that override the
   deprecated `provideArguments(ExtensionContext, Annotation)` method.
 
-[[release-notes-5.13.1-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.1-junit-jupiter-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.13.1-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.13.1-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.1-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.1-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes
