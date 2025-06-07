@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.reader.CsvParseException;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -30,12 +31,12 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvArgumentsProviderTests {
 
 	@Test
-	void throwsExceptionForInvalidCsv() {
+	void throwsExceptionForEmptyLine() {
 		var annotation = csvSource("foo", "bar", "");
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Record at index 3 contains invalid CSV: \"\"");
+				.withMessage("CSV record at index 3 is empty");
 	}
 
 	@Test
@@ -233,20 +234,20 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void defaultEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource("'', null, , apple");
+		var annotation = csvSource("'', null, ,, apple");
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("", "null", null, null, "apple"));
 	}
 
 	@Test
 	void customEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
+		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, ,, apple").build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("EMPTY", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("EMPTY", "null", null, null, "apple"));
 	}
 
 	@Test
@@ -275,7 +276,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
@@ -294,7 +295,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test

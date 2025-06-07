@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -106,7 +107,12 @@ public @interface CsvFileSource {
 	 * or 2 characters, typically {@code "\r"}, {@code "\n"}, or {@code "\r\n"}.
 	 *
 	 * <p>Defaults to {@code "\n"}.
+	 *
+	 * @deprecated Since JUnit 6.0, line separators are detected automatically during CSV parsing.
+	 * This setting is no longer required and will be ignored.
 	 */
+	@API(status = DEPRECATED, since = "6.0") //
+	@Deprecated(since = "6.0", forRemoval = true)
 	String lineSeparator() default "\n";
 
 	/**

@@ -45,7 +45,7 @@ tasks {
 			into("META-INF")
 		}
 		from(dependencyProject(project.projects.junitJupiterParams).projectDir) {
-			include("LICENSE-univocity-parsers.md")
+			include("LICENSE-fastcsv.md")
 			into("META-INF")
 		}
 		from(shadowedArtifactsFile) {
