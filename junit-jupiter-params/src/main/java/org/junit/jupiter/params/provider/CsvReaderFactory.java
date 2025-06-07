@@ -35,7 +35,13 @@ class CsvReaderFactory {
 
 	private static final String DEFAULT_DELIMITER = ",";
 	private static final char EMPTY_CHAR = '\0';
+	private static final boolean SKIP_EMPTY_LINES = true;
+	private static final boolean TRIM_WHITESPACES_AROUND_QUOTES = true;
+	private static final boolean ALLOW_EXTRA_FIELDS = true;
+	private static final boolean ALLOW_MISSING_FIELDS = true;
+	private static final boolean ALLOW_DUPLICATE_HEADER_FIELDS = true;
 	private static final int MAX_FIELDS = 512;
+	private static final int MAX_RECORD_SIZE = Integer.MAX_VALUE;
 
 	static void validate(CsvSource csvSource) {
 		validateMaxCharsPerColumn(csvSource.maxCharsPerColumn());
@@ -61,11 +67,11 @@ class CsvReaderFactory {
 		String delimiter = selectDelimiter(csvSource.delimiter(), csvSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
-				.skipEmptyLines(true)
+				.skipEmptyLines(SKIP_EMPTY_LINES)
+				.trimWhitespacesAroundQuotes(TRIM_WHITESPACES_AROUND_QUOTES)
+				.allowExtraFields(ALLOW_EXTRA_FIELDS)
+				.allowMissingFields(ALLOW_MISSING_FIELDS)
 				.fieldSeparator(delimiter)
-				.trimWhitespacesAroundQuotes(true)
-				.allowExtraFields(true)
-				.allowMissingFields(true)
 				.quoteCharacter(csvSource.quoteCharacter())
 				.commentStrategy(csvSource.textBlock().isEmpty() ? NONE : SKIP);
 
@@ -86,11 +92,11 @@ class CsvReaderFactory {
 		String delimiter = selectDelimiter(csvFileSource.delimiter(), csvFileSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
-				.skipEmptyLines(true)
+				.skipEmptyLines(SKIP_EMPTY_LINES)
+				.trimWhitespacesAroundQuotes(TRIM_WHITESPACES_AROUND_QUOTES)
+				.allowExtraFields(ALLOW_EXTRA_FIELDS)
+				.allowMissingFields(ALLOW_MISSING_FIELDS)
 				.fieldSeparator(delimiter)
-				.trimWhitespacesAroundQuotes(true)
-				.allowExtraFields(true)
-				.allowMissingFields(true)
 				.quoteCharacter(csvFileSource.quoteCharacter())
 				.commentStrategy(SKIP);
 
@@ -125,17 +131,17 @@ class CsvReaderFactory {
 		// @formatter:off
 		if (useHeadersInDisplayName) {
 			return NamedCsvRecordHandler.builder()
-					.allowDuplicateHeaderFields(true)
+					.allowDuplicateHeaderFields(ALLOW_DUPLICATE_HEADER_FIELDS)
 					.maxFields(MAX_FIELDS)
+					.maxRecordSize(MAX_RECORD_SIZE)
 					.maxFieldSize(maxFieldSize)
-					.maxRecordSize(Integer.MAX_VALUE)
 					.fieldModifier(modifier)
 					.build();
 		}
 		return CsvRecordHandler.builder()
 				.maxFields(MAX_FIELDS)
+				.maxRecordSize(MAX_RECORD_SIZE)
 				.maxFieldSize(maxFieldSize)
-				.maxRecordSize(Integer.MAX_VALUE)
 				.fieldModifier(modifier)
 				.build();
 		// @formatter:on
