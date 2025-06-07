@@ -88,14 +88,19 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 		for (int i = 0; i < record.getFieldCount(); i++) {
 			String field = record.getField(i);
-			Object argument = CsvReaderFactory.DefaultFieldModifier.NULL_MARKER.equals(field) ? null : field;
+			Object argument = resolveNullMarker(field);
 			if (useHeadersInDisplayName) {
-				argument = asNamed(getHeaders(record).get(i) + " = " + argument, argument);
+				String header = resolveNullMarker(getHeaders(record).get(i));
+				argument = asNamed(header + " = " + argument, argument);
 			}
 			arguments[i] = argument;
 		}
 
 		return Arguments.of(arguments);
+	}
+
+	private static @Nullable String resolveNullMarker(String record) {
+		return CsvReaderFactory.DefaultFieldModifier.NULL_MARKER.equals(record) ? null : record;
 	}
 
 	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {

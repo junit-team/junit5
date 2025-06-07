@@ -261,6 +261,18 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
+	void customNullValueInHeader() {
+		var annotation = csvSource().useHeadersInDisplayName(true).nullValues("NIL").textBlock("""
+				FRUIT, NIL
+				apple, 1
+				""").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+				array("FRUIT = apple", "null = 1")//
+		);
+	}
+
+	@Test
 	void convertsEmptyValuesToNullInLinesAfterFirstLine() {
 		var annotation = csvSource("'', ''", " , ");
 
@@ -341,31 +353,38 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void supportsCsvHeadersWhenUsingTextBlockAttribute() {
-		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true).textBlock("""
+		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
 				FRUIT, RANK
 				apple, 1
 				banana, 2
-				""").build());
+				""").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+				array("FRUIT = apple", "RANK = 1"),//
+				array("FRUIT = banana", "RANK = 2")//
+		);
 	}
 
 	@Test
 	void supportsCsvHeadersWhenUsingValueAttribute() {
-		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true)//
-				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build());
+		var annotation = csvSource().useHeadersInDisplayName(true)//
+				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+				array("FRUIT = apple", "RANK = 1"),//
+				array("FRUIT = banana", "RANK = 2")//
+		);
 	}
 
-	private void supportsCsvHeaders(CsvSource csvSource) {
+	private Stream<String[]> headersToValues(CsvSource csvSource) {
 		var arguments = provideArguments(csvSource);
-		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
+		return arguments.map(array -> {
 			String[] strings = new String[array.length];
 			for (int i = 0; i < array.length; i++) {
 				strings[i] = String.valueOf(array[i]);
 			}
 			return strings;
 		});
-
-		assertThat(argumentsAsStrings).containsExactly(array("FRUIT = apple", "RANK = 1"),
-			array("FRUIT = banana", "RANK = 2"));
 	}
 
 	@Test
