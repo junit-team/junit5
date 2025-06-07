@@ -91,8 +91,7 @@ public class UniqueId implements Cloneable, Serializable {
 	private transient int hashCode;
 
 	// lazily computed
-	@Nullable
-	private transient SoftReference<String> toString;
+	private transient @Nullable SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
 		this(uniqueIdFormat, List.of(segment));

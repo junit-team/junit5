@@ -37,9 +37,10 @@ class SeparateThreadTimeoutInvocation<T extends @Nullable Object> implements Inv
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public T proceed() throws Throwable {
 		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
-			(__, messageSupplier, cause, testThread) -> {
+			(__, ___, cause, testThread) -> {
 				TimeoutException exception = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, null);
 				if (testThread != null) {
 					preInterruptCallback.executePreInterruptCallback(testThread, exception::addSuppressed);

@@ -110,14 +110,11 @@ public class MethodSource implements TestSource {
 	private final String className;
 	private final String methodName;
 
-	@Nullable
-	private final String methodParameterTypes;
+	private final @Nullable String methodParameterTypes;
 
-	@Nullable
-	private Class<?> javaClass;
+	private @Nullable Class<?> javaClass;
 
-	@Nullable
-	private transient Method javaMethod;
+	private transient @Nullable Method javaMethod;
 
 	private MethodSource(String className, String methodName) {
 		this(className, methodName, null);

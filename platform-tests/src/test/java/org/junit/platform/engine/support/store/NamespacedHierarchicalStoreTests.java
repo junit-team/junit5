@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.store;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -323,7 +324,8 @@ public class NamespacedHierarchicalStoreTests {
 
 			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
 				values = executeConcurrently(threads, //
-					() -> localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet()));
+					() -> requireNonNull(
+						localStore.getOrComputeIfAbsent(namespace, key, it -> counter.incrementAndGet())));
 			}
 
 			assertEquals(1, counter.get());

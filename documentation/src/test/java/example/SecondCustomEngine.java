@@ -48,6 +48,9 @@ public class SecondCustomEngine implements TestEngine {
 		return new EngineDescriptor(uniqueId, "Second Custom Test Engine");
 	}
 
+	//end::user_guide[]
+	@SuppressWarnings("NullAway")
+	//tag::user_guide[]
 	@Override
 	public void execute(ExecutionRequest request) {
 		request.getEngineExecutionListener()

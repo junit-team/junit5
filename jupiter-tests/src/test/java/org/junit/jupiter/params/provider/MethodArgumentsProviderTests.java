@@ -51,8 +51,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class MethodArgumentsProviderTests {
 
-	@Nullable
-	private MutableExtensionRegistry extensionRegistry;
+	private @Nullable MutableExtensionRegistry extensionRegistry;
 
 	@Test
 	void providesArgumentsUsingStream() {

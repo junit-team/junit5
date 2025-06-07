@@ -293,7 +293,8 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public <T> Optional<T> getConfigurationParameter(String key, Function<String, T> transformer) {
+			public <T> Optional<T> getConfigurationParameter(String key,
+					Function<? super String, ? extends @Nullable T> transformer) {
 				return configurationSupplier.apply(key).map(transformer);
 			}
 
@@ -417,11 +418,10 @@ class ParameterizedTestExtensionTests {
 
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
-		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Override
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
 				ExtensionContext context) {
-			return null;
+			throw new UnsupportedOperationException();
 		}
 	}
 

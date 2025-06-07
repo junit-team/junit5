@@ -98,9 +98,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		return Arguments.of(arguments);
 	}
 
-	@SuppressWarnings("NullAway")
 	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {
-		return Named.of(name, column);
+		return Named.<@Nullable Object> of(name, column);
 	}
 
 	private static List<String> getHeaders(CsvRecord record) {

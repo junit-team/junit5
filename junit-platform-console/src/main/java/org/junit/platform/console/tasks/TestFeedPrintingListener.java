@@ -32,8 +32,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 	private final PrintWriter out;
 	private final ColorPalette colorPalette;
 
-	@Nullable
-	private TestPlan testPlan;
+	private @Nullable TestPlan testPlan;
 
 	TestFeedPrintingListener(PrintWriter out, ColorPalette colorPalette) {
 		this.out = out;

@@ -16,6 +16,7 @@
  * @provides org.junit.platform.engine.TestEngine The {@code VintageTestEngine}
  * runs JUnit 3 and 4 based tests on the platform.
  */
+@SuppressWarnings("deprecation")
 module org.junit.vintage.engine {
 
 	requires static org.apiguardian.api;

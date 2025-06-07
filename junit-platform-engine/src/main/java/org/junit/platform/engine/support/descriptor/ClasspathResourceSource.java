@@ -114,8 +114,7 @@ public class ClasspathResourceSource implements TestSource {
 
 	private final String classpathResourceName;
 
-	@Nullable
-	private final FilePosition filePosition;
+	private final @Nullable FilePosition filePosition;
 
 	private ClasspathResourceSource(String classpathResourceName) {
 		this(classpathResourceName, null);

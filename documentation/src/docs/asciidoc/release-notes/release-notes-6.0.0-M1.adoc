@@ -76,6 +76,11 @@ repository on GitHub.
   property has been removed. JUnit now always adheres to standard Java semantics regarding
   whether a given field or method is visible or overridden according to the rules of the
   Java language.
+* The type bounds of the following methods have been changed to be more flexible and allow
+  nullable and non-nullable types:
+  - `ConfigurationParameters.get(String, Function)`
+  - `NamespacedHierarchicalStore.getOrComputeIfAbsent(N, K, Function)`
+  - `NamespacedHierarchicalStore.getOrComputeIfAbsent(N, K, Function, Class)`
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -119,6 +124,13 @@ repository on GitHub.
   of exceptions thrown when parsing malformed CSV input may differ in rare cases.
   While overall parsing behavior remains consistent, this may affect
   custom error handling that relies on specific exception types or messages.
+* The `junit-jupiter-migrationsupport` artifact and its contained classes are now
+  deprecated and will be removed in the next major version.
+* The type bounds of the following methods have been changed to be more flexible and allow
+  nullable and non-nullable types:
+  - `ExtensionContext.getConfigurationParameter(String, Function)`
+  - `ExtensionContext.getOrComputeIfAbsent(K, Function)`
+  - `ExtensionContext.getOrComputeIfAbsent(K, Function, Class)`
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -142,7 +154,11 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-junit-vintage-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The JUnit Vintage engine is now deprecated and will report an INFO level discovery issue
+  when it finds at least one JUnit 4 test class. For now, the intent of the deprecation is
+  not to signal removal in the next major version but to clarify the intended purpose of
+  the engine. It should only be used temporarily while migrating tests to JUnit Jupiter or
+  another testing framework with native JUnit Platform support.
 
 [[release-notes-6.0.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements

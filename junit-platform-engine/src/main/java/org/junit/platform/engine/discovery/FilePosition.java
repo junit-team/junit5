@@ -123,8 +123,7 @@ public class FilePosition implements Serializable {
 
 	private final int line;
 
-	@Nullable
-	private final Integer column;
+	private final @Nullable Integer column;
 
 	private FilePosition(int line) {
 		Preconditions.condition(line > 0, "line number must be greater than zero");

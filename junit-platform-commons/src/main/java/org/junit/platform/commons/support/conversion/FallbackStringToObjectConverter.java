@@ -76,8 +76,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	@Nullable
-	public Object convert(String source, Class<?> targetType) throws Exception {
+	public @Nullable Object convert(String source, Class<?> targetType) throws Exception {
 		Function<String, @Nullable Object> executable = findFactoryExecutable(targetType);
 		Preconditions.condition(executable != NULL_EXECUTABLE,
 			"Illegal state: convert() must not be called if canConvert() returned false");

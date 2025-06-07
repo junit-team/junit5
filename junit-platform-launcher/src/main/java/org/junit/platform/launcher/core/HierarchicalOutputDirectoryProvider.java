@@ -36,8 +36,7 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 
 	private final Supplier<Path> rootDirSupplier;
 
-	@Nullable
-	private volatile Path rootDir;
+	private volatile @Nullable Path rootDir;
 
 	HierarchicalOutputDirectoryProvider(Supplier<Path> rootDirSupplier) {
 		this.rootDirSupplier = rootDirSupplier;

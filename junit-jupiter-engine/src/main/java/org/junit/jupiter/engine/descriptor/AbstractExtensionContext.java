@@ -55,8 +55,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExtensionContext.class);
 
-	@Nullable
-	private final ExtensionContext parent;
+	private final @Nullable ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
 	private final Set<String> tags;
@@ -242,7 +241,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
-	public <V> Optional<V> getConfigurationParameter(String key, Function<String, V> transformer) {
+	public <V> Optional<V> getConfigurationParameter(String key,
+			Function<? super String, ? extends @Nullable V> transformer) {
 		return this.configuration.getRawConfigurationParameter(key, transformer);
 	}
 

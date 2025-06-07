@@ -12,10 +12,6 @@ package org.junit.vintage.engine.execution;
 
 import static java.util.Objects.requireNonNullElse;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.vintage.engine.Constants.PARALLEL_CLASS_EXECUTION;
-import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
-import static org.junit.vintage.engine.Constants.PARALLEL_METHOD_EXECUTION;
-import static org.junit.vintage.engine.Constants.PARALLEL_POOL_SIZE;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,12 +30,14 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.vintage.engine.Constants;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 
 /**
  * @since 5.12
  */
+@SuppressWarnings({ "deprecation", "RedundantSuppression" })
 @API(status = INTERNAL, since = "5.12")
 public class VintageExecutor {
 
@@ -62,9 +60,11 @@ public class VintageExecutor {
 		this.engineExecutionListener = engineExecutionListener;
 		this.request = request;
 		this.parallelExecutionEnabled = request.getConfigurationParameters().getBoolean(
-			PARALLEL_EXECUTION_ENABLED).orElse(false);
-		this.classes = request.getConfigurationParameters().getBoolean(PARALLEL_CLASS_EXECUTION).orElse(false);
-		this.methods = request.getConfigurationParameters().getBoolean(PARALLEL_METHOD_EXECUTION).orElse(false);
+			Constants.PARALLEL_EXECUTION_ENABLED).orElse(false);
+		this.classes = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(
+			false);
+		this.methods = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(
+			false);
 	}
 
 	public void executeAllChildren() {
@@ -110,7 +110,7 @@ public class VintageExecutor {
 	}
 
 	private int getThreadPoolSize() {
-		Optional<String> optionalPoolSize = request.getConfigurationParameters().get(PARALLEL_POOL_SIZE);
+		Optional<String> optionalPoolSize = request.getConfigurationParameters().get(Constants.PARALLEL_POOL_SIZE);
 		if (optionalPoolSize.isPresent()) {
 			try {
 				int poolSize = Integer.parseInt(optionalPoolSize.get());

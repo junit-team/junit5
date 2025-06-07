@@ -787,8 +787,10 @@ class VintageTestEngineExecutionTests {
 	@Test
 	void executesCompletelyDynamicTestCaseDiscoveredByUniqueId() {
 		Class<?> testClass = CompletelyDynamicTestCase.class;
-		var request = LauncherDiscoveryRequestBuilder.request().selectors(
-			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClass(testClass))).build();
+		var request = LauncherDiscoveryRequestBuilder.request() //
+				.selectors(selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClass(testClass))) //
+				.enableImplicitConfigurationParameters(false) //
+				.build();
 
 		execute(request).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -868,8 +870,10 @@ class VintageTestEngineExecutionTests {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
 		Class<?> testClass = ReflectionUtils.loadRequiredClass(testClassName, getClass().getClassLoader());
-		var request = LauncherDiscoveryRequestBuilder.request().selectors(
-			selectMethod(testClass, "unrolled feature for #input")).build();
+		var request = LauncherDiscoveryRequestBuilder.request() //
+				.selectors(selectMethod(testClass, "unrolled feature for #input"))//
+				.enableImplicitConfigurationParameters(false) //
+				.build();
 		execute(request).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(uniqueIdSubstring(testClassName), started()), //
@@ -889,7 +893,10 @@ class VintageTestEngineExecutionTests {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
 		Class<?> testClass = ReflectionUtils.loadRequiredClass(testClassName, getClass().getClassLoader());
-		var request = LauncherDiscoveryRequestBuilder.request().selectors(selectMethod(testClass, "regular")).build();
+		var request = LauncherDiscoveryRequestBuilder.request() //
+				.selectors(selectMethod(testClass, "regular")) //
+				.enableImplicitConfigurationParameters(false) //
+				.build();
 		execute(request).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -924,10 +931,12 @@ class VintageTestEngineExecutionTests {
 		return execute(request(testClass));
 	}
 
+	@SuppressWarnings("deprecation")
 	private static EngineExecutionResults execute(LauncherDiscoveryRequest request) {
 		return EngineTestKit.execute(new VintageTestEngine(), request);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
 		TestEngine testEngine = new VintageTestEngine();
 		var discoveryRequest = request(testClass);
@@ -938,7 +947,10 @@ class VintageTestEngineExecutionTests {
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {
-		return LauncherDiscoveryRequestBuilder.request().selectors(selectClass(testClass)).build();
+		return LauncherDiscoveryRequestBuilder.request() //
+				.selectors(selectClass(testClass)) //
+				.enableImplicitConfigurationParameters(false) //
+				.build();
 	}
 
 	private static boolean atLeastJUnit4_13() {
