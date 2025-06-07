@@ -84,10 +84,10 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 				record.getFieldCount(), getHeaders(record).size(), record.getFields())); //
 
 		@Nullable
-		Object[] arguments = new Object[record.getFields().size()];
+		Object[] arguments = new Object[record.getFieldCount()];
 
-		for (int i = 0; i < record.getFields().size(); i++) {
-			String field = record.getFields().get(i);
+		for (int i = 0; i < record.getFieldCount(); i++) {
+			String field = record.getField(i);
 			Object argument = CsvReaderFactory.DefaultFieldModifier.NULL_MARKER.equals(field) ? null : field;
 			if (useHeadersInDisplayName) {
 				argument = asNamed(getHeaders(record).get(i) + " = " + argument, argument);
