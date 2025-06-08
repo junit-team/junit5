@@ -77,7 +77,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	}
 
 	private static Stream<Arguments> toStream(CsvReader<? extends CsvRecord> reader, CsvFileSource csvFileSource) {
-		var spliterator = CsvExceptionHandlingSpliterator.fromDelegate(reader.spliterator(), csvFileSource);
+		var spliterator = CsvExceptionHandlingSpliterator.delegatingTo(reader.spliterator(), csvFileSource);
 		// @formatter:off
 		return StreamSupport.stream(spliterator, false)
 				.skip(csvFileSource.numLinesToSkip())
@@ -98,7 +98,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	private record CsvExceptionHandlingSpliterator<T>(Spliterator<T> delegate, CsvFileSource csvFileSource)
 			implements Spliterator<T> {
 
-		static <T> CsvExceptionHandlingSpliterator<T> fromDelegate(Spliterator<T> delegate,
+		static <T> CsvExceptionHandlingSpliterator<T> delegatingTo(Spliterator<T> delegate,
 				CsvFileSource csvFileSource) {
 			return new CsvExceptionHandlingSpliterator<>(delegate, csvFileSource);
 		}
