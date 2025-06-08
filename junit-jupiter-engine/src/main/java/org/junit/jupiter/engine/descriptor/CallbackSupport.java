@@ -8,7 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+<<<<<<< Updated upstream
 import java.util.Objects;
+=======
+import org.junit.platform.commons.util.Preconditions;
+import java.util.List;
+>>>>>>> Stashed changes
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
@@ -27,6 +32,7 @@ class CallbackSupport {
 	static <T extends Extension> void invokeBeforeCallbacks(Class<T> type, JupiterEngineExecutionContext context,
 			CallbackInvoker<T> callbackInvoker) {
 		
+<<<<<<< Updated upstream
 		Objects.requireNonNull(type, "type must not be null");
 		Objects.requireNonNull(context, "context must not be null");
 		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
@@ -41,14 +47,41 @@ class CallbackSupport {
 				break;
 			}
 		}
+=======
+		Preconditions.notNull(type, "type must not be null");
+		Preconditions.notNull(context, "context must not be null");
+		Preconditions.notNull(callbackInvoker, "callbackInvoker must not be null");
+		
+		invokeCallbacks(
+			context.getExtensionRegistry().getExtensions(type),
+			context.getExtensionContext(),
+			context.getThrowableCollector(),
+			false, // forward order on callbacks
+			true //break out on any first exception encountered 
+		)
+>>>>>>> Stashed changes
 	}
 
 	static <T extends Extension> void invokeAfterCallbacks(Class<T> type, JupiterEngineExecutionContext context,
 			CallbackInvoker<T> callbackInvoker) {
 		
+<<<<<<< Updated upstream
 		Objects.requireNonNull(type, "type must not be null");
 		Objects.requireNonNull(context, "context must not be null");
 		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
+=======
+		Preconditions.notNull(type, "type must not be null");
+		Preconditions.notNull(context, "context must not be null");
+		Preconditions.notNull(callbackInvoker, "callbackInvoker must not be null");
+
+		invokeCallbacks(
+			context.getExtensionRegistry().getExtensions(type),
+			context.getExtensionContext(),
+			context.getThrowableCollector(),
+			true, // reverse order on callbacks 
+			false, // allow all the callbacks to run.
+		)
+>>>>>>> Stashed changes
 		
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ExtensionContext extensionContext = context.getExtensionContext();
