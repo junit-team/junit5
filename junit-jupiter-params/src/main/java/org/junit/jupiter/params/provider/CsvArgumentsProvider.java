@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.siegmar.fastcsv.reader.CsvReader;
 import de.siegmar.fastcsv.reader.CsvRecord;
 import de.siegmar.fastcsv.reader.NamedCsvRecord;
 
@@ -40,7 +39,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 		List<Arguments> arguments = new ArrayList<>();
 
-		try (CsvReader<? extends CsvRecord> reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {
+		try (var reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {
 			for (CsvRecord record : reader) {
 				arguments.add(processCsvRecord(record, csvSource.useHeadersInDisplayName()));
 			}

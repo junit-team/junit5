@@ -66,7 +66,7 @@ class CsvReaderFactory {
 	static CsvReader<? extends CsvRecord> createReaderFor(CsvSource csvSource, String data) {
 		String delimiter = selectDelimiter(csvSource.delimiter(), csvSource.delimiterString());
 		// @formatter:off
-		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+		var builder = CsvReader.builder()
 				.skipEmptyLines(SKIP_EMPTY_LINES)
 				.trimWhitespacesAroundQuotes(TRIM_WHITESPACES_AROUND_QUOTES)
 				.allowExtraFields(ALLOW_EXTRA_FIELDS)
@@ -75,7 +75,7 @@ class CsvReaderFactory {
 				.quoteCharacter(csvSource.quoteCharacter())
 				.commentStrategy(csvSource.textBlock().isEmpty() ? NONE : SKIP);
 
-		CsvCallbackHandler<? extends CsvRecord> callbackHandler = createCallbackHandler(
+		var callbackHandler = createCallbackHandler(
 				csvSource.emptyValue(),
 				Set.of(csvSource.nullValues()),
 				csvSource.ignoreLeadingAndTrailingWhitespace(),
@@ -91,7 +91,7 @@ class CsvReaderFactory {
 
 		String delimiter = selectDelimiter(csvFileSource.delimiter(), csvFileSource.delimiterString());
 		// @formatter:off
-		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+		var builder = CsvReader.builder()
 				.skipEmptyLines(SKIP_EMPTY_LINES)
 				.trimWhitespacesAroundQuotes(TRIM_WHITESPACES_AROUND_QUOTES)
 				.allowExtraFields(ALLOW_EXTRA_FIELDS)
@@ -100,7 +100,7 @@ class CsvReaderFactory {
 				.quoteCharacter(csvFileSource.quoteCharacter())
 				.commentStrategy(SKIP);
 
-		CsvCallbackHandler<? extends CsvRecord> callbackHandler = createCallbackHandler(
+		var callbackHandler = createCallbackHandler(
 				csvFileSource.emptyValue(),
 				Set.of(csvFileSource.nullValues()),
 				csvFileSource.ignoreLeadingAndTrailingWhitespace(),
