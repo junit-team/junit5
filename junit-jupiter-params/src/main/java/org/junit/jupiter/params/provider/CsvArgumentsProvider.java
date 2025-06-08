@@ -86,11 +86,13 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		@Nullable
 		Object[] arguments = new Object[record.getFieldCount()];
 
+		List<String> headers =  useHeadersInDisplayName ? getHeaders(record) : List.of();
+
 		for (int i = 0; i < record.getFieldCount(); i++) {
 			String field = record.getField(i);
 			Object argument = resolveNullMarker(field);
-			if (useHeadersInDisplayName) {
-				String header = resolveNullMarker(getHeaders(record).get(i));
+			if (!headers.isEmpty()) {
+				String header = resolveNullMarker(headers.get(i));
 				argument = asNamed(header + " = " + argument, argument);
 			}
 			arguments[i] = argument;
@@ -99,16 +101,16 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		return Arguments.of(arguments);
 	}
 
+	private static List<String> getHeaders(CsvRecord record) {
+		return ((NamedCsvRecord) record).getHeader();
+	}
+
 	private static @Nullable String resolveNullMarker(String record) {
 		return CsvReaderFactory.DefaultFieldModifier.NULL_MARKER.equals(record) ? null : record;
 	}
 
 	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {
 		return Named.<@Nullable Object> of(name, column);
-	}
-
-	private static List<String> getHeaders(CsvRecord record) {
-		return ((NamedCsvRecord) record).getHeader();
 	}
 
 	/**
