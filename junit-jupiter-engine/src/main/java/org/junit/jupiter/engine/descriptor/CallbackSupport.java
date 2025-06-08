@@ -50,7 +50,7 @@ class CallbackSupport {
 			context.getExtensionContext(),
 			 context.getThrowableCollector(),
 			 false, // forward order on callbacks
-			 true, //break out on any first exception encountered 
+			 true //break out on any first exception encountered 
 		)
 	}
 
@@ -66,7 +66,7 @@ class CallbackSupport {
 			context.getExtensionContext(),
 			 context.getThrowableCollector(),
 			 true, // reverse order on callbacks 
-			 false, // allow all the callbacks to run.
+			 false // allow all the callbacks to run.
 		)
 		
 	}
