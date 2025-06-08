@@ -1,6 +1,7 @@
 import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
 import net.ltgt.gradle.nullaway.nullaway
+import java.util.zip.ZipFile
 
 plugins {
 	id("junitbuild.java-nullability-conventions")
@@ -39,11 +40,42 @@ tasks {
 			""")
 		}
 	}
+	fun copyFastCsvLicenseTo(file: File, configurations: List<FileCollection>) {
+		val jarFile = configurations
+			.flatMap { it.files }
+			.firstOrNull { it.name.contains("fastcsv") }
+			?: throw GradleException("Could not find FastCSV dependency JAR")
+
+		ZipFile(jarFile).use { zipFile ->
+			val licenseEntry = zipFile.entries().toList()
+				.firstOrNull { it.name == "META-INF/LICENSE" }
+				?: throw GradleException("Could not find META-INF/LICENSE in FastCSV dependency JAR")
+
+			zipFile.getInputStream(licenseEntry).use { input ->
+				file.outputStream().use { output ->
+					input.copyTo(output)
+				}
+			}
+		}
+	}
 	shadowJar {
+		val tempLicenseFile = projectDir.resolve("LICENSE-fastcsv")
+
+		doFirst {
+			copyFastCsvLicenseTo(tempLicenseFile, configurations)
+		}
+
 		relocate("de.siegmar.fastcsv", "org.junit.jupiter.params.shadow.de.siegmar.fastcsv")
+
 		from(projectDir) {
-			include("LICENSE-fastcsv.md")
+			include(tempLicenseFile.name)
 			into("META-INF")
+		}
+
+		doLast {
+			if (tempLicenseFile.exists()) {
+				tempLicenseFile.delete()
+			}
 		}
 	}
 	compileJava {
