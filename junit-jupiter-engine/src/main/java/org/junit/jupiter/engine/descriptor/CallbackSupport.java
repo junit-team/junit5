@@ -8,6 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import java.util.Objects;
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
@@ -25,6 +26,10 @@ class CallbackSupport {
 
 	static <T extends Extension> void invokeBeforeCallbacks(Class<T> type, JupiterEngineExecutionContext context,
 			CallbackInvoker<T> callbackInvoker) {
+		
+		Objects.requireNonNull(type, "type must not be null");
+		Objects.requireNonNull(context, "context must not be null");
+		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
 
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ExtensionContext extensionContext = context.getExtensionContext();
@@ -40,7 +45,11 @@ class CallbackSupport {
 
 	static <T extends Extension> void invokeAfterCallbacks(Class<T> type, JupiterEngineExecutionContext context,
 			CallbackInvoker<T> callbackInvoker) {
-
+		
+		Objects.requireNonNull(type, "type must not be null");
+		Objects.requireNonNull(context, "context must not be null");
+		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
+		
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
