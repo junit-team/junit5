@@ -55,20 +55,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		if (!csvSource.textBlock().isEmpty()) {
-			return csvSource.textBlock();
-		}
-		else {
-			for (int i = 0; i < csvSource.value().length; i++) {
-				if (csvSource.value()[i].isEmpty()) {
-					int finalI = i;
-					Preconditions.condition(!csvSource.value()[i].isEmpty(), //
-						() -> "CSV record at index %d is empty".formatted(finalI + 1) //
-					);
-				}
-			}
-			return String.join("\n", csvSource.value());
-		}
+		return csvSource.value().length > 0 ? String.join("\n", csvSource.value()) : csvSource.textBlock();
 	}
 
 	/**
@@ -85,7 +72,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		@Nullable
 		Object[] arguments = new Object[record.getFieldCount()];
 
-		List<String> headers =  useHeadersInDisplayName ? getHeaders(record) : List.of();
+		List<String> headers = useHeadersInDisplayName ? getHeaders(record) : List.of();
 
 		for (int i = 0; i < record.getFieldCount(); i++) {
 			String field = record.getField(i);

@@ -127,6 +127,9 @@ repository on GitHub.
 * Parameters such as `ignoreLeadingAndTrailingWhitespace()`, `nullValues()`,
   and others in `CsvSource` and `CsvFileSource` now apply to header fields as well
   as to regular fields.
+* Empty lines in `CsvSource.value()` no longer cause a
+  `PreconditionViolationException`; such lines are now ignored, consistent with
+  the behavior of `CsvSource.textBlock()`.
 * The `junit-jupiter-migrationsupport` artifact and its contained classes are now
   deprecated and will be removed in the next major version.
 * The type bounds of the following methods have been changed to be more flexible and allow

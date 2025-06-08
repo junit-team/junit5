@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.reader.CsvParseException;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -31,12 +30,12 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvArgumentsProviderTests {
 
 	@Test
-	void throwsExceptionForEmptyLine() {
-		var annotation = csvSource("foo", "bar", "");
+	void skipsEmptyLines() {
+		var annotation = csvSource("", "foo", "", "bar", "");
 
-		assertThatExceptionOfType(JUnitException.class)//
-				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("CSV record at index 3 is empty");
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
