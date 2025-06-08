@@ -24,23 +24,33 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  */
 class CallbackSupport {
 
+	private static <T extends Extension> void invokeCallbacks(List<T> extensions, 
+			ExtensionContext extensionContext, ThrowableCollector collector, CallbackInvoker<T> invoker, boolean reverse, boolean breakOnPossibleException){
+
+		if(reverse){
+			forEachInReverseOrder(extensions, ext -> collector.execute(() -> invoker.invoke(ext, extensionContext)));
+		}else{
+			for(T ext: extensions){
+				collector.execute(()-> invoker.invoke(ext, extensionContext));
+				if (breakOnPossibleException && collector.isNotEmpty()) break;
+			}
+		}
+	}
+
 	static <T extends Extension> void invokeBeforeCallbacks(Class<T> type, JupiterEngineExecutionContext context,
 			CallbackInvoker<T> callbackInvoker) {
 		
 		Objects.requireNonNull(type, "type must not be null");
 		Objects.requireNonNull(context, "context must not be null");
 		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
-
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		for (T callback : registry.getExtensions(type)) {
-			throwableCollector.execute(() -> callbackInvoker.invoke(callback, extensionContext));
-			if (throwableCollector.isNotEmpty()) {
-				break;
-			}
-		}
+		
+		invokeCallbacks(
+			context.getExtensionRegistry().getExtensions(type),
+			context.getExtensionContext(),
+			 context.getThrowableCollector(),
+			 false, // forward order on callbacks
+			 true, //break out on any first exception encountered 
+		)
 	}
 
 	static <T extends Extension> void invokeAfterCallbacks(Class<T> type, JupiterEngineExecutionContext context,
@@ -49,13 +59,15 @@ class CallbackSupport {
 		Objects.requireNonNull(type, "type must not be null");
 		Objects.requireNonNull(context, "context must not be null");
 		Objects.requireNonNull(callbackInvoker, "callbackInvoker must not be null");
-		
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		forEachInReverseOrder(registry.getExtensions(type), //
-			callback -> throwableCollector.execute(() -> callbackInvoker.invoke(callback, extensionContext)));
+		invokeCallbacks(
+			context.getExtensionRegistry().getExtensions(type),
+			context.getExtensionContext(),
+			 context.getThrowableCollector(),
+			 true, // reverse order on callbacks 
+			 false, // allow all the callbacks to run.
+		)
+		
 	}
 
 	@FunctionalInterface
