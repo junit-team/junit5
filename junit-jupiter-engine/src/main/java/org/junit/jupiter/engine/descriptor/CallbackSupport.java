@@ -9,6 +9,7 @@
  */
 
 import java.util.Objects;
+import java.util.List;
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
