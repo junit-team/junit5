@@ -129,6 +129,7 @@ repository on GitHub.
 * Kotlin's `suspend` modifier may now be applied to test and lifecycle methods.
 * The `Arguments` interface for parameterized tests is now officially a
   `@FunctionalInterface`.
+* `JAVA_26` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-6.0.0-M1-junit-vintage]]
