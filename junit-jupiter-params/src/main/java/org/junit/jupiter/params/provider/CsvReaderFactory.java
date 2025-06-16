@@ -159,13 +159,13 @@ class CsvReaderFactory {
 
 		@Override
 		public String modify(long unusedStartingLineNumber, int unusedFieldIdx, boolean quoted, String field) {
-			if (field.isEmpty() && quoted && !emptyValue.isEmpty()) {
+			if (quoted && field.isEmpty() && !emptyValue.isEmpty()) {
 				return emptyValue;
 			}
-			if (field.isBlank() && !quoted) {
+			if (!quoted && field.isBlank()) {
 				return NULL_MARKER;
 			}
-			String modifiedField = (ignoreLeadingAndTrailingWhitespaces && !quoted) ? field.strip() : field;
+			String modifiedField = (!quoted && ignoreLeadingAndTrailingWhitespaces) ? field.strip() : field;
 			if (nullValues.contains(modifiedField)) {
 				return NULL_MARKER;
 			}
