@@ -65,20 +65,20 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	 * CSV record wrapped in an {@link Arguments} instance.
 	 */
 	static Arguments processCsvRecord(CsvRecord record, boolean useHeadersInDisplayName) {
-		Preconditions.condition(!useHeadersInDisplayName || record.getFieldCount() <= getHeaders(record).size(),
-			() -> String.format( //
-				"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
-				record.getFieldCount(), getHeaders(record).size(), record.getFields())); //
-
-		@Nullable
-		Object[] arguments = new Object[record.getFieldCount()];
-
+		List<String> fields = record.getFields();
 		List<String> headers = useHeadersInDisplayName ? getHeaders(record) : List.of();
 
-		for (int i = 0; i < record.getFieldCount(); i++) {
-			String field = record.getField(i);
-			Object argument = resolveNullMarker(field);
-			if (!headers.isEmpty()) {
+		Preconditions.condition(!useHeadersInDisplayName || fields.size() <= headers.size(),
+			() -> String.format( //
+				"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
+				fields.size(), headers.size(), fields)); //
+
+		@Nullable
+		Object[] arguments = new Object[fields.size()];
+
+		for (int i = 0; i < fields.size(); i++) {
+			Object argument = resolveNullMarker(fields.get(i));
+			if (useHeadersInDisplayName) {
 				String header = resolveNullMarker(headers.get(i));
 				argument = asNamed(header + " = " + argument, argument);
 			}
