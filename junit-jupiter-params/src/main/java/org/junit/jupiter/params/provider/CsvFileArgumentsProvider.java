@@ -78,11 +78,12 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 
 	private static Stream<Arguments> toStream(CsvReader<? extends CsvRecord> reader, CsvFileSource csvFileSource) {
 		var spliterator = CsvExceptionHandlingSpliterator.delegatingTo(reader.spliterator(), csvFileSource);
+		boolean useHeadersInDisplayName = csvFileSource.useHeadersInDisplayName();
 		// @formatter:off
 		return StreamSupport.stream(spliterator, false)
 				.skip(csvFileSource.numLinesToSkip())
 				.map(record -> CsvArgumentsProvider.processCsvRecord(
-						record, csvFileSource.useHeadersInDisplayName())
+						record, useHeadersInDisplayName)
 				)
 				.onClose(() -> {
 					try {

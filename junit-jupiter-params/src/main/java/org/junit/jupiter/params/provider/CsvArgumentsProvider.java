@@ -40,8 +40,9 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		List<Arguments> arguments = new ArrayList<>();
 
 		try (var reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {
+			boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
 			for (CsvRecord record : reader) {
-				arguments.add(processCsvRecord(record, csvSource.useHeadersInDisplayName()));
+				arguments.add(processCsvRecord(record, useHeadersInDisplayName));
 			}
 		}
 		catch (Throwable throwable) {
