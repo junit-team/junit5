@@ -311,8 +311,7 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void minVersion21MaxVersionMaxInteger() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22()
-				|| onJava23() || onJava24() || onJava25() || onJava26());
+		assertEnabledOnCurrentJreIf(onJava21() || onJava22() || onJava23() || onJava24() || onJava25() || onJava26());
 	}
 
 	/**
