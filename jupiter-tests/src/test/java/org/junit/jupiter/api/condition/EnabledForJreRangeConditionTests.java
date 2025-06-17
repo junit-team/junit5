@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava24;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava25;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava26;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -209,7 +210,8 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void min20() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava20() || onJava21() || onJava22() || onJava23() || onJava24() || onJava25());
+		assertEnabledOnCurrentJreIf(
+			onJava20() || onJava21() || onJava22() || onJava23() || onJava24() || onJava25() || onJava26());
 	}
 
 	/**
@@ -320,7 +322,7 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	void minVersion17MaxVersionMaxInteger() {
 		evaluateCondition();
 		assertEnabledOnCurrentJreIf(onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22()
-				|| onJava23() || onJava24() || onJava25());
+				|| onJava23() || onJava24() || onJava25() || onJava26());
 	}
 
 	/**
