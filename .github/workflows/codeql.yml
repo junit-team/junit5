@@ -20,7 +20,7 @@ env:
 
 jobs:
   analyze:
-    name: Analyze
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -30,7 +30,7 @@ jobs:
         include:
           - language: actions
             build-mode: none
-          - language: java
+          - language: java-kotlin
             build-mode: manual
           - language: javascript
             build-mode: none
