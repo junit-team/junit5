@@ -113,8 +113,7 @@ jobs:
         fetch-depth: 1
     - name: Install Graphviz
       run: |
-        sudo apt-get update
-        sudo apt-get install graphviz
+        sudo apt-get update && sudo apt-get install graphviz
     - name: Build Documentation
       uses: ./.github/actions/run-gradle
       with:
