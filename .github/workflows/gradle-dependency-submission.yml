@@ -7,6 +7,9 @@ on:
 
 permissions: read-all
 
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
 jobs:
   dependency-submission:
     if: github.repository == 'junit-team/junit5'
