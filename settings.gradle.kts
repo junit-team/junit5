@@ -57,7 +57,7 @@ buildCache {
 	if (useDevelocityInstance) {
 		remote(develocity.buildCache) {
 			server = buildCacheServer.orNull
-			val authenticated = System.getenv("DEVELOCITY_ACCESS_KEY").isNotBlank()
+			val authenticated = !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrEmpty()
 			isPush = buildParameters.ci && authenticated
 		}
 	} else {
