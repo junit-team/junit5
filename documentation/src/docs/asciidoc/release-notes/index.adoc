@@ -1,5 +1,5 @@
 [[release-notes]]
-= JUnit Release Notes
+= JUnit Release Notes!!!
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 //
 :basedir: {includedir}/release-notes
