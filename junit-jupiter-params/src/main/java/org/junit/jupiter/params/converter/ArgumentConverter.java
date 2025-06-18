@@ -26,8 +26,12 @@ import org.junit.platform.commons.JUnitException;
  *
  * <p>Such an {@code ArgumentConverter} is applied to the method parameter
  * of a {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}
- * method with the help of a
- * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith} annotation.
+ * or a constructor parameter or
+ * {@link org.junit.jupiter.params.Parameter @Parameter}-annotated field of a
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} with
+ * the help of a
+ * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith}
+ * annotation.
  *
  * <p>Implementations must provide a no-args constructor or a single unambiguous
  * constructor to use {@linkplain ParameterResolver parameter resolution}. They
