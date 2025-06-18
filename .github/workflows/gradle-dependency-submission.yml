@@ -5,7 +5,7 @@ on:
     branches:
       - main
 
-permissions: read-all
+permissions: {}
 
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}

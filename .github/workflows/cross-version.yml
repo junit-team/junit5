@@ -11,7 +11,7 @@ on:
     branches:
       - '**'
 
-permissions: read-all
+permissions: {}
 
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
