@@ -12,7 +12,7 @@ dependencies {
 		implementation("com.hierynomus:sshj:0.40.0") {
 			because("Workaround for CVE-2020-36843")
 		}
-		implementation("org.eclipse.jgit:org.eclipse.jgit:6.10.1.202505221210-r") {
+		implementation("org.eclipse.jgit:org.eclipse.jgit:7.3.0.202506031305-r") {
 			because("Workaround for CVE-2025-4949")
 		}
 	}
