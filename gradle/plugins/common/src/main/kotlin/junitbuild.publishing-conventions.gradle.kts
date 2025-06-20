@@ -52,7 +52,7 @@ publishing {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"
 				})
-				url = "https://junit.org/junit5/"
+				url = "https://junit.org/"
 				scm {
 					connection = "scm:git:git://github.com/junit-team/junit5.git"
 					developerConnection = "scm:git:git://github.com/junit-team/junit5.git"
