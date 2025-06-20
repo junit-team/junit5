@@ -1,4 +1,4 @@
-# <img src="https://junit.org/assets/img/junit5-logo.png" align="right" width="100">JUnit
+# <img src="https://junit.org/assets/img/junit6-logo.png" align="right" width="100">JUnit
 
 This repository is the home of JUnit Platform, Jupiter, and Vintage.
 
