@@ -222,7 +222,7 @@ jobs:
         id: pagesDeployment
         timeout-minutes: 20
         run: |
-          URL="https://junit.org/junit5/docs/${{ inputs.releaseVersion }}/user-guide/junit-user-guide-${{ inputs.releaseVersion }}.pdf"
+          URL="https://docs.junit.org/${{ inputs.releaseVersion }}/user-guide/junit-user-guide-${{ inputs.releaseVersion }}.pdf"
           ./.github/scripts/waitForUrl.sh "$URL"
           echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
       - name: Verify integrity of PDF version of User Guide
@@ -293,7 +293,7 @@ jobs:
               tag_name: `r${releaseVersion}`,
               name: `JUnit ${releaseVersion}`,
               generate_release_notes: true,
-              body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
+              body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://docs.junit.org/${releaseVersion}/release-notes/).`,
               prerelease: releaseVersion.includes("-"),
             };
             console.log(requestBody);

@@ -42,7 +42,7 @@ class TestDiscoveryOptionsMixin {
 	SelectorOptions selectorOptions;
 
 	@ArgGroup(validate = false, order = 3, heading = "%n  For more information on selectors including syntax examples, see"
-			+ "%n  @|underline https://junit.org/junit5/docs/${junit.docs.version}/user-guide/#running-tests-discovery-selectors|@"
+			+ "%n  @|underline https://docs.junit.org/${junit.docs.version}/user-guide/#running-tests-discovery-selectors|@"
 			+ "%n%n@|bold FILTERS|@%n%n")
 	FilterOptions filterOptions;
 

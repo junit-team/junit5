@@ -82,7 +82,7 @@ class ClasspathAlignmentChecker {
 					.append(" is likely caused by the versions of JUnit jars on the classpath/module path ") //
 					.append("not being properly aligned. ") //
 					.append(lineBreak) //
-					.append("Please ensure consistent versions are used (see https://junit.org/junit5/docs/") //
+					.append("Please ensure consistent versions are used (see https://docs.junit.org/") //
 					.append(platformToJupiterVersion(
 						ClasspathAlignmentChecker.class.getPackage().getImplementationVersion())) //
 					.append("/user-guide/#dependency-metadata).") //
