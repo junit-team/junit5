@@ -261,7 +261,7 @@ class ConversionSupportTests {
 
 	@Test
 	void convertsStringToURL() throws Exception {
-		assertConverts("https://junit.org/junit5", URL.class, URI.create("https://junit.org/junit5").toURL());
+		assertConverts("https://junit.org", URL.class, URI.create("https://junit.org").toURL());
 	}
 
 	// --- java.time -----------------------------------------------------------
