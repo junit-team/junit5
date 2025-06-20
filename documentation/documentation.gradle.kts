@@ -371,7 +371,7 @@ tasks {
 			include("user-guide/index.adoc")
 		}
 		copyAllResources()
-		attributes(mapOf("releaseNotesUrl" to "https://junit.org/junit5/docs/$docsVersion/release-notes/"))
+		attributes(mapOf("releaseNotesUrl" to "https://docs.junit.org/$docsVersion/release-notes/"))
 	}
 
 	val downloadJavadocElementLists by registering {

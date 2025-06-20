@@ -1,6 +1,6 @@
 :javadoc-root:                               link:../api
 ifdef::backend-pdf[]
-:javadoc-root:                               https://junit.org/junit5/docs/{docs-version}/api
+:javadoc-root:                               https://docs.junit.org/{docs-version}/api
 endif::[]
 // Snapshot Repository
 :snapshot-repo:                              https://central.sonatype.com/service/rest/repository/browse/maven-snapshots
