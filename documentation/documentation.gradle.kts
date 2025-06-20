@@ -108,10 +108,9 @@ val ota4jDocVersion = libs.versions.opentest4j.map { if (it.isSnapshot()) "snaps
 val apiGuardianDocVersion = libs.versions.apiguardian.map { if (it.isSnapshot()) "snapshot" else it }.get()
 
 gitPublish {
-	repoUri = "https://github.com/junit-team/junit5.git"
-	referenceRepoUri = rootDir.toURI().toString()
+	repoUri = "https://github.com/junit-team/docs.junit.org.git"
 
-	branch = "gh-pages"
+	branch = "main"
 	sign = false
 	fetchDepth = 1
 
@@ -120,14 +119,14 @@ gitPublish {
 
 	contents {
 		from(docsDir)
-		into("docs")
+		into(".")
 	}
 
 	preserve {
 		include("**/*")
-		exclude("docs/$docsVersion/**")
+		exclude("$docsVersion/**")
 		if (replaceCurrentDocs) {
-			exclude("docs/current/**")
+			exclude("current/**")
 		}
 	}
 }

@@ -103,8 +103,6 @@ jobs:
       cancel-in-progress: true
     needs: macOS
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
     - name: Check out repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -136,4 +134,4 @@ jobs:
           -Dscan.tag.Documentation
       env:
         GIT_USERNAME: git
-        GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        GIT_PASSWORD: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_DOCS_REPO }}
