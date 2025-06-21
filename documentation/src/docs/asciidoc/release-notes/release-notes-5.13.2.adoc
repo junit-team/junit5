@@ -35,7 +35,8 @@ on GitHub.
 [[release-notes-5.13.2-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Stop reporting discovery issues for cyclic inner class hierarchies not annotated with
+  `@Nested`.
 
 [[release-notes-5.13.2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,7 +23,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -218,11 +216,7 @@ public class TestClassPredicatesTests {
 		 */
 		@Test
 		void recursiveHierarchies() {
-			assertThatExceptionOfType(JUnitException.class)//
-					.isThrownBy(() -> predicates.looksLikeIntendedTestClass(TestCases.OuterClass.class))//
-					.withMessage("Detected cycle in inner class hierarchy between %s and %s",
-						TestCases.OuterClass.RecursiveInnerClass.class.getName(), TestCases.OuterClass.class.getName());
-
+			assertTrue(predicates.looksLikeIntendedTestClass(TestCases.OuterClass.class));
 			assertTrue(predicates.isValidStandaloneTestClass(TestCases.OuterClass.class));
 			assertThat(discoveryIssues).isEmpty();
 

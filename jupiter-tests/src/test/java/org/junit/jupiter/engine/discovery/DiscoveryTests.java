@@ -48,6 +48,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -296,7 +297,28 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void reportsWarningsForInvalidTags() throws NoSuchMethodException {
+	void ignoresRecursiveNonTestHierarchyCycles() {
+		var results = discoverTestsForClass(NonTestRecursiveHierarchyTestCase.class);
+
+		assertThat(results.getDiscoveryIssues()).isEmpty();
+	}
+
+	@Test
+	void reportsMissingNestedAnnotationOnRecursiveHierarchy() {
+		var results = discoverTestsForClass(RecursiveHierarchyWithoutNestedTestCase.class);
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().severity()) //
+				.isEqualTo(Severity.WARNING);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo(
+					"Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.",
+					RecursiveHierarchyWithoutNestedTestCase.Inner.class.getName());
+	}
+
+	@Test
+	void reportsWarningsForInvalidTags() throws Exception {
 
 		var results = discoverTestsForClass(InvalidTagsTestCase.class);
 
@@ -318,7 +340,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void reportsWarningsForBlankDisplayNames() throws NoSuchMethodException {
+	void reportsWarningsForBlankDisplayNames() throws Exception {
 
 		var results = discoverTestsForClass(BlankDisplayNamesTestCase.class);
 
@@ -459,6 +481,25 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		class Inner {
 			class Recursive extends Inner {
 			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class RecursiveHierarchyWithoutNestedTestCase {
+
+		@Test
+		void test() {
+		}
+
+		@SuppressWarnings({ "InnerClassMayBeStatic", "unused" })
+		class Inner extends RecursiveHierarchyWithoutNestedTestCase {
+		}
+	}
+
+	@SuppressWarnings("unused")
+	static class NonTestRecursiveHierarchyTestCase {
+		@SuppressWarnings("InnerClassMayBeStatic")
+		class Inner extends NonTestRecursiveHierarchyTestCase {
 		}
 	}
 
