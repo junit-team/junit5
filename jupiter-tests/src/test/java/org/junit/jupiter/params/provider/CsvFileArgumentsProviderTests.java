@@ -32,6 +32,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileArgumentsProvider.InputStreamProvider;
+import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.reader.CsvParseException;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -44,7 +45,6 @@ class CsvFileArgumentsProviderTests {
 	void providesArgumentsForNewlineAndComma() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\n")//
 				.delimiter(',')//
 				.build();
 
@@ -57,7 +57,6 @@ class CsvFileArgumentsProviderTests {
 	void providesArgumentsForCarriageReturnAndSemicolon() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\r")//
 				.delimiter(';')//
 				.build();
 
@@ -379,14 +378,13 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.hasRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
 	void emptyValueIsAnEmptyWithCustomNullValueString() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\n")//
 				.delimiter(',')//
 				.nullValues("NIL")//
 				.build();
@@ -483,7 +481,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.hasRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
