@@ -45,7 +45,7 @@ on GitHub.
 [[release-notes-5.13.2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* `JAVA_26` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.13.2-junit-vintage]]
