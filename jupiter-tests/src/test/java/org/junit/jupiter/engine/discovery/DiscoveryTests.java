@@ -289,6 +289,13 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void ignoresUnrelatedClassDefinitionCycles() {
+		var results = discoverTestsForClass(UnrelatedRecursiveHierarchyTestCase.class);
+
+		assertThat(results.getDiscoveryIssues()).isEmpty();
+	}
+
+	@Test
 	void reportsWarningsForInvalidTags() throws NoSuchMethodException {
 
 		var results = discoverTestsForClass(InvalidTagsTestCase.class);
@@ -439,6 +446,20 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		private class InvalidTestClassSubclassTestCase extends InvalidTestClassTestCase {
 		}
 
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class UnrelatedRecursiveHierarchyTestCase {
+
+		@Test
+		void test() {
+		}
+
+		@SuppressWarnings({ "InnerClassMayBeStatic", "unused" })
+		class Inner {
+			class Recursive extends Inner {
+			}
+		}
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
