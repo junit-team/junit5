@@ -69,6 +69,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.test.TestClassLoader;
+import org.junit.platform.commons.util.ReflectionUtils.CycleErrorHandling;
 import org.junit.platform.commons.util.ReflectionUtilsTests.NestedClassTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.NestedClassTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.NestedClassTests.ClassWithNestedClasses.Nested3;
@@ -1039,9 +1040,10 @@ class ReflectionUtilsTests {
 		@Test
 		void isNestedClassPresentPreconditions() {
 			// @formatter:off
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, null));
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, clazz -> true));
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(getClass(), null));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, null, null));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, clazz -> true, CycleErrorHandling.THROW_EXCEPTION));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(getClass(), null, CycleErrorHandling.ABORT_VISIT));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(getClass(), clazz -> true, null));
 			// @formatter:on
 		}
 
@@ -1058,12 +1060,12 @@ class ReflectionUtilsTests {
 
 			assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
 					.containsExactly(Nested1.class);
-			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
+			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1"), CycleErrorHandling.THROW_EXCEPTION))
 					.isTrue();
 
 			assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
 					.containsExactly(Nested3.class);
-			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
+			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, ReflectionUtils::isStatic, CycleErrorHandling.THROW_EXCEPTION))
 					.isTrue();
 
 			assertThat(findNestedClasses(ClassExtendingClassWithNestedClasses.class))
@@ -1090,12 +1092,14 @@ class ReflectionUtilsTests {
 			// predicate should prevent cycle detection.
 			// See https://github.com/junit-team/junit-framework/issues/2249
 			assertThat(ReflectionUtils.findNestedClasses(OuterClass.class, clazz -> false)).isEmpty();
-			assertThat(ReflectionUtils.isNestedClassPresent(OuterClass.class, clazz -> false)).isFalse();
+			assertThat(ReflectionUtils.isNestedClassPresent(OuterClass.class, clazz -> false,
+				CycleErrorHandling.THROW_EXCEPTION)).isFalse();
 
 			// RecursiveInnerInnerClass is part of a recursive hierarchy, but the non-matching
 			// predicate should prevent cycle detection.
 			assertThat(ReflectionUtils.findNestedClasses(RecursiveInnerInnerClass.class, clazz -> false)).isEmpty();
-			assertThat(ReflectionUtils.isNestedClassPresent(RecursiveInnerInnerClass.class, clazz -> false)).isFalse();
+			assertThat(ReflectionUtils.isNestedClassPresent(RecursiveInnerInnerClass.class, clazz -> false,
+				CycleErrorHandling.THROW_EXCEPTION)).isFalse();
 
 			// Sibling types don't actually result in cycles.
 			assertThat(findNestedClasses(StaticNestedSiblingClass.class))//
@@ -1138,7 +1142,7 @@ class ReflectionUtilsTests {
 		}
 
 		private static boolean isNestedClassPresent(Class<?> clazz) {
-			return ReflectionUtils.isNestedClassPresent(clazz, c -> true);
+			return ReflectionUtils.isNestedClassPresent(clazz, c -> true, CycleErrorHandling.THROW_EXCEPTION);
 		}
 
 		private void assertNestedCycle(Class<?> from, Class<?> to) {

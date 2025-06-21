@@ -153,7 +153,7 @@ public final class ReflectionUtils {
 	 * <p>This serves as a cache to avoid repeated cycle detection for classes
 	 * that have already been checked.
 	 * @since 1.6
-	 * @see #detectInnerClassCycle(Class)
+	 * @see #detectInnerClassCycle(Class, CycleErrorHandling)
 	 */
 	private static final Set<String> noCyclesDetectedCache = ConcurrentHashMap.newKeySet();
 
@@ -1234,11 +1234,17 @@ public final class ReflectionUtils {
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findNestedClasses(Class, Predicate)
 	 */
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+		return findNestedClasses(clazz, predicate, CycleErrorHandling.THROW_EXCEPTION);
+	}
+
+	@API(status = INTERNAL, since = "5.13.2")
+	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
+			CycleErrorHandling errorHandling) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		Set<Class<?>> candidates = new LinkedHashSet<>();
-		visitAllNestedClasses(clazz, predicate, candidates::add);
+		visitAllNestedClasses(clazz, predicate, candidates::add, errorHandling);
 		return Collections.unmodifiableList(new ArrayList<>(candidates));
 	}
 
@@ -1255,13 +1261,15 @@ public final class ReflectionUtils {
 	 * @return {@code true} if such a nested class is present
 	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
 	 */
-	@API(status = INTERNAL, since = "1.13")
-	public static boolean isNestedClassPresent(Class<?> clazz, Predicate<Class<?>> predicate) {
+	@API(status = INTERNAL, since = "1.13.2")
+	public static boolean isNestedClassPresent(Class<?> clazz, Predicate<Class<?>> predicate,
+			CycleErrorHandling errorHandling) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
+		Preconditions.notNull(errorHandling, "CycleErrorHandling must not be null");
 
 		AtomicBoolean foundNestedClass = new AtomicBoolean(false);
-		visitAllNestedClasses(clazz, predicate, __ -> foundNestedClass.set(true));
+		visitAllNestedClasses(clazz, predicate, __ -> foundNestedClass.set(true), errorHandling);
 		return foundNestedClass.get();
 	}
 
@@ -1273,27 +1281,37 @@ public final class ReflectionUtils {
 		return findNestedClasses(clazz, predicate).stream();
 	}
 
+	@API(status = INTERNAL, since = "5.13.2")
+	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
+			CycleErrorHandling errorHandling) {
+		return findNestedClasses(clazz, predicate, errorHandling).stream();
+	}
+
 	/**
 	 * Visit <em>all</em> nested classes without support for short-circuiting
 	 * in order to ensure all of them are checked for class cycles.
 	 */
 	private static void visitAllNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
-			Consumer<Class<?>> consumer) {
+			Consumer<Class<?>> consumer, CycleErrorHandling errorHandling) {
 
 		if (!isSearchable(clazz)) {
 			return;
 		}
 
 		if (isInnerClass(clazz) && predicate.test(clazz)) {
-			detectInnerClassCycle(clazz);
+			if (detectInnerClassCycle(clazz, errorHandling)) {
+				return;
+			}
 		}
 
 		try {
 			// Candidates in current class
 			for (Class<?> nestedClass : clazz.getDeclaredClasses()) {
 				if (predicate.test(nestedClass)) {
-					detectInnerClassCycle(nestedClass);
 					consumer.accept(nestedClass);
+					if (detectInnerClassCycle(nestedClass, errorHandling)) {
+						return;
+					}
 				}
 			}
 		}
@@ -1302,11 +1320,11 @@ public final class ReflectionUtils {
 		}
 
 		// Search class hierarchy
-		visitAllNestedClasses(clazz.getSuperclass(), predicate, consumer);
+		visitAllNestedClasses(clazz.getSuperclass(), predicate, consumer, errorHandling);
 
 		// Search interface hierarchy
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			visitAllNestedClasses(ifc, predicate, consumer);
+			visitAllNestedClasses(ifc, predicate, consumer, errorHandling);
 		}
 	}
 
@@ -1314,10 +1332,8 @@ public final class ReflectionUtils {
 	 * Detect a cycle in the inner class hierarchy in which the supplied class
 	 * resides &mdash; from the supplied class up to the outermost enclosing class
 	 * &mdash; and throw a {@link JUnitException} if a cycle is detected.
-	 *
 	 * <p>This method does <strong>not</strong> detect cycles within inner class
 	 * hierarchies <em>below</em> the supplied class.
-	 *
 	 * <p>If the supplied class is not an inner class and does not have a
 	 * searchable superclass, this method is effectively a no-op.
 	 *
@@ -1325,25 +1341,26 @@ public final class ReflectionUtils {
 	 * @see #isInnerClass(Class)
 	 * @see #isSearchable(Class)
 	 */
-	private static void detectInnerClassCycle(Class<?> clazz) {
+	private static boolean detectInnerClassCycle(Class<?> clazz, CycleErrorHandling errorHandling) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		String className = clazz.getName();
 
 		if (noCyclesDetectedCache.contains(className)) {
-			return;
+			return false;
 		}
 
 		Class<?> superclass = clazz.getSuperclass();
 		if (isInnerClass(clazz) && isSearchable(superclass)) {
 			for (Class<?> enclosing = clazz.getEnclosingClass(); enclosing != null; enclosing = enclosing.getEnclosingClass()) {
 				if (superclass.equals(enclosing)) {
-					throw new JUnitException(String.format("Detected cycle in inner class hierarchy between %s and %s",
-						className, enclosing.getName()));
+					errorHandling.handle(clazz, enclosing);
+					return true;
 				}
 			}
 		}
 
 		noCyclesDetectedCache.add(className);
+		return false;
 	}
 
 	/**
@@ -2111,6 +2128,27 @@ public final class ReflectionUtils {
 		Preconditions.condition(isTrue || "false".equals(value), () -> USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME
 				+ " property must be 'true' or 'false' (ignoring case): " + rawValue);
 		return isTrue;
+	}
+
+	@API(status = INTERNAL, since = "5.13.2")
+	public enum CycleErrorHandling {
+
+		THROW_EXCEPTION {
+			@Override
+			void handle(Class<?> clazz, Class<?> enclosing) {
+				throw new JUnitException(String.format("Detected cycle in inner class hierarchy between %s and %s",
+					clazz.getName(), enclosing.getName()));
+			}
+		},
+
+		ABORT_VISIT {
+			@Override
+			void handle(Class<?> clazz, Class<?> enclosing) {
+				// ignore
+			}
+		};
+
+		abstract void handle(Class<?> clazz, Class<?> enclosing);
 	}
 
 }

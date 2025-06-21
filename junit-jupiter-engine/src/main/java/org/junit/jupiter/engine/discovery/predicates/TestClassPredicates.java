@@ -28,6 +28,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ReflectionUtils.CycleErrorHandling;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
@@ -94,14 +95,16 @@ public class TestClassPredicates {
 	}
 
 	private boolean hasNestedTests(Class<?> candidate, Set<Class<?>> seen) {
+		boolean hasAnnotatedClass = isNestedClassPresent(candidate, this.isAnnotatedWithNested,
+			CycleErrorHandling.THROW_EXCEPTION);
+		if (hasAnnotatedClass) {
+			return true;
+		}
 		return isNestedClassPresent( //
 			candidate, //
-			isNotSame(candidate).and(
-				this.isAnnotatedWithNested.or(it -> isInnerClass(it) && looksLikeIntendedTestClass(it, seen))));
-	}
-
-	private static Predicate<Class<?>> isNotSame(Class<?> candidate) {
-		return clazz -> candidate != clazz;
+			it -> isInnerClass(it) && looksLikeIntendedTestClass(it, seen), //
+			CycleErrorHandling.ABORT_VISIT //
+		);
 	}
 
 	private static Condition<Class<?>> isNotPrivateUnlessAbstract(String prefix, DiscoveryIssueReporter issueReporter) {
