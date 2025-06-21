@@ -20,6 +20,8 @@ import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
 import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -65,9 +67,16 @@ public class TestClassPredicates {
 	}
 
 	public boolean looksLikeIntendedTestClass(Class<?> candidate) {
-		return this.isAnnotatedWithClassTemplate.test(candidate) //
-				|| hasTestOrTestFactoryOrTestTemplateMethods(candidate) //
-				|| hasNestedTests(candidate);
+		return looksLikeIntendedTestClass(candidate, new HashSet<>());
+	}
+
+	private boolean looksLikeIntendedTestClass(Class<?> candidate, Set<Class<?>> seen) {
+		if (seen.add(candidate)) {
+			return this.isAnnotatedWithClassTemplate.test(candidate) //
+					|| hasTestOrTestFactoryOrTestTemplateMethods(candidate) //
+					|| hasNestedTests(candidate, seen);
+		}
+		return false;
 	}
 
 	public boolean isValidNestedTestClass(Class<?> candidate) {
@@ -84,11 +93,11 @@ public class TestClassPredicates {
 		return isMethodPresent(candidate, this.isTestOrTestFactoryOrTestTemplateMethod);
 	}
 
-	private boolean hasNestedTests(Class<?> candidate) {
+	private boolean hasNestedTests(Class<?> candidate, Set<Class<?>> seen) {
 		return isNestedClassPresent( //
 			candidate, //
 			isNotSame(candidate).and(
-				this.isAnnotatedWithNested.or(it -> isInnerClass(it) && looksLikeIntendedTestClass(it))));
+				this.isAnnotatedWithNested.or(it -> isInnerClass(it) && looksLikeIntendedTestClass(it, seen))));
 	}
 
 	private static Predicate<Class<?>> isNotSame(Class<?> candidate) {
