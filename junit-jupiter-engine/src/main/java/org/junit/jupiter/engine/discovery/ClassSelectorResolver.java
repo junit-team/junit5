@@ -17,9 +17,9 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor.getEnclosingTestClasses;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
-import static org.junit.platform.commons.support.ReflectionSupport.streamNestedClasses;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
+import static org.junit.platform.commons.util.ReflectionUtils.streamNestedClasses;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
@@ -46,6 +46,7 @@ import org.junit.jupiter.engine.descriptor.TestClassAware;
 import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ReflectionUtils.CycleErrorHandling;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
@@ -289,9 +290,13 @@ class ClassSelectorResolver implements SelectorResolver {
 			Stream<DiscoverySelector> methods = findMethods(testClass,
 				this.predicates.isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN).stream() //
 						.map(method -> selectMethod(testClasses, method));
-			Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass,
-				this.predicates.isAnnotatedWithNested.or(ReflectionUtils::isInnerClass)) //
-						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
+			Stream<Class<?>> annotatedNestedClasses = streamNestedClasses(testClass,
+				this.predicates.isAnnotatedWithNested);
+			Stream<Class<?>> notAnnotatedInnerClasses = streamNestedClasses(testClass,
+				this.predicates.isAnnotatedWithNested.negate().and(ReflectionUtils::isInnerClass),
+				CycleErrorHandling.ABORT_VISIT);
+			var nestedClasses = Stream.concat(annotatedNestedClasses, notAnnotatedInnerClasses) //
+					.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
 			return Stream.concat(methods, nestedClasses).collect(
 				toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 		};
