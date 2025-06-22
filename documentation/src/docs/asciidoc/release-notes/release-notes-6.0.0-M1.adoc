@@ -144,9 +144,11 @@ repository on GitHub.
 * Kotlin's `suspend` modifier may now be applied to test and lifecycle methods.
 * The `Arguments` interface for parameterized tests is now officially a
   `@FunctionalInterface`.
-* CSV parsing for parameterized tests now uses the https://fastcsv.org/[FastCSV]
-  library instead of the no longer maintained
-  https://github.com/uniVocity/univocity-parsers[univocity-parsers].
+* CSV parsing for parameterized was migrated from the the no longer maintained
+  https://github.com/uniVocity/univocity-parsers[univocity-parsers]
+  to https://fastcsv.org/[FastCSV].
+  This improves the consistency of CSV input handling, including for malformed entries,
+  and provides better error reporting and overall performance.
 
 
 [[release-notes-6.0.0-M1-junit-vintage]]
