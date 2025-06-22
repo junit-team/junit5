@@ -865,7 +865,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	@DisabledIf("runningInEclipse")
+	@DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
 	void executesUnrolledSpockFeatureMethod() {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
@@ -888,7 +888,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	@DisabledIf("runningInEclipse")
+	@DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
 	void executesRegularSpockFeatureMethod() {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
@@ -955,14 +955,6 @@ class VintageTestEngineExecutionTests {
 
 	private static boolean atLeastJUnit4_13() {
 		return JUnit4VersionCheck.parseVersion(Version.id()).compareTo(new BigDecimal("4.13")) >= 0;
-	}
-
-	/**
-	 * Determine if the current code is running in the Eclipse IDE.
-	 */
-	static boolean runningInEclipse() {
-		return StackWalker.getInstance().walk(
-			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
 	}
 
 }

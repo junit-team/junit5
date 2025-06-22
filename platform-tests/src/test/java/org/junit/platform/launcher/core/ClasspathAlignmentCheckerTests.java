@@ -25,6 +25,7 @@ import io.github.classgraph.PackageInfo;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 
 class ClasspathAlignmentCheckerTests {
 
@@ -59,6 +60,7 @@ class ClasspathAlignmentCheckerTests {
 	}
 
 	@Test
+	@DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
 	void allRootPackagesAreChecked() {
 		var allowedFileNames = Pattern.compile("junit-(?:platform|jupiter|vintage)-.+[\\d.]+(?:-SNAPSHOT)?\\.jar");
 		var classGraph = new ClassGraph() //
@@ -83,4 +85,5 @@ class ClasspathAlignmentCheckerTests {
 					.allMatch(name -> foundPackages.stream().anyMatch(it -> it.startsWith(name)));
 		}
 	}
+
 }
