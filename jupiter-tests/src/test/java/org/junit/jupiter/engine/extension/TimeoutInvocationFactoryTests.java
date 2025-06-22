@@ -97,13 +97,4 @@ class TimeoutInvocationFactoryTests {
 		assertThat(invocation).isInstanceOf(SeparateThreadTimeoutInvocation.class);
 	}
 
-	/**
-	 * Determine if the current code is running in the Eclipse IDE.
-	 * <p>Copied from {@code org.springframework.core.testfixture.ide.IdeUtils}.
-	 */
-	static boolean runningInEclipse() {
-		return StackWalker.getInstance().walk(
-			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
-	}
-
 }
