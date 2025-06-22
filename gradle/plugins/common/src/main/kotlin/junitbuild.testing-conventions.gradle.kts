@@ -8,6 +8,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
 import java.io.OutputStream
+import java.nio.file.NoSuchFileException
 
 plugins {
 	`java-library`
@@ -152,7 +153,11 @@ tasks.withType<Test>().configureEach {
 	doFirst {
 		reportDirTree.visit {
 			if (name.startsWith("junit-")) {
-				file.deleteRecursively()
+				file.walkBottomUp().forEach {
+					try {
+						it.delete()
+					} catch (_: NoSuchFileException) {}
+				}
 			}
 		}
 	}
