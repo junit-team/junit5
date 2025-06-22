@@ -114,7 +114,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	public void interceptAfterEachMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		this.<@Nullable Void> interceptLifecycleMethod(invocation, invocationContext, extensionContext,
+		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterEachMethodTimeout);
 	}
 
@@ -122,7 +122,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	public void interceptAfterAllMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		this.<@Nullable Void> interceptLifecycleMethod(invocation, invocationContext, extensionContext,
+		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterAllMethodTimeout);
 	}
 

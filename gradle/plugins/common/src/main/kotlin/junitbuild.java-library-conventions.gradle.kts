@@ -39,6 +39,8 @@ eclipse {
 		file {
 			// Set properties for org.eclipse.jdt.core.prefs
 			withProperties {
+				// Configure Eclipse projects with -release compiler flag.
+				setProperty("org.eclipse.jdt.core.compiler.release", "enabled")
 				// Configure Eclipse projects with -parameters compiler flag.
 				setProperty("org.eclipse.jdt.core.compiler.codegen.methodParameters", "generate")
 			}
@@ -53,6 +55,8 @@ eclipse {
 		// Java Template Engine (JTE) which is used to generate the JRE enum and
 		// dependent tests.
 		entries.removeIf { it is ProjectDependency && it.path.equals("/code-generator-model") }
+		// Remove classpath entries for anything used by the Gradle Wrapper.
+		entries.removeIf { it is Library && it.path.contains("gradle/wrapper") }
 		entries.filterIsInstance<SourceFolder>().forEach {
 			it.excludes.add("**/module-info.java")
 		}

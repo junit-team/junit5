@@ -15,12 +15,6 @@ plugins {
 dependencyResolutionManagement {
 	repositories {
 		mavenCentral()
-		maven(url = "https://central.sonatype.com/repository/maven-snapshots") {
-			mavenContent {
-				snapshotsOnly()
-				includeGroup("org.opentest4j.reporting")
-			}
-		}
 	}
 }
 
@@ -63,7 +57,7 @@ buildCache {
 	if (useDevelocityInstance) {
 		remote(develocity.buildCache) {
 			server = buildCacheServer.orNull
-			val authenticated = System.getenv("DEVELOCITY_ACCESS_KEY") != null
+			val authenticated = !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrEmpty()
 			isPush = buildParameters.ci && authenticated
 		}
 	} else {

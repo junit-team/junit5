@@ -35,7 +35,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 // Mockito cannot mock this class: class org.junit.jupiter.engine.execution.NamespaceAwareStore.
 // You are seeing this disclaimer because Mockito is configured to create inlined mocks.
 // Byte Buddy could not instrument all classes within the mock's type hierarchy.
-@DisabledIf(value = "runningInEclipse", disabledReason = "Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
+@DisabledIf(//
+		value = "org.junit.platform.commons.test.IdeUtils#runningInEclipse()", //
+		disabledReason = "Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
 @DisplayName("TimeoutInvocationFactory")
 @ExtendWith(MockitoExtension.class)
 class TimeoutInvocationFactoryTests {
@@ -98,15 +100,6 @@ class TimeoutInvocationFactoryTests {
 	void shouldCreateTimeoutInvocationForSeparateThreadTimeoutThreadMode() {
 		var invocation = timeoutInvocationFactory.create(ThreadMode.SEPARATE_THREAD, parameters);
 		assertThat(invocation).isInstanceOf(SeparateThreadTimeoutInvocation.class);
-	}
-
-	/**
-	 * Determine if the current code is running in the Eclipse IDE.
-	 * <p>Copied from {@code org.springframework.core.testfixture.ide.IdeUtils}.
-	 */
-	static boolean runningInEclipse() {
-		return StackWalker.getInstance().walk(
-			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
 	}
 
 }

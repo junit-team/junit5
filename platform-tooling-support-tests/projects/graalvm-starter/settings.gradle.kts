@@ -28,12 +28,6 @@ dependencyResolutionManagement {
 					snapshotsOnly()
 				}
 			}
-			maven(url = "https://central.sonatype.com/repository/maven-snapshots/") {
-				mavenContent {
-					snapshotsOnly()
-					includeGroup("org.opentest4j.reporting")
-				}
-			}
 		}
 	}
 }

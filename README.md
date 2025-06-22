@@ -1,4 +1,4 @@
-# <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit
+# <img src="https://junit.org/assets/img/junit6-logo.png" align="right" width="100">JUnit
 
 This repository is the home of JUnit Platform, Jupiter, and Vintage.
 
@@ -94,14 +94,14 @@ of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
-[Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
+[Dependency Metadata]: https://docs.junit.org/current/user-guide/#dependency-metadata
 [GitHub Discussions]: https://github.com/junit-team/junit5/discussions/categories/q-a
 [Gradle toolchains]: https://docs.gradle.org/current/userguide/toolchains.html
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
-[Javadoc]: https://junit.org/junit5/docs/current/api/
+[Javadoc]: https://docs.junit.org/current/api/
 [JDK 24]: https://javaalmanac.io/jdk/24/
-[Release Notes]: https://junit.org/junit5/docs/current/release-notes/
+[Release Notes]: https://docs.junit.org/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
-[User Guide]: https://junit.org/junit5/docs/current/user-guide/
+[User Guide]: https://docs.junit.org/current/user-guide/
