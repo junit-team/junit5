@@ -63,14 +63,14 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void discoverTestClass() {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(LocalTestCase.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(7, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void doNotDiscoverAbstractTestClass() {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(AbstractTestCase.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -78,7 +78,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	void discoverMethodByUniqueId() {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -86,7 +86,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	void discoverMethodByUniqueIdForOverloadedMethod() {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test4()"))).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -95,7 +95,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class,
 				"test4(" + TestInfo.class.getName() + ")"))).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -105,7 +105,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectMethod(LocalTestCase.class, testMethod)).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -114,7 +114,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(selectMethod(LocalTestCase.class, "test1"),
 			selectMethod(LocalTestCase.class, "test2")).build();
 
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 		TestDescriptor classDescriptor = getOnlyElement(engineDescriptor.getChildren());
@@ -361,14 +361,23 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 				.contains(org.junit.platform.engine.support.descriptor.MethodSource.from(method));
 	}
 
+	private TestDescriptor discoverTestsWithoutIssues(LauncherDiscoveryRequest request) {
+		var results = super.discoverTests(request);
+		assertThat(results.getDiscoveryIssues()).isEmpty();
+		return results.getEngineDescriptor();
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")
-	private static abstract class AbstractTestCase {
+	static abstract class AbstractTestCase {
 
 		@Test
-		void abstractTest() {
+		void test() {
 		}
+
+		@Test
+		abstract void abstractTest();
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
