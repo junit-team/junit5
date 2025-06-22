@@ -39,6 +39,8 @@ eclipse {
 		file {
 			// Set properties for org.eclipse.jdt.core.prefs
 			withProperties {
+				// Configure Eclipse projects with -release compiler flag.
+				setProperty("org.eclipse.jdt.core.compiler.release", "enabled")
 				// Configure Eclipse projects with -parameters compiler flag.
 				setProperty("org.eclipse.jdt.core.compiler.codegen.methodParameters", "generate")
 			}
