@@ -7,8 +7,14 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
+import java.io.IOException
 import java.io.OutputStream
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
 import java.nio.file.NoSuchFileException
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
 
 plugins {
 	`java-library`
@@ -149,17 +155,38 @@ tasks.withType<Test>().configureEach {
 	}
 	jvmArgs("-Xshare:off") // https://github.com/mockito/mockito/issues/3111
 
-	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
-		reportDirTree.visit {
-			if (name.startsWith("junit-")) {
-				file.walkBottomUp().forEach {
-					try {
-						it.delete()
-					} catch (_: NoSuchFileException) {}
-				}
+		reports.junitXml.outputLocation.asFile.get()
+			.listFiles { _, name -> name.startsWith("junit-") }
+			?.forEach { dir ->
+				Files.walkFileTree(dir.toPath(), object : SimpleFileVisitor<Path>() {
+					override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+						return deleteIfExistsAndContinue(file)
+					}
+
+					override fun postVisitDirectory(dir: Path, ex: IOException?): FileVisitResult {
+						if (ex is NoSuchFileException) {
+							return FileVisitResult.CONTINUE
+						}
+						if (ex != null) {
+							throw ex
+						}
+						return deleteIfExistsAndContinue(dir)
+					}
+
+					private fun deleteIfExistsAndContinue(dir: Path): FileVisitResult {
+						Files.deleteIfExists(dir)
+						return FileVisitResult.CONTINUE
+					}
+
+					override fun visitFileFailed(file: Path, ex: IOException): FileVisitResult {
+						if (ex is NoSuchFileException) {
+							return FileVisitResult.CONTINUE
+						}
+						throw ex
+					}
+				})
 			}
-		}
 	}
 
 	finalizedBy(generateOpenTestHtmlReport)
