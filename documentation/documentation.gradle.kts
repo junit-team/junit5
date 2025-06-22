@@ -446,7 +446,7 @@ tasks {
 					).asPath
 				}
 			}))
-			addStringOption("-add-modules", "info.picocli,org.opentest4j.reporting.events")
+			addStringOption("-add-modules", "info.picocli,org.opentest4j.reporting.events,de.siegmar.fastcsv")
 			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
 					"org.junit.platform.console" to provider { "info.picocli" },
 					"org.junit.platform.reporting" to provider { "org.opentest4j.reporting.events" },
