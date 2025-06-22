@@ -115,9 +115,9 @@ repository on GitHub.
 * The contracts for the `Executable` parameters of Kotlin-specific `assertTimeout`
   functions were changed from `callsInPlace(executable, EXACTLY_ONCE)` to
   `callsInPlace(executable, AT_MOST_ONCE)` which might result in compilation errors.
-* The `CsvFileSource.lineSeparator()` parameter is deprecated because line separators
-  are now detected automatically during CSV parsing. This setting is no longer required
-  and will be ignored.
+* The `CsvFileSource.lineSeparator()` parameter has been removed. The line separator
+  is now automatically detected, meaning that any of `\r`, `\n`, or `\r\n` is
+  treated as a line separator.
 * As a result of migrating from
   https://github.com/uniVocity/univocity-parsers[univocity-parsers] to
   https://fastcsv.org/[FastCSV] for CSV input handling, the root causes and messages

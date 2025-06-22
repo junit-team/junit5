@@ -42,6 +42,22 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvFileArgumentsProviderTests {
 
 	@Test
+	void providesArgumentsForEachSupportedLineSeparator() {
+		var annotation = csvFileSource()//
+				.resources("test.csv")//
+				.build();
+
+		var arguments = provideArguments(annotation, "foo, bar \n baz, qux \r quux, corge \r\n grault, garply");
+
+		assertThat(arguments).containsExactly(//
+			array("foo", "bar"), //
+			array("baz", "qux"), //
+			array("quux", "corge"), //
+			array("grault", "garply")//
+		);
+	}
+
+	@Test
 	void providesArgumentsForNewlineAndComma() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//

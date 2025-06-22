@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -41,6 +40,9 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  *
  * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
  * via either {@link #delimiter} or {@link #delimiterString}.
+ *
+ * <p>The line separator is detected automatically, meaning that any of
+ * {@code "\r"}, {@code "\n"}, or {@code "\r\n"} is treated as a line separator.
  *
  * <p>In contrast to the default syntax used in {@code @CsvSource}, {@code @CsvFileSource}
  * uses a double quote ({@code "}) as its quote character by default, but this can
@@ -101,19 +103,6 @@ public @interface CsvFileSource {
 	 * @see java.nio.charset.StandardCharsets
 	 */
 	String encoding() default "UTF-8";
-
-	/**
-	 * The line separator to use when reading the CSV files; must consist of 1
-	 * or 2 characters, typically {@code "\r"}, {@code "\n"}, or {@code "\r\n"}.
-	 *
-	 * <p>Defaults to {@code "\n"}.
-	 *
-	 * @deprecated Since JUnit 6.0, line separators are detected automatically during CSV parsing.
-	 * This setting is no longer required and will be ignored.
-	 */
-	@API(status = DEPRECATED, since = "6.0") //
-	@Deprecated(since = "6.0", forRemoval = true)
-	String lineSeparator() default "\n";
 
 	/**
 	 * Configures whether the first CSV record should be treated as header names
