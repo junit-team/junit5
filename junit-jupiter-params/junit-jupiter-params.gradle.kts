@@ -46,17 +46,11 @@ tasks {
 		into(layout.buildDirectory.dir("fastcsv"))
 	}
 	shadowJar {
-		val tempLicenseFile = projectDir.resolve("LICENSE-fastcsv")
-
 		relocate("de.siegmar.fastcsv", "org.junit.jupiter.params.shadow.de.siegmar.fastcsv")
-
-		from(projectDir) {
-			include(tempLicenseFile.name)
-			into("META-INF")
-		}
-
-		from(extractFastCSVLicense.map { it.destinationDir }) {
+		exclude("META-INF/LICENSE")
+		from(extractFastCSVLicense.map { "${it.destinationDir}/META-INF" }) {
 			rename { "LICENSE-fastcsv" }
+			into("META-INF")
 		}
 	}
 	compileJava {
