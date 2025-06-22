@@ -230,6 +230,13 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		executionResults.testEvents().assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
+	@Test
+	void doesNotReportDiscoveryIssueForAbstractInnerClass() {
+		var discoveryIssues = discoverTestsForClass(ConcreteWithExtendedInnerClassTestCase.class).getDiscoveryIssues();
+
+		assertThat(discoveryIssues).isEmpty();
+	}
+
 	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
 		var results = executeTestsForClass(start);
 		var expectedMessage = "Cause: org.junit.platform.commons.JUnitException: Detected cycle in inner class hierarchy between %s and %s".formatted(
@@ -417,6 +424,21 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 				void nested() {
 				}
 			}
+		}
+	}
+
+	static class AbstractBaseWithInnerClassTestCase {
+		@SuppressWarnings("InnerClassMayBeStatic")
+		abstract class AbstractInnerClass {
+			@Test
+			void test() {
+			}
+		}
+	}
+
+	static class ConcreteWithExtendedInnerClassTestCase extends AbstractBaseWithInnerClassTestCase {
+		@Nested
+		class NestedTests extends AbstractInnerClass {
 		}
 	}
 
