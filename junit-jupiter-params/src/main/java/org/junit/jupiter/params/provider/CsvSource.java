@@ -91,7 +91,8 @@ public @interface CsvSource {
 	 * <p>Each value corresponds to a record in a CSV file and will be split using
 	 * the specified {@link #delimiter} or {@link #delimiterString}. Note that
 	 * the first value may optionally be used to supply CSV headers (see
-	 * {@link #useHeadersInDisplayName}).
+	 * {@link #useHeadersInDisplayName}). Moreover, each specified value must
+	 * not be blank.
 	 *
 	 * <p>If <em>text block</em> syntax is supported by your programming language,
 	 * you may find it more convenient to declare your CSV content via the

@@ -53,10 +53,21 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	}
 
 	private static String getData(CsvSource csvSource) {
-		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
+		var values = csvSource.value();
+		Preconditions.condition(values.length > 0 ^ !csvSource.textBlock().isEmpty(),
 			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		return csvSource.value().length > 0 ? String.join("\n", csvSource.value()) : csvSource.textBlock();
+		if (!csvSource.textBlock().isEmpty()) {
+			return csvSource.textBlock();
+		}
+		else {
+			for (int i = 0; i < values.length; i++) {
+				int finalI = i;
+				Preconditions.notBlank(values[i],
+					() -> "CSV record at index %d must not be blank".formatted(finalI + 1));
+			}
+			return String.join("\n", values);
+		}
 	}
 
 	/**
