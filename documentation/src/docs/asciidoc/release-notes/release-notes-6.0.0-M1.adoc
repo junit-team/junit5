@@ -115,6 +115,18 @@ repository on GitHub.
 * The contracts for the `Executable` parameters of Kotlin-specific `assertTimeout`
   functions were changed from `callsInPlace(executable, EXACTLY_ONCE)` to
   `callsInPlace(executable, AT_MOST_ONCE)` which might result in compilation errors.
+* As a result of migrating from
+  https://github.com/uniVocity/univocity-parsers[univocity-parsers] to
+  https://fastcsv.org/[FastCSV] for `@CsvSource` and `@CsvFileSource`, root causes and
+  messages of exceptions thrown for malformed CSV input may differ in some cases. While
+  the overall parsing behavior remains consistent, this may affect custom error handling
+  that relies on specific exception types or messages.
+* The `CsvFileSource.lineSeparator()` parameter has been removed. The line separator is
+  now automatically detected, meaning that any of `\r`, `\n`, or `\r\n` is treated as a
+  line separator.
+* Parameters such as `ignoreLeadingAndTrailingWhitespace()`, `nullValues()`, and others in
+  `@CsvSource` and `@CsvFileSource` now apply to header fields as well as to regular
+  fields.
 * The `junit-jupiter-migrationsupport` artifact and its contained classes are now
   deprecated and will be removed in the next major version.
 * The type bounds of the following methods have been changed to be more flexible and allow
@@ -129,6 +141,11 @@ repository on GitHub.
 * Kotlin's `suspend` modifier may now be applied to test and lifecycle methods.
 * The `Arguments` interface for parameterized tests is now officially a
   `@FunctionalInterface`.
+* The implementation of `@CsvSource` and `@CsvFileSource` was migrated from the no longer
+  maintained https://github.com/uniVocity/univocity-parsers[univocity-parsers] to
+  https://fastcsv.org/[FastCSV].
+  This improves the consistency of CSV input handling, including for malformed entries,
+  and provides better error reporting and overall performance.
 
 
 [[release-notes-6.0.0-M1-junit-vintage]]

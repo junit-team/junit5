@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.reader.CsvParseException;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -30,12 +31,12 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvArgumentsProviderTests {
 
 	@Test
-	void throwsExceptionForInvalidCsv() {
-		var annotation = csvSource("foo", "bar", "");
+	void throwsExceptionForBlankLines() {
+		var annotation = csvSource("foo", "bar", " ");
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Record at index 3 contains invalid CSV: \"\"");
+				.withMessage("CSV record at index 3 must not be blank");
 	}
 
 	@Test
@@ -233,20 +234,20 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void defaultEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource("'', null, , apple");
+		var annotation = csvSource("'', null, ,, apple");
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("", "null", null, null, "apple"));
 	}
 
 	@Test
 	void customEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
+		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, ,, apple").build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("EMPTY", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("EMPTY", "null", null, null, "apple"));
 	}
 
 	@Test
@@ -257,6 +258,18 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("apple", null, null, "", null, "banana", null));
+	}
+
+	@Test
+	void customNullValueInHeader() {
+		var annotation = csvSource().useHeadersInDisplayName(true).nullValues("NIL").textBlock("""
+				FRUIT, NIL
+				apple, 1
+				""").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+			array("FRUIT = apple", "null = 1")//
+		);
 	}
 
 	@Test
@@ -275,7 +288,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
@@ -294,7 +307,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
@@ -340,31 +353,38 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void supportsCsvHeadersWhenUsingTextBlockAttribute() {
-		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true).textBlock("""
+		var annotation = csvSource().useHeadersInDisplayName(true).textBlock("""
 				FRUIT, RANK
 				apple, 1
 				banana, 2
-				""").build());
+				""").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+			array("FRUIT = apple", "RANK = 1"), //
+			array("FRUIT = banana", "RANK = 2")//
+		);
 	}
 
 	@Test
 	void supportsCsvHeadersWhenUsingValueAttribute() {
-		supportsCsvHeaders(csvSource().useHeadersInDisplayName(true)//
-				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build());
+		var annotation = csvSource().useHeadersInDisplayName(true)//
+				.lines("FRUIT, RANK", "apple, 1", "banana, 2").build();
+
+		assertThat(headersToValues(annotation)).containsExactly(//
+			array("FRUIT = apple", "RANK = 1"), //
+			array("FRUIT = banana", "RANK = 2")//
+		);
 	}
 
-	private void supportsCsvHeaders(CsvSource csvSource) {
+	private Stream<String[]> headersToValues(CsvSource csvSource) {
 		var arguments = provideArguments(csvSource);
-		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
+		return arguments.map(array -> {
 			String[] strings = new String[array.length];
 			for (int i = 0; i < array.length; i++) {
 				strings[i] = String.valueOf(array[i]);
 			}
 			return strings;
 		});
-
-		assertThat(argumentsAsStrings).containsExactly(array("FRUIT = apple", "RANK = 1"),
-			array("FRUIT = banana", "RANK = 2"));
 	}
 
 	@Test
