@@ -29,7 +29,7 @@ Make sure that the `junit-vintage-engine` artifact is in your test runtime path.
 case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
 launcher.
 
-See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
+See the example projects in the {junit-examples-repo}[`junit-examples`] repository to
 find out how this is done with Gradle and Maven.
 
 [[migrating-from-junit4-categories-support]]

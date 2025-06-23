@@ -77,14 +77,14 @@ corresponding sections of this User Guide, organized by topic.
 ==== Example Projects
 
 To see complete, working examples of projects that you can copy and experiment with, the
-{junit5-samples-repo}[`junit5-samples`] repository is a good place to start. The
-`junit5-samples` repository hosts a collection of sample projects based on JUnit Jupiter,
+{junit-examples-repo}[`junit-examples`] repository is a good place to start. The
+`junit-examples` repository hosts a collection of example projects based on JUnit Jupiter,
 JUnit Vintage, and other testing frameworks. You'll find appropriate build scripts (e.g.,
 `build.gradle`, `pom.xml`, etc.) in the example projects. The links below highlight some
 of the combinations you can choose from.
 
-* For Gradle and Java, check out the `{junit5-jupiter-starter-gradle}` project.
-* For Gradle and Kotlin, check out the `{junit5-jupiter-starter-gradle-kotlin}` project.
-* For Gradle and Groovy, check out the `{junit5-jupiter-starter-gradle-groovy}` project.
-* For Maven, check out the `{junit5-jupiter-starter-maven}` project.
-* For Ant, check out the `{junit5-jupiter-starter-ant}` project.
+* For Gradle and Java, check out the `{junit-jupiter-starter-gradle}` project.
+* For Gradle and Kotlin, check out the `{junit-jupiter-starter-gradle-kotlin}` project.
+* For Gradle and Groovy, check out the `{junit-jupiter-starter-gradle-groovy}` project.
+* For Maven, check out the `{junit-jupiter-starter-maven}` project.
+* For Ant, check out the `{junit-jupiter-starter-ant}` project.
