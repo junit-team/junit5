@@ -118,14 +118,14 @@ repository on GitHub.
 * As a result of migrating from
   https://github.com/uniVocity/univocity-parsers[univocity-parsers] to
   https://fastcsv.org/[FastCSV] for `@CsvSource` and `@CsvFileSource`, root causes and
-  messages  of exceptions thrown for malformed CSV input may differ in some cases. While
+  messages of exceptions thrown for malformed CSV input may differ in some cases. While
   the overall parsing behavior remains consistent, this may affect custom error handling
   that relies on specific exception types or messages.
 * The `CsvFileSource.lineSeparator()` parameter has been removed. The line separator is
   now automatically detected, meaning that any of `\r`, `\n`, or `\r\n` is treated as a
   line separator.
 * Parameters such as `ignoreLeadingAndTrailingWhitespace()`, `nullValues()`, and others in
-  `@CsvSource` and `@CsvFileSource` now apply to header fields as well  as to regular
+  `@CsvSource` and `@CsvFileSource` now apply to header fields as well as to regular
   fields.
 * The `junit-jupiter-migrationsupport` artifact and its contained classes are now
   deprecated and will be removed in the next major version.
