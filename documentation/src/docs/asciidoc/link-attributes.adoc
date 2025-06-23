@@ -229,14 +229,14 @@ endif::[]
 :EnableRuleMigrationSupport:                 {javadoc-root}/org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html[@EnableRuleMigrationSupport]
 // Vintage
 :junit-vintage-engine:                       {javadoc-root}/org.junit.vintage.engine/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
-// Samples Repository
-:junit5-samples-repo:                        {junit-team}/junit5-samples
-:junit5-jupiter-starter-ant:                 {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
-:junit5-jupiter-starter-gradle-groovy:       {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle-groovy[junit5-jupiter-starter-gradle-groovy]
-:junit5-jupiter-starter-gradle-kotlin:       {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle-kotlin[junit5-jupiter-starter-gradle-kotlin]
-:junit5-jupiter-starter-gradle:              {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle[junit5-jupiter-starter-gradle]
-:junit5-jupiter-starter-maven:               {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-maven[junit5-jupiter-starter-maven]
-:RandomParametersExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]
+// Examples Repository
+:junit-examples-repo:                        {junit-team}/junit-examples
+:junit-jupiter-starter-ant:                  {junit-examples-repo}/tree/{release-branch}/junit-jupiter-starter-ant[junit-jupiter-starter-ant]
+:junit-jupiter-starter-gradle-groovy:        {junit-examples-repo}/tree/{release-branch}/junit-jupiter-starter-gradle-groovy[junit-jupiter-starter-gradle-groovy]
+:junit-jupiter-starter-gradle-kotlin:        {junit-examples-repo}/tree/{release-branch}/junit-jupiter-starter-gradle-kotlin[junit-jupiter-starter-gradle-kotlin]
+:junit-jupiter-starter-gradle:               {junit-examples-repo}/tree/{release-branch}/junit-jupiter-starter-gradle[junit-jupiter-starter-gradle]
+:junit-jupiter-starter-maven:                {junit-examples-repo}/tree/{release-branch}/junit-jupiter-starter-maven[junit-jupiter-starter-maven]
+:RandomParametersExtension:                  {junit-examples-repo}/tree/{release-branch}/junit-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]
 // Third-party Links
 :API:                                        https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
 :API_Guardian:                               https://github.com/apiguardian-team/apiguardian[@API Guardian]

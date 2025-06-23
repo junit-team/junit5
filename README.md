@@ -20,7 +20,7 @@ This repository is the home of _JUnit 5_.
 - [User Guide]
 - [Javadoc]
 - [Release Notes]
-- [Samples]
+- [Examples]
 
 ## Contributing
 
@@ -102,6 +102,6 @@ of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 [Javadoc]: https://docs.junit.org/current/api/
 [JDK 21]: https://javaalmanac.io/jdk/21/
 [Release Notes]: https://docs.junit.org/current/release-notes/
-[Samples]: https://github.com/junit-team/junit5-samples
+[Examples]: https://github.com/junit-team/junit-examples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://docs.junit.org/current/user-guide/

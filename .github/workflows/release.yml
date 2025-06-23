@@ -77,22 +77,22 @@ jobs:
           fetch-depth: 1
           ref: "refs/tags/${{ env.RELEASE_TAG }}"
           path: junit-framework
-      - name: Check out samples repository
+      - name: Check out examples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          repository: ${{ github.repository_owner }}/junit5-samples
-          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_SAMPLES_REPO }}
+          repository: ${{ github.repository_owner }}/junit-examples
+          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_EXAMPLES_REPO }}
           fetch-depth: 1
-          path: junit5-samples
+          path: junit-examples
       - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           java-version: 21
           distribution: temurin
       - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
-      - name: Update JUnit dependencies in samples
+      - name: Update JUnit dependencies in examples
         run: java src/Updater.java ${{ inputs.releaseVersion }}
-        working-directory: junit5-samples
+        working-directory: junit-examples
       - name: Prepare Maven Central user token
         uses: ./junit-framework/.github/actions/maven-central-user-token
         with:
@@ -100,12 +100,12 @@ jobs:
           password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       - name: Inject staging repository URL
         run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
-        working-directory: junit5-samples
-      - name: Build samples
-        run: java src/Builder.java --exclude=junit5-jupiter-starter-bazel,junit5-jupiter-starter-sbt
-        working-directory: junit5-samples
+        working-directory: junit-examples
+      - name: Build examples
+        run: java src/Builder.java --exclude=junit-jupiter-starter-bazel,junit-jupiter-starter-sbt
+        working-directory: junit-examples
         env:
-          MAVEN_ARGS: --settings ${{ github.workspace }}/junit5-samples/src/central-staging-maven-settings.xml --activate-profiles central-staging
+          MAVEN_ARGS: --settings ${{ github.workspace }}/junit-examples/src/central-staging-maven-settings.xml --activate-profiles central-staging
 
   close_github_milestone:
     name: Close GitHub milestone
@@ -231,16 +231,16 @@ jobs:
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           pdfinfo /tmp/junit-user-guide.pdf
 
-  update_samples:
-    name: Update samples
+  update_examples:
+    name: Update examples
     needs: publish_deployment
     runs-on: ubuntu-latest
     steps:
-      - name: Check out samples repository
+      - name: Check out examples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          repository: ${{ github.repository_owner }}/junit5-samples
-          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_SAMPLES_REPO }}
+          repository: ${{ github.repository_owner }}/junit-examples
+          token: ${{ secrets.JUNIT_BUILDS_GITHUB_TOKEN_EXAMPLES_REPO }}
           fetch-depth: 1
       - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
@@ -248,9 +248,9 @@ jobs:
           java-version: 21
           distribution: temurin
       - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
-      - name: Update JUnit dependencies in samples
+      - name: Update JUnit dependencies in examples
         run: java src/Updater.java ${{ inputs.releaseVersion }}
-      - name: Build samples
+      - name: Build examples
         if: ${{ inputs.dryRun == false }}
         run: java src/Builder.java
       - name: Create release branch
@@ -274,7 +274,7 @@ jobs:
   create_github_release:
     name: Create GitHub release
     if: ${{ inputs.dryRun == false }}
-    needs: [ publish_documentation, update_samples ]
+    needs: [ publish_documentation, update_examples ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
