@@ -1,3 +1,4 @@
+import junitbuild.extensions.withArchiveOperations
 import junitbuild.java.WriteArtifactsFile
 
 plugins {
@@ -33,7 +34,7 @@ tasks {
 		outputFile = layout.buildDirectory.file("shadowed-artifacts")
 	}
 	val extractThirdPartyLicenses by registering(Sync::class) {
-		from(configurations.shadowedClasspath.map { it.elements.map { files -> files.map(project::zipTree) } })
+		from(withArchiveOperations { ops -> configurations.shadowedClasspath.flatMap { it.elements }.map { it.map(ops::zipTree) } })
 		into(layout.buildDirectory.dir("thirdPartyLicenses"))
 		include("LICENSE.txt")
 		include("LICENSE-junit.txt")
