@@ -40,7 +40,7 @@ tasks {
 		}
 	}
 	val extractFastCSVLicense by registering(Sync::class) {
-		from(zipTree(configurations.shadowedClasspath.map { it.files.single { file -> file.name.contains("fastcsv") } })) {
+		from(configurations.shadowedClasspath.map { it.elements.map { files -> files.map(project::zipTree) } }) {
 			include("META-INF/LICENSE")
 			rename { "LICENSE-fastcsv" }
 		}

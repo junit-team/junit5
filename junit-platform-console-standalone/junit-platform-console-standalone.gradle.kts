@@ -1,4 +1,3 @@
-import junitbuild.extensions.dependencyProject
 import junitbuild.java.WriteArtifactsFile
 
 plugins {
@@ -33,19 +32,33 @@ tasks {
 		from(configurations.shadowedClasspath)
 		outputFile = layout.buildDirectory.file("shadowed-artifacts")
 	}
+	val extractThirdPartyLicenses by registering(Sync::class) {
+		from(configurations.shadowedClasspath.map { it.elements.map { files -> files.map(project::zipTree) } })
+		into(layout.buildDirectory.dir("thirdPartyLicenses"))
+		include("LICENSE.txt")
+		include("LICENSE-junit.txt")
+		include("META-INF/LICENSE-*")
+		exclude("META-INF/LICENSE-notice.md")
+		eachFile {
+			val fileName = relativePath.lastName
+			relativePath = RelativePath(true, when (fileName) {
+				"LICENSE.txt" -> "LICENSE-hamcrest"
+				"LICENSE-junit.txt" -> "LICENSE-junit4"
+				else -> fileName
+			})
+		}
+		includeEmptyDirs = false
+	}
 	shadowJar {
 		// https://github.com/junit-team/junit5/issues/2557
 		// exclude compiled module declarations from any source (e.g. /*, /META-INF/versions/N/*)
 		exclude("**/module-info.class")
 		// https://github.com/junit-team/junit5/issues/761
 		// prevent duplicates, add 3rd-party licenses explicitly
-		exclude("META-INF/LICENSE*.md")
-		from(dependencyProject(project.projects.junitPlatformConsole).projectDir) {
-			include("LICENSE-picocli.md")
-			into("META-INF")
-		}
-		from(dependencyProject(project.projects.junitJupiterParams).projectDir) {
-			include("LICENSE-fastcsv.md")
+		exclude("**/COPYRIGHT*")
+		exclude("META-INF/LICENSE*")
+		exclude("LICENSE*.txt") // JUnit 4 and Hamcrest
+		from(extractThirdPartyLicenses) {
 			into("META-INF")
 		}
 		from(shadowedArtifactsFile) {
