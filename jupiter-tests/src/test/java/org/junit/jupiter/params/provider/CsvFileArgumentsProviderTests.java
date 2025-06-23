@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.CsvArgumentsProviderTests.isCsvParseException;
 import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvFileSource;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
@@ -393,8 +394,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.rootCause()//
-				.satisfies(ex -> ex.getClass().getName().contains("de.siegmar.fastcsv.reader.CsvParseException"));
+				.rootCause().satisfies(isCsvParseException());
 	}
 
 	@Test
@@ -497,8 +497,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.rootCause()//
-				.satisfies(ex -> ex.getClass().getName().contains("de.siegmar.fastcsv.reader.CsvParseException"));
+				.rootCause().satisfies(isCsvParseException());
 	}
 
 	@Test

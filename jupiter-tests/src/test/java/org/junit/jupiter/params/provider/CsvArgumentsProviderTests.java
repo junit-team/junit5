@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.stream.Stream;
 
+import org.assertj.core.api.ThrowingConsumer;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -287,8 +288,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.havingRootCause()//
-				.satisfies(ex -> ex.getClass().getName().contains("de.siegmar.fastcsv.reader.CsvParseException"));
+				.havingRootCause().satisfies(isCsvParseException());
 	}
 
 	@Test
@@ -307,8 +307,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.havingRootCause()//
-				.satisfies(ex -> ex.getClass().getName().contains("de.siegmar.fastcsv.reader.CsvParseException"));
+				.havingRootCause().satisfies(isCsvParseException());
 	}
 
 	@Test
@@ -411,6 +410,10 @@ class CsvArgumentsProviderTests {
 	@SuppressWarnings("unchecked")
 	private static <T> @Nullable T[] array(@Nullable T... elements) {
 		return elements;
+	}
+
+	static ThrowingConsumer<Throwable> isCsvParseException() {
+		return ex -> ex.getClass().getName().contains("de.siegmar.fastcsv.reader.CsvParseException");
 	}
 
 }
