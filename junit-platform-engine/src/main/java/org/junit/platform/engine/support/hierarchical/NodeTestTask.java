@@ -108,7 +108,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		finally {
 			// Ensure that the 'interrupted status' flag for the current thread
 			// is cleared for reuse of the thread in subsequent task executions.
-			// See https://github.com/junit-team/junit5/issues/1688
+			// See https://github.com/junit-team/junit-framework/issues/1688
 			if (Thread.interrupted()) {
 				logger.debug(() -> String.format(
 					"Execution of TestDescriptor with display name [%s] "
@@ -121,7 +121,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		}
 
 		// Clear reference to context to allow it to be garbage collected.
-		// See https://github.com/junit-team/junit5/issues/1578
+		// See https://github.com/junit-team/junit-framework/issues/1578
 		context = null;
 	}
 
@@ -129,7 +129,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		throwableCollector.execute(() -> context = node.prepare(parentContext));
 
 		// Clear reference to parent context to allow it to be garbage collected.
-		// See https://github.com/junit-team/junit5/issues/1578
+		// See https://github.com/junit-team/junit-framework/issues/1578
 		parentContext = null;
 	}
 

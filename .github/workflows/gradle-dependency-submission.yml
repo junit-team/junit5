@@ -12,7 +12,7 @@ env:
 
 jobs:
   dependency-submission:
-    if: github.repository == 'junit-team/junit5'
+    if: github.repository == 'junit-team/junit-framework'
     runs-on: ubuntu-latest
     permissions:
       contents: write

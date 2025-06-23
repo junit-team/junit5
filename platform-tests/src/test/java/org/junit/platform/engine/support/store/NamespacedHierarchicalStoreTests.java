@@ -520,7 +520,7 @@ public class NamespacedHierarchicalStoreTests {
 		}
 
 		/**
-		 * @see <a href="https://github.com/junit-team/junit5/issues/3944">#3944</a>
+		 * @see <a href="https://github.com/junit-team/junit-framework/issues/3944">#3944</a>
 		 */
 		@Test
 		void acceptsQueryAfterClose() {

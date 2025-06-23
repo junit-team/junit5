@@ -16,12 +16,12 @@
 * Bug fixes and other minor improvements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/85?closed=1+[5.13.0-M1],
-link:{junit5-repo}+/milestone/92?closed=1+[5.13.0-M2],
-link:{junit5-repo}+/milestone/93?closed=1+[5.13.0-M3],
-link:{junit5-repo}+/milestone/96?closed=1+[5.13.0-RC1],
-and link:{junit5-repo}+/milestone/94?closed=1+[5.13.0] milestone pages in the JUnit
-repository on GitHub.
+link:{junit-framework-repo}+/milestone/85?closed=1+[5.13.0-M1],
+link:{junit-framework-repo}+/milestone/92?closed=1+[5.13.0-M2],
+link:{junit-framework-repo}+/milestone/93?closed=1+[5.13.0-M3],
+link:{junit-framework-repo}+/milestone/96?closed=1+[5.13.0-RC1],
+and link:{junit-framework-repo}+/milestone/94?closed=1+[5.13.0] milestone pages in the
+JUnit repository on GitHub.
 
 
 [[release-notes-5.13.0-overall-improvements]]
@@ -36,7 +36,7 @@ repository on GitHub.
   `--initialize-at-build-time` options (introduced in 5.12.0). Please update to the most
   recent version of GraalVM Native Build Tools prior to upgrading to this version of
   JUnit. Please refer to the
-  https://github.com/junit-team/junit5/wiki/Upgrading-to-JUnit-5.13[Upgrade Instructions]
+  https://github.com/junit-team/junit-framework/wiki/Upgrading-to-JUnit-5.13[Upgrade Instructions]
   in the wiki for details if you're on NBT 0.10.x or earlier.
 
 

@@ -154,7 +154,7 @@ class ParameterizedInvocationNameFormatterTests {
 	void formatsCompleteArgumentsListWithArrays() {
 		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
-		// Explicit test for https://github.com/junit-team/junit5/issues/814
+		// Explicit test for https://github.com/junit-team/junit-framework/issues/814
 		assertEquals("[foo, bar]", format(formatter, 1, arguments((Object) new String[] { "foo", "bar" })));
 
 		assertEquals("[foo, bar], 42, true", format(formatter, 1, arguments(new String[] { "foo", "bar" }, 42, true)));

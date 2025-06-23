@@ -78,7 +78,7 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	 * on the heap.
 	 *
 	 * @since 5.5
-	 * @see <a href="https://github.com/junit-team/junit5/issues/1865">Issue 1865</a>
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/1865">Issue 1865</a>
 	 */
 	@Override
 	public void after(JupiterEngineExecutionContext context) throws Exception {

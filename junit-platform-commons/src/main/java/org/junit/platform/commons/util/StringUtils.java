@@ -41,7 +41,7 @@ public final class StringUtils {
 
 	/**
 	 * Guard against "IllegalArgumentException: Unsupported flags: 256" errors.
-	 * @see <a href="https://github.com/junit-team/junit5/issues/1800">#1800</a>
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/1800">#1800</a>
 	 */
 	static Pattern compileIsoControlPattern() {
 		// https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#posix

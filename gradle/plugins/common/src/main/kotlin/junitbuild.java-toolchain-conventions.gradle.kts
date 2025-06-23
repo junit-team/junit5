@@ -50,7 +50,7 @@ project.pluginManager.withPlugin("java") {
 		doFirst {
 			if (options.release.orNull == 8 && javaLanguageVersion.asInt() >= 20) {
 				options.compilerArgs.add(
-					"-Xlint:-options" // see https://github.com/junit-team/junit5/issues/3029
+					"-Xlint:-options" // see https://github.com/junit-team/junit-framework/issues/3029
 				)
 			}
 		}

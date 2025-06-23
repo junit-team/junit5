@@ -214,7 +214,7 @@ public class TestClassPredicatesTests {
 		}
 
 		/*
-		 * see https://github.com/junit-team/junit5/issues/2249
+		 * see https://github.com/junit-team/junit-framework/issues/2249
 		 */
 		@Test
 		void recursiveHierarchies() {

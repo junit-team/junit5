@@ -460,7 +460,7 @@ class StandaloneTests {
 	@Test
 	@Order(5)
 	@Execution(SAME_THREAD)
-	// https://github.com/junit-team/junit5/issues/2600
+	// https://github.com/junit-team/junit-framework/issues/2600
 	void executeOnJava8SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //

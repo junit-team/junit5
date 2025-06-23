@@ -4,7 +4,7 @@
 
 We welcome new contributors to the project!
 If you're interested, please check for [issues labeled with `up-for-grabs`
-that are not yet in progress](https://github.com/junit-team/junit5/issues?q=sort%3Aupdated-desc%20is%3Aissue%20is%3Aopen%20label%3Aup-for-grabs%20-label%3A%22status%3A%20in%20progress%22).
+that are not yet in progress](https://github.com/junit-team/junit-framework/issues?q=sort%3Aupdated-desc%20is%3Aissue%20is%3Aopen%20label%3Aup-for-grabs%20-label%3A%22status%3A%20in%20progress%22).
 Generally, before you work on an issue, post a comment and ask whether it can be started.
 Please wait for the core team to respond and assign the issue to you before making any code
 changes.
@@ -36,7 +36,7 @@ Issue: #999
 
 ## Pull Requests
 
-Our [Definition of Done](https://github.com/junit-team/junit5/wiki/Definition-of-Done)
+Our [Definition of Done](https://github.com/junit-team/junit-framework/wiki/Definition-of-Done)
 (DoD) offers some guidelines on what we expect from a pull request.
 Feel free to open a pull request that does not fulfill all criteria, e.g. to discuss
 a certain change before polishing it, but please be aware that we will only merge it
@@ -111,7 +111,7 @@ code -- class names, method names, variable names, etc.
 - Favor literals (e.g., `{@literal @}`) over HTML entities.
 - New classes and methods should declare a `@since ...` tag.
 - Use `@since 5.10` instead of `@since 5.10.0`.
-- Do not use `@author` tags. Instead, contributors are listed on the [GitHub](https://github.com/junit-team/junit5/graphs/contributors) page.
+- Do not use `@author` tags. Instead, contributors are listed on the [GitHub](https://github.com/junit-team/junit-framework/graphs/contributors) page.
 - Do not use verbs in third-person form in the first sentence of the Javadoc for a method -- for example, use "Discover tests..." instead of "Discovers tests...".
 
 #### Examples
@@ -140,8 +140,8 @@ See [`ExtensionContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/e
 ### Logging
 
 - In general, logging should be used sparingly.
-- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](https://github.com/junit-team/junit5/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java).
-- Levels defined in JUnit's [Logger](https://github.com/junit-team/junit5/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java) façade, which delegates to Java Util Logging (JUL) for the actual logging.
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](https://github.com/junit-team/junit-framework/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java).
+- Levels defined in JUnit's [Logger](https://github.com/junit-team/junit-framework/blob/main/junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java) façade, which delegates to Java Util Logging (JUL) for the actual logging.
   - _error_ (JUL: `SEVERE`, Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
   - _warn_ (JUL: `WARNING`, Log4J: `WARN`): potential usage or configuration errors that should not halt execution
   - _info_ (JUL: `INFO`, Log4J: `INFO`): information the users might want to know but not by default

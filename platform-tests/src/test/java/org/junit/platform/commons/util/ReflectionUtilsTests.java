@@ -265,7 +265,7 @@ class ReflectionUtilsTests {
 		}
 
 		/**
-		 * @see <a href="https://github.com/junit-team/junit5/issues/3684">#3684</a>
+		 * @see <a href="https://github.com/junit-team/junit-framework/issues/3684">#3684</a>
 		 */
 		@Test
 		void getInterfaceMethodIfPossible() throws Exception {
@@ -1088,7 +1088,7 @@ class ReflectionUtilsTests {
 
 			// OuterClass contains recursive hierarchies, but the non-matching
 			// predicate should prevent cycle detection.
-			// See https://github.com/junit-team/junit5/issues/2249
+			// See https://github.com/junit-team/junit-framework/issues/2249
 			assertThat(ReflectionUtils.findNestedClasses(OuterClass.class, clazz -> false)).isEmpty();
 			assertThat(ReflectionUtils.isNestedClassPresent(OuterClass.class, clazz -> false)).isFalse();
 
@@ -1475,7 +1475,7 @@ class ReflectionUtilsTests {
 
 		/**
 		 * @since 1.9.1
-		 * @see https://github.com/junit-team/junit5/issues/2993
+		 * @see https://github.com/junit-team/junit-framework/issues/2993
 		 */
 		@Test
 		void findMethodsFindsDistinctMethodsDeclaredInMultipleInterfaces() {
@@ -1819,7 +1819,7 @@ class ReflectionUtilsTests {
 		}
 
 		/**
-		 * @see https://github.com/junit-team/junit5/issues/3553
+		 * @see https://github.com/junit-team/junit-framework/issues/3553
 		 */
 		@Test
 		void findMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
@@ -2006,7 +2006,7 @@ class ReflectionUtilsTests {
 	class FindAndReadFieldsTests {
 
 		/**
-		 * @see https://github.com/junit-team/junit5/issues/3553
+		 * @see https://github.com/junit-team/junit-framework/issues/3553
 		 */
 		@Test
 		void findFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
@@ -2054,7 +2054,7 @@ class ReflectionUtilsTests {
 		}
 
 		/**
-		 * @see https://github.com/junit-team/junit5/issues/3646
+		 * @see https://github.com/junit-team/junit-framework/issues/3646
 		 * @since 1.11
 		 */
 		@Test

@@ -60,7 +60,7 @@ configuration parameters.
 Although there is currently no official guide on how to implement a custom `TestEngine`,
 you can consult the implementation of <<test-engines-junit>> or the implementation of
 third-party test engines listed in the
-https://github.com/junit-team/junit5/wiki/Third-party-Extensions#junit-platform-test-engines[JUnit 5 wiki].
+https://github.com/junit-team/junit-framework/wiki/Third-party-Extensions#junit-platform-test-engines[JUnit 5 wiki].
 You will also find various tutorials and blogs on the Internet that demonstrate how to
 write a custom `TestEngine`.
 

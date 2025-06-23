@@ -432,7 +432,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	/**
 	 * {@link TestWatcher} that retrieves data from the {@link ExtensionContext.Store}.
-	 * @see <a href="https://github.com/junit-team/junit5/issues/3944">#3944</a>
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3944">#3944</a>
 	 */
 	static class DataRetrievingTestWatcher implements BeforeTestExecutionCallback, TestWatcher {
 

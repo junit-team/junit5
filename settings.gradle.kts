@@ -69,7 +69,7 @@ buildCache {
 
 includeBuild("gradle/base")
 
-rootProject.name = "junit5"
+rootProject.name = "junit-framework"
 
 include("documentation")
 include("junit-jupiter")

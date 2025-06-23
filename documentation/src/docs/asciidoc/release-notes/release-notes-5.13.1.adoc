@@ -6,8 +6,8 @@
 *Scope:* Bug fixes and enhancements since 5.13.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/97?closed=1+[5.13.1] milestone page in the JUnit repository
-on GitHub.
+link:{junit-framework-repo}+/milestone/97?closed=1+[5.13.1] milestone page in the JUnit
+repository on GitHub.
 
 
 [[release-notes-5.13.1-junit-platform]]

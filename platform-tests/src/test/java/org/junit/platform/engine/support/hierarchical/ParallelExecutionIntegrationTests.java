@@ -176,7 +176,7 @@ class ParallelExecutionIntegrationTests {
 
 	/**
 	 * @since 1.4
-	 * @see <a href="https://github.com/junit-team/junit5/issues/1688">gh-1688</a>
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/1688">gh-1688</a>
 	 */
 	@Test
 	void threadInterruptedByUserCode() {
