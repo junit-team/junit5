@@ -106,7 +106,7 @@ jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 # see https://github.com/jreleaser/jreleaser/issues/1900
 jreleaser = { id = "org.jreleaser", version = "1.18.0" }
 # check if workaround in gradle.properties can be removed when updating
-kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0-RC3" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0" }
 nullaway = { id = "net.ltgt.nullaway", version = "2.2.0" }
 openrewrite = { id = "org.openrewrite.rewrite", version = "7.8.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.14" }
