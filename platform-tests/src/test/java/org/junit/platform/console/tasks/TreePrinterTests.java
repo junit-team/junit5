@@ -69,7 +69,7 @@ class TreePrinterTests {
 	}
 
 	@Test
-	// https://github.com/junit-team/junit5/issues/786
+	// https://github.com/junit-team/junit-framework/issues/786
 	void printNodeHandlesNullMessageThrowableGracefully() {
 		var result = TestExecutionResult.failed(new NullPointerException());
 		var node = new TreeNode(identifier("NPE", "test()")).setResult(result);
@@ -78,7 +78,7 @@ class TreePrinterTests {
 	}
 
 	@Test
-	// https://github.com/junit-team/junit5/issues/1531
+	// https://github.com/junit-team/junit-framework/issues/1531
 	void reportsAreTabbedCorrectly() {
 		var root = new TreeNode("<root>");
 		var e1 = new TreeNode(identifier("e-1", "engine one")).setResult(successful());

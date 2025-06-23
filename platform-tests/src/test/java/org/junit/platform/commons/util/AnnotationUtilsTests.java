@@ -94,7 +94,7 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * Test for https://github.com/junit-team/junit5/issues/1133
+	 * Test for https://github.com/junit-team/junit-framework/issues/1133
 	 */
 	@Test
 	void findInheritedAnnotationMetaPresentOnNonInheritedComposedAnnotationPresentOnSuperclass() {
@@ -391,7 +391,7 @@ class AnnotationUtilsTests {
 	}
 
 	/*
-	 * see https://github.com/junit-team/junit5/issues/3553
+	 * see https://github.com/junit-team/junit-framework/issues/3553
 	 */
 	@Test
 	void findAnnotatedMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
@@ -511,7 +511,7 @@ class AnnotationUtilsTests {
 	}
 
 	/*
-	 * see https://github.com/junit-team/junit5/issues/3553
+	 * see https://github.com/junit-team/junit-framework/issues/3553
 	 */
 	@Test
 	void findAnnotatedFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {

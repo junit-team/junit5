@@ -20,7 +20,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
- * <a href="https://github.com/junit-team/junit5/issues/3445">#3445</a>.
+ * <a href="https://github.com/junit-team/junit-framework/issues/3445">#3445</a>.
  *
  * @since 5.12
  * @see TestInstantiationAwareExtension

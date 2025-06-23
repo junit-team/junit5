@@ -628,7 +628,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/1748
+	// https://github.com/junit-team/junit-framework/issues/1748
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
 
@@ -646,7 +646,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/1801
+	// https://github.com/junit-team/junit-framework/issues/1801
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UserTempDirectoryDeletionDoesNotCauseFailureTestCase {
 
@@ -658,7 +658,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/2046
+	// https://github.com/junit-team/junit-framework/issues/2046
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NonWritableFileDoesNotCauseFailureTestCase {
 
@@ -673,7 +673,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/2171
+	// https://github.com/junit-team/junit-framework/issues/2171
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase {
 
@@ -687,7 +687,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/2171
+	// https://github.com/junit-team/junit-framework/issues/2171
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase {
 
@@ -703,7 +703,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/2609
+	// https://github.com/junit-team/junit-framework/issues/2609
 	@SuppressWarnings({ "ResultOfMethodCallIgnored", "JUnitMalformedDeclaration" })
 	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
 
@@ -782,7 +782,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// https://github.com/junit-team/junit5/issues/2609
+	// https://github.com/junit-team/junit-framework/issues/2609
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	static class NonMintTempDirectoryPermissionsDoNotCauseFailureTestCase {
 
@@ -1082,7 +1082,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// https://github.com/junit-team/junit5/issues/2079
+	// https://github.com/junit-team/junit-framework/issues/2079
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirUsageInsideNestedClassesTestCase {
 
@@ -1302,7 +1302,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	// https://github.com/junit-team/junit5/issues/2088
+	// https://github.com/junit-team/junit-framework/issues/2088
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithCustomParentDirectoryTestCase {
 

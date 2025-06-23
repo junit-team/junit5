@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestInfo
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
-// https://github.com/junit-team/junit5/issues/1836
+// https://github.com/junit-team/junit-framework/issues/1836
 object DisplayNameTests {
     @JvmStatic
     fun data() =

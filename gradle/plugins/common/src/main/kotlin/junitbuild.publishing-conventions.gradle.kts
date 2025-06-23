@@ -54,9 +54,9 @@ publishing {
 				})
 				url = "https://junit.org/"
 				scm {
-					connection = "scm:git:git://github.com/junit-team/junit5.git"
-					developerConnection = "scm:git:git://github.com/junit-team/junit5.git"
-					url = "https://github.com/junit-team/junit5"
+					connection = "scm:git:git://github.com/junit-team/junit-framework.git"
+					developerConnection = "scm:git:git://github.com/junit-team/junit-framework.git"
+					url = "https://github.com/junit-team/junit-framework"
 				}
 				licenses {
 					license {

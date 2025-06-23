@@ -6,8 +6,8 @@ endif::[]
 :snapshot-repo:                              https://central.sonatype.com/service/rest/repository/browse/maven-snapshots
 // Base Links
 :junit-team:                                 https://github.com/junit-team
-:junit5-repo:                                {junit-team}/junit5
-:current-branch:                             {junit5-repo}/tree/{release-branch}
+:junit-framework-repo:                       {junit-team}/junit-framework
+:current-branch:                             {junit-framework-repo}/tree/{release-branch}
 // Platform Commons
 :junit-platform-support-package:             {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/package-summary.html[org.junit.platform.commons.support]
 :AnnotationSupport:                          {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/AnnotationSupport.html[AnnotationSupport]
@@ -196,7 +196,7 @@ endif::[]
 :ArgumentsAccessor:                          {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAccessor.html[ArgumentsAccessor]
 :ArgumentsAggregator:                        {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html[ArgumentsAggregator]
 :BeforeParameterizedClassInvocation:         {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/BeforeParameterizedClassInvocation.html[@BeforeParameterizedClassInvocation]
-:CsvArgumentsProvider:                       {junit5-repo}/blob/main/junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java[CsvArgumentsProvider]
+:CsvArgumentsProvider:                       {junit-framework-repo}/blob/main/junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java[CsvArgumentsProvider]
 :EmptySource:                                {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/EmptySource.html[@EmptySource]
 :FieldSource:                                {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/FieldSource.html[@FieldSource]
 :MethodSource:                               {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/MethodSource.html[@MethodSource]
@@ -206,7 +206,7 @@ endif::[]
 :ParameterizedClass:                         {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedClass.html[@ParameterizedClass]
 :ParameterizedTest:                          {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedTest.html[@ParameterizedTest]
 :ParameterInfo:                              {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/support/ParameterInfo.html[ParameterInfo]
-:ValueArgumentsProvider:                     {junit5-repo}/blob/main/junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java[ValueArgumentsProvider]
+:ValueArgumentsProvider:                     {junit-framework-repo}/blob/main/junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java[ValueArgumentsProvider]
 // Jupiter Engine
 :junit-jupiter-engine:                       {javadoc-root}/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html[junit-jupiter-engine]
 // Jupiter Extension Implementations
@@ -238,7 +238,7 @@ endif::[]
 :API:                                        https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
 :API_Guardian:                               https://github.com/apiguardian-team/apiguardian[@API Guardian]
 :AssertJ:                                    https://assertj.github.io/doc/[AssertJ]
-:DiscussionsQA:                              https://github.com/junit-team/junit5/discussions/categories/q-a[Q&A category on GitHub Discussions]
+:DiscussionsQA:                              https://github.com/junit-team/junit-framework/discussions/categories/q-a[Q&A category on GitHub Discussions]
 :Hamcrest:                                   https://hamcrest.org/JavaHamcrest/[Hamcrest]
 :Jimfs:                                      https://google.github.io/jimfs/[Jimfs]
 :Log4j:                                      https://logging.apache.org/log4j/2.x/[Log4j]

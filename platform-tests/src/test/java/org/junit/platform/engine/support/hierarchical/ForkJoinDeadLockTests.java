@@ -36,7 +36,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
-// https://github.com/junit-team/junit5/issues/3945
+// https://github.com/junit-team/junit-framework/issues/3945
 @Timeout(10)
 public class ForkJoinDeadLockTests {
 

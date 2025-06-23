@@ -227,7 +227,7 @@ class TestDiscoveryOptionsMixin {
 		 *
 		 * @param map the key-value pairs to add
 		 * @throws CommandLine.ParameterException if the map already contains this key
-		 * @see <a href="https://github.com/junit-team/junit5/issues/1308">#1308</a>
+		 * @see <a href="https://github.com/junit-team/junit-framework/issues/1308">#1308</a>
 		 */
 		@Option(names = "--config", paramLabel = "KEY=VALUE", arity = "1", description = "Set a configuration parameter for test discovery and execution. This option can be repeated.")
 		public void setConfigurationParameters(Map<String, String> map) {

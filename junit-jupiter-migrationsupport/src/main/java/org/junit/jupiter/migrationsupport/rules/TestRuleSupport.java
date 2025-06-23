@@ -102,7 +102,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 
 		// If no appropriate @Rule annotated members were discovered, we then
 		// have to rethrow the exception in order not to silently swallow it.
-		// Fixes bug: https://github.com/junit-team/junit5/issues/1069
+		// Fixes bug: https://github.com/junit-team/junit-framework/issues/1069
 		if (numRuleAnnotatedMembers == 0) {
 			throw throwable;
 		}

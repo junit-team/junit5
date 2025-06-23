@@ -212,7 +212,7 @@ class AssertAllAssertionsTests {
 		assertEquals(exceptionTypes.length, failures.size(), "number of failures");
 
 		// Verify that exceptions are also present as suppressed exceptions.
-		// https://github.com/junit-team/junit5/issues/1602
+		// https://github.com/junit-team/junit-framework/issues/1602
 		Throwable[] suppressed = multipleFailuresError.getSuppressed();
 		assertEquals(exceptionTypes.length, suppressed.length, "number of suppressed exceptions");
 

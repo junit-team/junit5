@@ -12,8 +12,8 @@ This repository is the home of JUnit Platform, Jupiter, and Vintage.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.13.1](https://github.com/junit-team/junit5/releases/tag/r5.13.1) (June 7, 2025)
-- Preview (Milestone/Release Candidate): [JUnit 5.13.0-RC1](https://github.com/junit-team/junit5/releases/tag/r5.13.0-RC1) (May 16, 2025)
+- General Availability (GA): [JUnit 5.13.1](https://github.com/junit-team/junit-framework/releases/tag/r5.13.1) (June 7, 2025)
+- Preview (Milestone/Release Candidate): [JUnit 5.13.0-RC1](https://github.com/junit-team/junit-framework/releases/tag/r5.13.0-RC1) (May 16, 2025)
 
 ## Documentation
 
@@ -28,8 +28,8 @@ Contributions to JUnit are both welcomed and appreciated. For specific guideline
 regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
 project. Those willing to use milestone or SNAPSHOT releases are encouraged
 to file feature requests and bug reports using the project's
-[issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
-<a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
+[issue tracker](https://github.com/junit-team/junit-framework/issues). Issues marked with an
+<a href="https://github.com/junit-team/junit-framework/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
 label are specifically targeted for community contributions.
 
 ## Getting Help
@@ -38,7 +38,7 @@ Ask JUnit-related questions on [StackOverflow] or use the Q&A category on [GitHu
 
 ## Continuous Integration Builds
 
-[![CI](https://github.com/junit-team/junit5/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/junit-team/junit5/actions/workflows/main.yml) [![Cross-Version](https://github.com/junit-team/junit5/actions/workflows/cross-version.yml/badge.svg?branch=main)](https://github.com/junit-team/junit5/actions/workflows/cross-version.yml)
+[![CI](https://github.com/junit-team/junit-framework/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/junit-team/junit-framework/actions/workflows/main.yml) [![Cross-Version](https://github.com/junit-team/junit-framework/actions/workflows/cross-version.yml/badge.svg?branch=main)](https://github.com/junit-team/junit-framework/actions/workflows/cross-version.yml)
 
 Official CI build server used to perform quick checks on submitted pull requests and for
 build matrices including the latest released OpenJDK and early access builds of the next
@@ -92,10 +92,10 @@ Consult the [Dependency Metadata] section of the [User Guide] for a list of all 
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
 
-[Codecov]: https://codecov.io/gh/junit-team/junit5
-[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
+[Codecov]: https://codecov.io/gh/junit-team/junit-framework
+[CONTRIBUTING.md]: https://github.com/junit-team/junit-framework/blob/HEAD/CONTRIBUTING.md
 [Dependency Metadata]: https://docs.junit.org/current/user-guide/#dependency-metadata
-[GitHub Discussions]: https://github.com/junit-team/junit5/discussions/categories/q-a
+[GitHub Discussions]: https://github.com/junit-team/junit-framework/discussions/categories/q-a
 [Gradle toolchains]: https://docs.gradle.org/current/userguide/toolchains.html
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
