@@ -1,4 +1,3 @@
-import junitbuild.extensions.dependencyProject
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
@@ -46,16 +45,13 @@ tasks {
 }
 
 eclipse {
-	classpath{
-		plusConfigurations.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
-		file.whenMerged {
-			this as Classpath
-			entries.filterIsInstance<SourceFolder>().forEach {
-				if (it.path == "src/test/java") {
-					// Exclude test classes that depend on compiled Kotlin code.
-					it.excludes.add("**/AtypicalJvmMethodNameTests.java")
-					it.excludes.add("**/TestInstanceLifecycleKotlinTests.java")
-				}
+	classpath.file.whenMerged {
+		this as Classpath
+		entries.filterIsInstance<SourceFolder>().forEach {
+			if (it.path == "src/test/java") {
+				// Exclude test classes that depend on compiled Kotlin code.
+				it.excludes.add("**/AtypicalJvmMethodNameTests.java")
+				it.excludes.add("**/TestInstanceLifecycleKotlinTests.java")
 			}
 		}
 	}
