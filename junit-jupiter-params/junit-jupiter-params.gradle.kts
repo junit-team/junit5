@@ -40,18 +40,16 @@ tasks {
 		}
 	}
 	val extractFastCSVLicense by registering(Sync::class) {
-		from(zipTree(project.configurations.shadowedClasspath.map { it.files.single { file -> file.name.contains("fastcsv") } })) {
+		from(zipTree(configurations.shadowedClasspath.map { it.files.single { file -> file.name.contains("fastcsv") } })) {
 			include("META-INF/LICENSE")
+			rename { "LICENSE-fastcsv" }
 		}
 		into(layout.buildDirectory.dir("fastcsv"))
 	}
 	shadowJar {
 		relocate("de.siegmar.fastcsv", "org.junit.jupiter.params.shadow.de.siegmar.fastcsv")
 		exclude("META-INF/LICENSE")
-		from(extractFastCSVLicense.map { "${it.destinationDir}/META-INF" }) {
-			rename { "LICENSE-fastcsv" }
-			into("META-INF")
-		}
+		from(extractFastCSVLicense)
 	}
 	compileJava {
 		options.compilerArgs.addAll(listOf(
