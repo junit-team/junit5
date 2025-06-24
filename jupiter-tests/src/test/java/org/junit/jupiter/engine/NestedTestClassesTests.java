@@ -231,8 +231,16 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void doesNotReportDiscoveryIssueForAbstractInnerClass() {
+	void doesNotReportDiscoveryIssueForClassWithAbstractInnerClass() {
 		var discoveryIssues = discoverTestsForClass(ConcreteWithExtendedInnerClassTestCase.class).getDiscoveryIssues();
+
+		assertThat(discoveryIssues).isEmpty();
+	}
+
+	@Test
+	void doesNotReportDiscoveryIssueForAbstractInnerClass() {
+		var discoveryIssues = discoverTestsForClass(
+			AbstractBaseWithInnerClassTestCase.AbstractInnerClass.class).getDiscoveryIssues();
 
 		assertThat(discoveryIssues).isEmpty();
 	}
