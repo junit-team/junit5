@@ -1119,9 +1119,7 @@ to a problem.
 In order to record Flight Recorder events generated while running tests, you need to:
 
 1. Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.
-2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{version}.jar`)
-   on the class-path or module-path at test runtime.
-3. Start flight recording when launching a test run. Flight Recorder can be started via
+2. Start flight recording when launching a test run. Flight Recorder can be started via
    java command line option:
 
    -XX:StartFlightRecording:filename=...

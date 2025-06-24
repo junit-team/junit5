@@ -8,10 +8,10 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
 import static java.util.Objects.requireNonNull;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,8 +40,8 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.8
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  */
-@API(status = STABLE, since = "1.11")
-public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
+@API(status = INTERNAL, since = "6.0")
+class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 
 	private final AtomicReference<@Nullable LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new ConcurrentHashMap<>();

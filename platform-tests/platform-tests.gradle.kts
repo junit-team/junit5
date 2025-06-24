@@ -36,7 +36,6 @@ dependencies {
 	testImplementation(projects.junitPlatformCommons)
 	testImplementation(projects.junitPlatformConsole)
 	testImplementation(projects.junitPlatformEngine)
-	testImplementation(projects.junitPlatformJfr)
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteCommons)
 	testImplementation(projects.junitPlatformSuiteEngine)

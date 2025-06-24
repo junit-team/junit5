@@ -8,10 +8,10 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
 import static java.util.Objects.requireNonNull;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Map;
 import java.util.Optional;
@@ -41,8 +41,8 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.8
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  */
-@API(status = STABLE, since = "1.11")
-public class FlightRecordingExecutionListener implements TestExecutionListener {
+@API(status = INTERNAL, since = "6.0")
+class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	private final AtomicReference<@Nullable TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();

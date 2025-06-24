@@ -65,10 +65,6 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
     directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
-  `junit-platform-jfr`::
-    Provides a `LauncherDiscoveryListener` and `TestExecutionListener` for Java Flight
-	Recorder events on the JUnit Platform. See <<running-tests-listeners-flight-recorder>>
-	for details.
   `junit-platform-launcher`::
     Public API for configuring and launching test plans -- typically used by IDEs and
     build tools. See <<launcher-api>> for details.

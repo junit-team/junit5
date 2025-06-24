@@ -38,7 +38,6 @@ class ClasspathAlignmentChecker {
 		"org.junit.platform.commons", //
 		"org.junit.platform.console", //
 		"org.junit.platform.engine", //
-		"org.junit.platform.jfr", //
 		"org.junit.platform.launcher", //
 		"org.junit.platform.reporting", //
 		"org.junit.platform.suite.api", //

@@ -201,7 +201,6 @@ dependencies {
 	testImplementation(project(":junit-jupiter"))
 
 	testRuntimeOnly(project(":junit-platform-engine"))
-	testRuntimeOnly(project(":junit-platform-jfr"))
 	testRuntimeOnly(project(":junit-platform-reporting"))
 
 	testRuntimeOnly(bundleFromLibs("log4j"))
