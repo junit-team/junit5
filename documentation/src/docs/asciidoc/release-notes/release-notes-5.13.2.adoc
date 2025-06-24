@@ -39,6 +39,9 @@ repository on GitHub.
   `@Nested`.
 * Stop reporting discovery issues for _abstract_ inner classes that contain test methods
   but are not annotated with `@Nested`.
+* Stop reporting discovery issues for _abstract_ test methods. While they won't be
+  executed, it's a valid pattern to annotate them with `@Test` for documentation purposes
+  and override them in subclasses while re-declaring the `@Test` annotation.
 
 [[release-notes-5.13.2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
