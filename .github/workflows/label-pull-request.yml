@@ -1,7 +1,7 @@
 name: Copy labels from linked issues to PR
 on:
   pull_request:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, synchronize]
 permissions: {}
 jobs:
   copy_labels:
