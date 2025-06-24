@@ -19,6 +19,7 @@ import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
+import static org.junit.platform.commons.util.ReflectionUtils.isNotAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.streamNestedClasses;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
@@ -113,7 +114,8 @@ class ClassSelectorResolver implements SelectorResolver {
 					parent -> Optional.of(newMemberClassTestDescriptor(parent, nestedClass))));
 			}
 		}
-		else if (isInnerClass(nestedClass) && predicates.looksLikeIntendedTestClass(nestedClass)) {
+		else if (isInnerClass(nestedClass) && isNotAbstract(nestedClass)
+				&& predicates.looksLikeIntendedTestClass(nestedClass)) {
 			String message = "Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.".formatted(
 				nestedClass.getName());
 			issueReporter.reportIssue(DiscoveryIssue.builder(Severity.WARNING, message) //
