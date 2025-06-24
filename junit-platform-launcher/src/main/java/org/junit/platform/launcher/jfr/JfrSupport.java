@@ -13,6 +13,7 @@ package org.junit.platform.launcher.jfr;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.launcher.Launcher;
 
 /**
@@ -31,6 +32,7 @@ public class JfrSupport {
 	}
 
 	private static boolean isJfrAvailable() {
-		return System.getProperty("org.graalvm.nativeimage.imagecode") == null;
+		return System.getProperty("org.graalvm.nativeimage.imagecode") == null //
+				&& ReflectionSupport.tryToLoadClass("jdk.jfr.FlightRecorder").toOptional().isPresent();
 	}
 }
