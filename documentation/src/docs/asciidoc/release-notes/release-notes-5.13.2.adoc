@@ -37,6 +37,8 @@ repository on GitHub.
 
 * Stop reporting discovery issues for cyclic inner class hierarchies not annotated with
   `@Nested`.
+* Stop reporting discovery issues for _abstract_ inner classes that contain test methods
+  but are not annotated with `@Nested`.
 
 [[release-notes-5.13.2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
