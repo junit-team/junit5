@@ -3,7 +3,7 @@ plugins {
 	id("junitbuild.java-nullability-conventions")
 }
 
-description = "JUnit Platform Flight Recorder Support"
+description = "JUnit Platform Flight Recorder (JFR) Support"
 
 dependencies {
 	api(platform(projects.junitBom))
