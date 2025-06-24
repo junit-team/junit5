@@ -161,6 +161,7 @@ tasks {
 		args.addAll("execute")
 		args.addAll("--scan-classpath")
 		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
+		args.addAll("--config=junit.platform.reporting.open.xml.git.enabled=true")
 		args.addAll("--config=junit.platform.output.capture.stdout=true")
 		args.addAll("--config=junit.platform.output.capture.stderr=true")
 		args.addAll("--config=junit.platform.discovery.issue.severity.critical=info")

@@ -21,7 +21,11 @@ repository on GitHub.
 [[release-notes-5.13.2-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Including information about the Git repository (such as the commit hash and branch name)
+  in the Open Test Reporting XML format is now an opt-in feature that can be enabled via a
+  configuration parameter. Please refer to the
+  <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
+  for details.
 
 [[release-notes-5.13.2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements

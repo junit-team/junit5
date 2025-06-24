@@ -130,6 +130,7 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
+			"-Djunit.platform.reporting.open.xml.git.enabled=true",
 			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}/junit-{uniqueNumber}",
 		)
 	}
