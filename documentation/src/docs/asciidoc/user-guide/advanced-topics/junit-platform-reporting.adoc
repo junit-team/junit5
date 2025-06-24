@@ -36,10 +36,12 @@ event-based format specified by {OpenTestReporting} which supports all features 
 JUnit Platform such as hierarchical test structures, display names, tags, etc.
 
 The listener is auto-registered and can be configured via the following
-<<running-tests-config-params, configuration parameter>>:
+<<running-tests-config-params, configuration parameters>>:
 
 `junit.platform.reporting.open.xml.enabled=true|false`::
-  Enable/disable writing the report.
+  Enable/disable writing the report; defaults to `false`.
+`junit.platform.reporting.open.xml.git.enabled=true|false`::
+  Enable/disable including information about the Git repository (see https://github.com/ota4j-team/open-test-reporting#git[Git extension schema] of open-test-reporting); defaults to `false`.
 
 If enabled, the listener creates an XML report file named `open-test-report.xml` in the
 configured <<junit-platform-reporting-output-directory, output directory>>.
