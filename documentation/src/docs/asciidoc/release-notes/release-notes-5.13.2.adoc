@@ -1,9 +1,9 @@
 [[release-notes-5.13.2]]
 == 5.13.2
 
-*Date of Release:* ❓
+*Date of Release:* June 24, 2025
 
-*Scope:* ❓
+*Scope:* Bug fixes and enhancements since 5.13.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/98?closed=1+[5.13.2] milestone page in the JUnit
@@ -13,11 +13,6 @@ repository on GitHub.
 [[release-notes-5.13.2-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.13.2-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
 [[release-notes-5.13.2-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
@@ -26,11 +21,6 @@ repository on GitHub.
   configuration parameter. Please refer to the
   <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, User Guide>>
   for details.
-
-[[release-notes-5.13.2-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
 
 
 [[release-notes-5.13.2-junit-jupiter]]
@@ -47,11 +37,6 @@ repository on GitHub.
   executed, it's a valid pattern to annotate them with `@Test` for documentation purposes
   and override them in subclasses while re-declaring the `@Test` annotation.
 
-[[release-notes-5.13.2-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-5.13.2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
@@ -61,17 +46,4 @@ repository on GitHub.
 [[release-notes-5.13.2-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.13.2-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.2-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.2-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
