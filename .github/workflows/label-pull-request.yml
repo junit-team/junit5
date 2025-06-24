@@ -1,10 +1,11 @@
-name: Copy labels from linked issues to PRs
+name: Copy labels from linked issues to PR
 on:
   pull_request:
     types: [opened, reopened, edited]
 permissions: {}
 jobs:
-  label_issues:
+  copy_labels:
+    name: Copy labels
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -40,7 +41,7 @@ jobs:
                 .flatMap((node) => node.labels.nodes.map((label) => label.name))))
                 .filter((label) => !label.startsWith("status:"));
             
-            if (labels) {
+            if (labels.length > 0) {
                 console.log(`Adding labels to PR: ${labels}`);
                 await github.rest.issues.addLabels({
                     issue_number: context.issue.number,
