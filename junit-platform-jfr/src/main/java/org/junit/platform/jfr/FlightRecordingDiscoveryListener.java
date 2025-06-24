@@ -48,22 +48,24 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
-		LauncherDiscoveryEvent event = new LauncherDiscoveryEvent();
-		event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
-		event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
+		var event = new LauncherDiscoveryEvent();
 		event.begin();
 		launcherDiscoveryEvent.set(event);
 	}
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		requireNonNull(launcherDiscoveryEvent.getAndSet(null)).commit();
+		LauncherDiscoveryEvent event = requireNonNull(launcherDiscoveryEvent.getAndSet(null));
+		if (event.shouldCommit()) {
+			event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
+			event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
+			event.commit();
+		}
 	}
 
 	@Override
 	public void engineDiscoveryStarted(org.junit.platform.engine.UniqueId engineId) {
-		EngineDiscoveryEvent event = new EngineDiscoveryEvent();
-		event.uniqueId = engineId.toString();
+		var event = new EngineDiscoveryEvent();
 		event.begin();
 		engineDiscoveryEvents.put(engineId, event);
 	}
@@ -71,19 +73,24 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 	@Override
 	public void engineDiscoveryFinished(org.junit.platform.engine.UniqueId engineId, EngineDiscoveryResult result) {
 		EngineDiscoveryEvent event = engineDiscoveryEvents.remove(engineId);
-		event.result = result.getStatus().toString();
-		event.commit();
+		if (event.shouldCommit()) {
+			event.uniqueId = engineId.toString();
+			event.result = result.getStatus().toString();
+			event.commit();
+		}
 	}
 
 	@Override
 	public void issueEncountered(org.junit.platform.engine.UniqueId engineId, DiscoveryIssue issue) {
-		DiscoveryIssueEvent event = new DiscoveryIssueEvent();
-		event.engineId = engineId.toString();
-		event.severity = issue.severity().name();
-		event.message = issue.message();
-		event.source = issue.source().map(Object::toString).orElse(null);
-		event.cause = issue.cause().map(ExceptionUtils::readStackTrace).orElse(null);
-		event.commit();
+		var event = new DiscoveryIssueEvent();
+		if (event.shouldCommit()) {
+			event.engineId = engineId.toString();
+			event.severity = issue.severity().name();
+			event.message = issue.message();
+			event.source = issue.source().map(Object::toString).orElse(null);
+			event.cause = issue.cause().map(ExceptionUtils::readStackTrace).orElse(null);
+			event.commit();
+		}
 	}
 
 	@Category({ "JUnit", "Discovery" })

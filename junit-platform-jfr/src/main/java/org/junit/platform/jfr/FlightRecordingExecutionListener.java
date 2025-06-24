@@ -49,63 +49,74 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
-		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
-		event.containsTests = plan.containsTests();
-		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
-			Collectors.joining(", "));
+		var event = new TestPlanExecutionEvent();
 		testPlanExecutionEvent.set(event);
 		event.begin();
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		requireNonNull(testPlanExecutionEvent.getAndSet(null)).commit();
-	}
-
-	@Override
-	public void executionSkipped(TestIdentifier test, String reason) {
-		SkippedTestEvent event = new SkippedTestEvent();
-		event.initialize(test);
-		event.reason = reason;
-		event.commit();
-	}
-
-	@Override
-	public void executionStarted(TestIdentifier test) {
-		TestExecutionEvent event = new TestExecutionEvent();
-		testExecutionEvents.put(test.getUniqueIdObject(), event);
-		event.initialize(test);
-		event.begin();
-	}
-
-	@Override
-	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		Optional<Throwable> throwable = result.getThrowable();
-		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
-		event.end();
-		event.result = result.getStatus().toString();
-		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
-		event.exceptionMessage = throwable.map(Throwable::getMessage).orElse(null);
-		event.commit();
-	}
-
-	@Override
-	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
-		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
-			ReportEntryEvent event = new ReportEntryEvent();
-			event.uniqueId = test.getUniqueId();
-			event.key = entry.getKey();
-			event.value = entry.getValue();
+		var event = requireNonNull(testPlanExecutionEvent.getAndSet(null));
+		if (event.shouldCommit()) {
+			event.containsTests = plan.containsTests();
+			event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
+				Collectors.joining(", "));
 			event.commit();
 		}
 	}
 
 	@Override
+	public void executionSkipped(TestIdentifier test, String reason) {
+		var event = new SkippedTestEvent();
+		if (event.shouldCommit()) {
+			event.initialize(test);
+			event.reason = reason;
+			event.commit();
+		}
+	}
+
+	@Override
+	public void executionStarted(TestIdentifier test) {
+		var event = new TestExecutionEvent();
+		testExecutionEvents.put(test.getUniqueIdObject(), event);
+		event.begin();
+	}
+
+	@Override
+	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
+		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
+		if (event.shouldCommit()) {
+			event.end();
+			event.initialize(test);
+			event.result = result.getStatus().toString();
+			Optional<Throwable> throwable = result.getThrowable();
+			event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
+			event.exceptionMessage = throwable.map(Throwable::getMessage).orElse(null);
+			event.commit();
+		}
+	}
+
+	@Override
+	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
+		for (var entry : reportEntry.getKeyValuePairs().entrySet()) {
+			var event = new ReportEntryEvent();
+			if (event.shouldCommit()) {
+				event.uniqueId = test.getUniqueId();
+				event.key = entry.getKey();
+				event.value = entry.getValue();
+				event.commit();
+			}
+		}
+	}
+
+	@Override
 	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
-		FileEntryEvent event = new FileEntryEvent();
-		event.uniqueId = testIdentifier.getUniqueId();
-		event.path = file.getPath().toAbsolutePath().toString();
-		event.commit();
+		var event = new FileEntryEvent();
+		if (event.shouldCommit()) {
+			event.uniqueId = testIdentifier.getUniqueId();
+			event.path = file.getPath().toAbsolutePath().toString();
+			event.commit();
+		}
 	}
 
 	@Category({ "JUnit", "Execution" })
