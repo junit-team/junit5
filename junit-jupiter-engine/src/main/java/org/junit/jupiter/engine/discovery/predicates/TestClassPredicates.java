@@ -63,7 +63,7 @@ public class TestClassPredicates {
 				.and(isInner(issueReporter));
 		this.isValidStandaloneTestClass = isNotPrivateUnlessAbstract("Test", issueReporter) //
 				.and(isNotLocal(issueReporter)) //
-				.and(isNotInner(issueReporter)) // or should be annotated with @Nested!
+				.and(isNotInnerUnlessAbstract(issueReporter)) //
 				.and(isNotAnonymous(issueReporter));
 	}
 
@@ -127,8 +127,8 @@ public class TestClassPredicates {
 		});
 	}
 
-	private static Condition<Class<?>> isNotInner(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(testClass -> !isInnerClass(testClass),
+	private static Condition<Class<?>> isNotInnerUnlessAbstract(DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(testClass -> !isInnerClass(testClass) || isAbstract(testClass),
 			testClass -> createIssue("Test", testClass, "must not be an inner class unless annotated with @Nested"));
 	}
 
