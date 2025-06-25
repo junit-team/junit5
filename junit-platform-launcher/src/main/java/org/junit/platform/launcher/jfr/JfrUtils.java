@@ -22,7 +22,7 @@ import org.junit.platform.launcher.Launcher;
  * @since 6.0
  */
 @API(status = INTERNAL, since = "6.0")
-public class JfrSupport {
+public class JfrUtils {
 
 	public static void registerListeners(Launcher launcher) {
 		if (isJfrAvailable()) {
