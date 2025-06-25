@@ -13,6 +13,7 @@ This repository is the home of JUnit Platform, Jupiter, and Vintage.
 ## Latest Releases
 
 - General Availability (GA): [JUnit 5.13.2](https://github.com/junit-team/junit-framework/releases/tag/r5.13.2) (June 24, 2025)
+- Preview (Milestone/Release Candidate): N/A
 
 ## Documentation
 
