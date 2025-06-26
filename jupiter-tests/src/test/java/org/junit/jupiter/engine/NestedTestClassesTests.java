@@ -19,10 +19,13 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -38,6 +41,7 @@ import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.Re
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedSiblingClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -56,8 +60,8 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(TestCaseWithNesting.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -93,8 +97,9 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void doublyNestedTestsAreCorrectlyDiscovered() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectClass(TestCaseWithDoubleNesting.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(8, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -243,6 +248,22 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 			AbstractBaseWithInnerClassTestCase.AbstractInnerClass.class).getDiscoveryIssues();
 
 		assertThat(discoveryIssues).isEmpty();
+	}
+
+	@Test
+	void nestedTestsWithCustomAnnotationAreCorrectlyDiscovered() {
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectClass(CustomAnnotationTestCase.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(3, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { TopLevelComposedNested.class, CustomAnnotationTestCase.MyNested.class })
+	void ignoresComposedAnnotations(Class<?> annotationType) {
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(annotationType)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
@@ -448,6 +469,25 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	static class ConcreteWithExtendedInnerClassTestCase extends AbstractBaseWithInnerClassTestCase {
 		@Nested
 		class NestedTests extends AbstractInnerClass {
+		}
+	}
+
+	static class CustomAnnotationTestCase {
+
+		@Nested
+		@Retention(RetentionPolicy.RUNTIME)
+		@Target(ElementType.TYPE)
+		@interface MyNested {
+		}
+
+		@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
+		@MyNested
+		class Inner {
+
+			@Test
+			void test() {
+
+			}
 		}
 	}
 
