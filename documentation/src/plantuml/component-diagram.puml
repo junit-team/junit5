@@ -20,7 +20,6 @@ package org.junit.platform {
     [junit-platform-commons] as commons
     [junit-platform-console] as console
     [junit-platform-engine] as engine
-    [junit-platform-jfr] as jfr
     [junit-platform-launcher] as launcher
     [junit-platform-reporting] as reporting
     [junit-platform-suite] as suite

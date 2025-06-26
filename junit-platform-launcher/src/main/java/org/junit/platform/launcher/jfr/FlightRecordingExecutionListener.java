@@ -8,15 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
-import static java.util.Objects.requireNonNull;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import jdk.jfr.Category;
@@ -41,71 +39,87 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.8
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  */
-@API(status = STABLE, since = "1.11")
-public class FlightRecordingExecutionListener implements TestExecutionListener {
+@API(status = INTERNAL, since = "6.0")
+class FlightRecordingExecutionListener implements TestExecutionListener {
 
-	private final AtomicReference<@Nullable TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
+	private @Nullable TestPlanExecutionEvent testPlanExecutionEvent;
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
-		TestPlanExecutionEvent event = new TestPlanExecutionEvent();
-		event.containsTests = plan.containsTests();
-		event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
-			Collectors.joining(", "));
-		testPlanExecutionEvent.set(event);
-		event.begin();
+		var event = new TestPlanExecutionEvent();
+		if (event.isEnabled()) {
+			event.begin();
+			this.testPlanExecutionEvent = event;
+		}
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		requireNonNull(testPlanExecutionEvent.getAndSet(null)).commit();
-	}
-
-	@Override
-	public void executionSkipped(TestIdentifier test, String reason) {
-		SkippedTestEvent event = new SkippedTestEvent();
-		event.initialize(test);
-		event.reason = reason;
-		event.commit();
-	}
-
-	@Override
-	public void executionStarted(TestIdentifier test) {
-		TestExecutionEvent event = new TestExecutionEvent();
-		testExecutionEvents.put(test.getUniqueIdObject(), event);
-		event.initialize(test);
-		event.begin();
-	}
-
-	@Override
-	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		Optional<Throwable> throwable = result.getThrowable();
-		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
-		event.end();
-		event.result = result.getStatus().toString();
-		event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
-		event.exceptionMessage = throwable.map(Throwable::getMessage).orElse(null);
-		event.commit();
-	}
-
-	@Override
-	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
-		for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
-			ReportEntryEvent event = new ReportEntryEvent();
-			event.uniqueId = test.getUniqueId();
-			event.key = entry.getKey();
-			event.value = entry.getValue();
+		var event = this.testPlanExecutionEvent;
+		this.testPlanExecutionEvent = null;
+		if (event != null && event.shouldCommit()) {
+			event.containsTests = plan.containsTests();
+			event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
+				Collectors.joining(", "));
 			event.commit();
 		}
 	}
 
 	@Override
+	public void executionSkipped(TestIdentifier test, String reason) {
+		var event = new SkippedTestEvent();
+		if (event.shouldCommit()) {
+			event.initialize(test);
+			event.reason = reason;
+			event.commit();
+		}
+	}
+
+	@Override
+	public void executionStarted(TestIdentifier test) {
+		var event = new TestExecutionEvent();
+		if (event.isEnabled()) {
+			event.begin();
+			this.testExecutionEvents.put(test.getUniqueIdObject(), event);
+		}
+	}
+
+	@Override
+	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
+		TestExecutionEvent event = this.testExecutionEvents.remove(test.getUniqueIdObject());
+		if (event != null && event.shouldCommit()) {
+			event.end();
+			event.initialize(test);
+			event.result = result.getStatus().toString();
+			Optional<Throwable> throwable = result.getThrowable();
+			event.exceptionClass = throwable.map(Throwable::getClass).orElse(null);
+			event.exceptionMessage = throwable.map(Throwable::getMessage).orElse(null);
+			event.commit();
+		}
+	}
+
+	@Override
+	public void reportingEntryPublished(TestIdentifier test, ReportEntry reportEntry) {
+		for (var entry : reportEntry.getKeyValuePairs().entrySet()) {
+			var event = new ReportEntryEvent();
+			if (event.shouldCommit()) {
+				event.uniqueId = test.getUniqueId();
+				event.key = entry.getKey();
+				event.value = entry.getValue();
+				event.commit();
+			}
+		}
+	}
+
+	@Override
 	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
-		FileEntryEvent event = new FileEntryEvent();
-		event.uniqueId = testIdentifier.getUniqueId();
-		event.path = file.getPath().toAbsolutePath().toString();
-		event.commit();
+		var event = new FileEntryEvent();
+		if (event.shouldCommit()) {
+			event.uniqueId = testIdentifier.getUniqueId();
+			event.path = file.getPath().toAbsolutePath().toString();
+			event.commit();
+		}
 	}
 
 	@Category({ "JUnit", "Execution" })

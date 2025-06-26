@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -47,7 +47,7 @@ public class FlightRecordingExecutionListenerIntegrationTests {
 				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(tempDir)) //
 				.build();
 
-		launcher.execute(request, new FlightRecordingExecutionListener());
+		launcher.execute(request);
 		jfrEvents.awaitEvents();
 
 		var testFile = findPath(tempDir, "glob:**/test.txt");

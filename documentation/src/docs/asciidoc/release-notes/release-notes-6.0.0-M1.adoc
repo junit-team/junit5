@@ -49,6 +49,10 @@ repository on GitHub.
   `--h` (rather than `-h`) or `-help` (rather than `--help`).
 * The `junit-platform-runner` module that provided the JUnit 4 based `JUnitPlatform`
   runner has been discontinued.
+* The `junit-platform-jfr` module that provided custom Java Flight Recorder (JFR) events
+  for test discovery and execution has been discontinued. Instead, the functionality is
+  now available directly in `junit-platform-launcher` without requiring an additional
+  dependency.
 * Support for Maven Surefire/Failsafe versions less than 3.0.0 has been dropped.
 * The following deprecated APIs have been removed:
   - `ReflectionSupport.loadClass(String)` method

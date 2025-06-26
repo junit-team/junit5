@@ -8,14 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
-import static java.util.Objects.requireNonNull;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import jdk.jfr.Category;
 import jdk.jfr.Event;
@@ -40,50 +38,62 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.8
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  */
-@API(status = STABLE, since = "1.11")
-public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
+@API(status = INTERNAL, since = "6.0")
+class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 
-	private final AtomicReference<@Nullable LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
-	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new ConcurrentHashMap<>();
+	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new HashMap<>();
+	private @Nullable LauncherDiscoveryEvent launcherDiscoveryEvent;
 
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
-		LauncherDiscoveryEvent event = new LauncherDiscoveryEvent();
-		event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
-		event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
-		event.begin();
-		launcherDiscoveryEvent.set(event);
+		var event = new LauncherDiscoveryEvent();
+		if (event.isEnabled()) {
+			event.begin();
+			this.launcherDiscoveryEvent = event;
+		}
 	}
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		requireNonNull(launcherDiscoveryEvent.getAndSet(null)).commit();
+		LauncherDiscoveryEvent event = this.launcherDiscoveryEvent;
+		this.launcherDiscoveryEvent = null;
+		if (event != null && event.shouldCommit()) {
+			event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
+			event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
+			event.commit();
+		}
 	}
 
 	@Override
 	public void engineDiscoveryStarted(org.junit.platform.engine.UniqueId engineId) {
-		EngineDiscoveryEvent event = new EngineDiscoveryEvent();
-		event.uniqueId = engineId.toString();
-		event.begin();
-		engineDiscoveryEvents.put(engineId, event);
+		var event = new EngineDiscoveryEvent();
+		if (event.isEnabled()) {
+			event.begin();
+			this.engineDiscoveryEvents.put(engineId, event);
+		}
 	}
 
 	@Override
 	public void engineDiscoveryFinished(org.junit.platform.engine.UniqueId engineId, EngineDiscoveryResult result) {
-		EngineDiscoveryEvent event = engineDiscoveryEvents.remove(engineId);
-		event.result = result.getStatus().toString();
-		event.commit();
+		EngineDiscoveryEvent event = this.engineDiscoveryEvents.remove(engineId);
+		if (event != null && event.shouldCommit()) {
+			event.uniqueId = engineId.toString();
+			event.result = result.getStatus().toString();
+			event.commit();
+		}
 	}
 
 	@Override
 	public void issueEncountered(org.junit.platform.engine.UniqueId engineId, DiscoveryIssue issue) {
-		DiscoveryIssueEvent event = new DiscoveryIssueEvent();
-		event.engineId = engineId.toString();
-		event.severity = issue.severity().name();
-		event.message = issue.message();
-		event.source = issue.source().map(Object::toString).orElse(null);
-		event.cause = issue.cause().map(ExceptionUtils::readStackTrace).orElse(null);
-		event.commit();
+		var event = new DiscoveryIssueEvent();
+		if (event.shouldCommit()) {
+			event.engineId = engineId.toString();
+			event.severity = issue.severity().name();
+			event.message = issue.message();
+			event.source = issue.source().map(Object::toString).orElse(null);
+			event.cause = issue.cause().map(ExceptionUtils::readStackTrace).orElse(null);
+			event.commit();
+		}
 	}
 
 	@Category({ "JUnit", "Discovery" })

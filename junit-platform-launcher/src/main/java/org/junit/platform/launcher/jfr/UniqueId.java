@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.jfr;
+package org.junit.platform.launcher.jfr;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
