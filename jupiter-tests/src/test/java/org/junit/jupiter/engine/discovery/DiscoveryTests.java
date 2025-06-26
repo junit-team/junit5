@@ -361,12 +361,6 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 				.contains(org.junit.platform.engine.support.descriptor.MethodSource.from(method));
 	}
 
-	private TestDescriptor discoverTestsWithoutIssues(LauncherDiscoveryRequest request) {
-		var results = super.discoverTests(request);
-		assertThat(results.getDiscoveryIssues()).isEmpty();
-		return results.getEngineDescriptor();
-	}
-
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")

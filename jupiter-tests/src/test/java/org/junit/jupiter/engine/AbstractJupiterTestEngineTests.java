@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static kotlin.jvm.JvmClassMappingKt.getJavaClass;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -23,6 +24,7 @@ import java.util.function.Consumer;
 
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -65,6 +67,12 @@ public abstract class AbstractJupiterTestEngineTests {
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequest request) {
 		return EngineTestKit.execute(this.engine, request);
+	}
+
+	protected TestDescriptor discoverTestsWithoutIssues(LauncherDiscoveryRequest request) {
+		var results = discoverTests(request);
+		assertThat(results.getDiscoveryIssues()).isEmpty();
+		return results.getEngineDescriptor();
 	}
 
 	protected EngineDiscoveryResults discoverTestsForClass(Class<?> testClass) {

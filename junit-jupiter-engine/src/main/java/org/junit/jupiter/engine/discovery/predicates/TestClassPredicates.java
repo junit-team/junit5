@@ -19,6 +19,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
 import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,8 +43,9 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condit
 @API(status = INTERNAL, since = "5.13")
 public class TestClassPredicates {
 
-	public final Predicate<Class<?>> isAnnotatedWithNested = testClass -> isAnnotated(testClass, Nested.class);
-	public final Predicate<Class<?>> isAnnotatedWithClassTemplate = testClass -> isAnnotated(testClass,
+	public final Predicate<Class<?>> isAnnotatedWithNested = candidate -> isAnnotatedButNotComposed(candidate,
+		Nested.class);
+	public final Predicate<Class<?>> isAnnotatedWithClassTemplate = candidate -> isAnnotatedButNotComposed(candidate,
 		ClassTemplate.class);
 
 	public final Predicate<Class<?>> isAnnotatedWithNestedAndValid = candidate -> this.isAnnotatedWithNested.test(
@@ -143,5 +145,9 @@ public class TestClassPredicates {
 		return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message) //
 				.source(ClassSource.from(testClass)) //
 				.build();
+	}
+
+	private static boolean isAnnotatedButNotComposed(Class<?> candidate, Class<? extends Annotation> annotationType) {
+		return !candidate.isAnnotation() && isAnnotated(candidate, annotationType);
 	}
 }
