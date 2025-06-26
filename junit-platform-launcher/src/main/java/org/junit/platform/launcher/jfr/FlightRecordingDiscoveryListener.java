@@ -12,9 +12,8 @@ package org.junit.platform.launcher.jfr;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import jdk.jfr.Category;
 import jdk.jfr.Event;
@@ -42,21 +41,22 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 @API(status = INTERNAL, since = "6.0")
 class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 
-	private final AtomicReference<@Nullable LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
-	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new ConcurrentHashMap<>();
+	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new HashMap<>();
+	private @Nullable LauncherDiscoveryEvent launcherDiscoveryEvent;
 
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
 		var event = new LauncherDiscoveryEvent();
 		if (event.isEnabled()) {
 			event.begin();
-			launcherDiscoveryEvent.set(event);
+			this.launcherDiscoveryEvent = event;
 		}
 	}
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		LauncherDiscoveryEvent event = launcherDiscoveryEvent.getAndSet(null);
+		LauncherDiscoveryEvent event = this.launcherDiscoveryEvent;
+		this.launcherDiscoveryEvent = null;
 		if (event != null && event.shouldCommit()) {
 			event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
 			event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
@@ -69,13 +69,13 @@ class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 		var event = new EngineDiscoveryEvent();
 		if (event.isEnabled()) {
 			event.begin();
-			engineDiscoveryEvents.put(engineId, event);
+			this.engineDiscoveryEvents.put(engineId, event);
 		}
 	}
 
 	@Override
 	public void engineDiscoveryFinished(org.junit.platform.engine.UniqueId engineId, EngineDiscoveryResult result) {
-		EngineDiscoveryEvent event = engineDiscoveryEvents.remove(engineId);
+		EngineDiscoveryEvent event = this.engineDiscoveryEvents.remove(engineId);
 		if (event != null && event.shouldCommit()) {
 			event.uniqueId = engineId.toString();
 			event.result = result.getStatus().toString();

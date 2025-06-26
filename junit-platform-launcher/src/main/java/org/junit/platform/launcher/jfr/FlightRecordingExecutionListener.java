@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import jdk.jfr.Category;
@@ -43,21 +42,22 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = INTERNAL, since = "6.0")
 class FlightRecordingExecutionListener implements TestExecutionListener {
 
-	private final AtomicReference<@Nullable TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
+	private @Nullable TestPlanExecutionEvent testPlanExecutionEvent;
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
 		var event = new TestPlanExecutionEvent();
 		if (event.isEnabled()) {
 			event.begin();
-			testPlanExecutionEvent.set(event);
+			this.testPlanExecutionEvent = event;
 		}
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		var event = testPlanExecutionEvent.getAndSet(null);
+		var event = this.testPlanExecutionEvent;
+		this.testPlanExecutionEvent = null;
 		if (event != null && event.shouldCommit()) {
 			event.containsTests = plan.containsTests();
 			event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
@@ -81,13 +81,13 @@ class FlightRecordingExecutionListener implements TestExecutionListener {
 		var event = new TestExecutionEvent();
 		if (event.isEnabled()) {
 			event.begin();
-			testExecutionEvents.put(test.getUniqueIdObject(), event);
+			this.testExecutionEvents.put(test.getUniqueIdObject(), event);
 		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
-		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
+		TestExecutionEvent event = this.testExecutionEvents.remove(test.getUniqueIdObject());
 		if (event != null && event.shouldCommit()) {
 			event.end();
 			event.initialize(test);
