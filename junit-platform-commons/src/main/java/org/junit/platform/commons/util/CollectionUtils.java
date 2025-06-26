@@ -61,7 +61,7 @@ public final class CollectionUtils {
 	 * @throws PreconditionViolationException if the collection is {@code null}
 	 * or does not contain exactly one element
 	 */
-	public static <T extends @Nullable Object> T getOnlyElement(Collection<T> collection) {
+	public static <T> T getOnlyElement(Collection<T> collection) {
 		Preconditions.notNull(collection, "collection must not be null");
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
