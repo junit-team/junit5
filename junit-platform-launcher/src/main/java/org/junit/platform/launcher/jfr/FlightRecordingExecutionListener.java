@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.jfr;
 
-import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Map;
@@ -50,14 +49,16 @@ class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Override
 	public void testPlanExecutionStarted(TestPlan plan) {
 		var event = new TestPlanExecutionEvent();
-		testPlanExecutionEvent.set(event);
-		event.begin();
+		if (event.isEnabled()) {
+			event.begin();
+			testPlanExecutionEvent.set(event);
+		}
 	}
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		var event = requireNonNull(testPlanExecutionEvent.getAndSet(null));
-		if (event.shouldCommit()) {
+		var event = testPlanExecutionEvent.getAndSet(null);
+		if (event != null && event.shouldCommit()) {
 			event.containsTests = plan.containsTests();
 			event.engineNames = plan.getRoots().stream().map(TestIdentifier::getDisplayName).collect(
 				Collectors.joining(", "));
@@ -78,14 +79,16 @@ class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Override
 	public void executionStarted(TestIdentifier test) {
 		var event = new TestExecutionEvent();
-		testExecutionEvents.put(test.getUniqueIdObject(), event);
-		event.begin();
+		if (event.isEnabled()) {
+			event.begin();
+			testExecutionEvents.put(test.getUniqueIdObject(), event);
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier test, TestExecutionResult result) {
 		TestExecutionEvent event = testExecutionEvents.remove(test.getUniqueIdObject());
-		if (event.shouldCommit()) {
+		if (event != null && event.shouldCommit()) {
 			event.end();
 			event.initialize(test);
 			event.result = result.getStatus().toString();

@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.jfr;
 
-import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Map;
@@ -49,14 +48,16 @@ class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
 		var event = new LauncherDiscoveryEvent();
-		event.begin();
-		launcherDiscoveryEvent.set(event);
+		if (event.isEnabled()) {
+			event.begin();
+			launcherDiscoveryEvent.set(event);
+		}
 	}
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		LauncherDiscoveryEvent event = requireNonNull(launcherDiscoveryEvent.getAndSet(null));
-		if (event.shouldCommit()) {
+		LauncherDiscoveryEvent event = launcherDiscoveryEvent.getAndSet(null);
+		if (event != null && event.shouldCommit()) {
 			event.selectors = request.getSelectorsByType(DiscoverySelector.class).size();
 			event.filters = request.getFiltersByType(DiscoveryFilter.class).size();
 			event.commit();
@@ -66,14 +67,16 @@ class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 	@Override
 	public void engineDiscoveryStarted(org.junit.platform.engine.UniqueId engineId) {
 		var event = new EngineDiscoveryEvent();
-		event.begin();
-		engineDiscoveryEvents.put(engineId, event);
+		if (event.isEnabled()) {
+			event.begin();
+			engineDiscoveryEvents.put(engineId, event);
+		}
 	}
 
 	@Override
 	public void engineDiscoveryFinished(org.junit.platform.engine.UniqueId engineId, EngineDiscoveryResult result) {
 		EngineDiscoveryEvent event = engineDiscoveryEvents.remove(engineId);
-		if (event.shouldCommit()) {
+		if (event != null && event.shouldCommit()) {
 			event.uniqueId = engineId.toString();
 			event.result = result.getStatus().toString();
 			event.commit();
