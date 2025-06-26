@@ -73,7 +73,7 @@ public interface TempDirFactory extends Closeable {
 
 	/**
 	 * Standard {@link TempDirFactory} implementation which delegates to
-	 * {@link Files#createTempDirectory} using {@code "junit-,"} as prefix.
+	 * {@link Files#createTempDirectory} using {@code "junit-"} as prefix.
 	 *
 	 * <p>The created temporary directory is always created in the default
 	 * file system with the system's default temporary directory as its parent.
