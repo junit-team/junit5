@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.reporting;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.12
  * @see #from(Path, String)
  */
-@API(status = EXPERIMENTAL, since = "1.12")
+@API(status = MAINTAINED, since = "1.13.3")
 public final class FileEntry {
 
 	/**

@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  * @see TestInstancePostProcessor
  * @see TestInstanceFactory
  */
-@API(status = EXPERIMENTAL, since = "5.12")
+@API(status = MAINTAINED, since = "5.13.3")
 public interface TestInstantiationAwareExtension extends Extension {
 
 	/**
@@ -89,7 +89,7 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 *                    configuration parameters; never {@code null}
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
 		return ExtensionContextScope.DEFAULT;
 	}
@@ -102,7 +102,7 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 * @since 5.12
 	 * @see TestInstantiationAwareExtension#getTestInstantiationExtensionContextScope
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	enum ExtensionContextScope {
 
 		/**

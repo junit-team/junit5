@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support.scanning;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.function.Predicate;
 
@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 1.1
  */
-@API(status = EXPERIMENTAL, since = "1.12")
+@API(status = MAINTAINED, since = "1.13.3")
 public class ClassFilter {
 
 	/**

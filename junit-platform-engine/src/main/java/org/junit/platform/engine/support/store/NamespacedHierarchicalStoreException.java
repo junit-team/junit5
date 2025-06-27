@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.store;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -20,7 +20,7 @@ import org.junit.platform.commons.JUnitException;
  *
  * @since 1.10
  */
-@API(status = EXPERIMENTAL, since = "1.10")
+@API(status = MAINTAINED, since = "1.13.3")
 public class NamespacedHierarchicalStoreException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

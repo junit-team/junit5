@@ -12,7 +12,7 @@ package org.junit.platform.commons.support.conversion;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  *
  * @since 1.11
  */
-@API(status = EXPERIMENTAL, since = "1.11")
+@API(status = MAINTAINED, since = "1.13.3")
 public final class ConversionSupport {
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //

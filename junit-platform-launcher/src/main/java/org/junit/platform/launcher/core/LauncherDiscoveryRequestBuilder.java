@@ -11,7 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
@@ -302,7 +302,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * @see OutputDirectoryProvider
 	 * @see LauncherConstants#OUTPUT_DIR_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public LauncherDiscoveryRequestBuilder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 		this.outputDirectoryProvider = Preconditions.notNull(outputDirectoryProvider,
 			"outputDirectoryProvider must not be null");

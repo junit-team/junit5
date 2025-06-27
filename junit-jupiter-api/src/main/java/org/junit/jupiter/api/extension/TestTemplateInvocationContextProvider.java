@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.stream.Stream;
@@ -111,7 +111,7 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext context) {
 		return false;
 	}

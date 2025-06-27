@@ -531,7 +531,7 @@ public final class EngineTestKit {
 		 * @since 1.12
 		 * @see OutputDirectoryProvider
 		 */
-		@API(status = EXPERIMENTAL, since = "1.12")
+		@API(status = MAINTAINED, since = "1.13.3")
 		public Builder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 			this.requestBuilder.outputDirectoryProvider(outputDirectoryProvider);
 			return this;

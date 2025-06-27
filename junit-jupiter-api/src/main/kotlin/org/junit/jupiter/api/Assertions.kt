@@ -12,7 +12,7 @@
 package org.junit.jupiter.api
 
 import org.apiguardian.api.API
-import org.apiguardian.api.API.Status.EXPERIMENTAL
+import org.apiguardian.api.API.Status.MAINTAINED
 import org.apiguardian.api.API.Status.STABLE
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
@@ -36,7 +36,7 @@ fun fail(
  * @see Assertions.fail
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 @JvmName("fail_nonNullableLambda")
 fun fail(message: () -> String): Nothing {
     contract {
@@ -122,7 +122,7 @@ fun assertAll(
  * @see Assertions.assertNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNull(actual: Any?) {
     contract {
         returns() implies (actual == null)
@@ -144,7 +144,7 @@ fun assertNull(actual: Any?) {
  * @see Assertions.assertNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNull(
     actual: Any?,
     message: String
@@ -169,7 +169,7 @@ fun assertNull(
  * @see Assertions.assertNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNull(
     actual: Any?,
     messageSupplier: () -> String
@@ -196,7 +196,7 @@ fun assertNull(
  * @see Assertions.assertNotNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNotNull(actual: Any?) {
     contract {
         returns() implies (actual != null)
@@ -218,7 +218,7 @@ fun assertNotNull(actual: Any?) {
  * @see Assertions.assertNotNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNotNull(
     actual: Any?,
     message: String
@@ -243,7 +243,7 @@ fun assertNotNull(
  * @see Assertions.assertNotNull
  */
 @OptIn(ExperimentalContracts::class)
-@API(since = "5.12", status = EXPERIMENTAL)
+@API(status = MAINTAINED, since = "5.13.3")
 fun assertNotNull(
     actual: Any?,
     messageSupplier: () -> String
@@ -568,7 +568,7 @@ fun <R> assertTimeoutPreemptively(
  * @since 5.11
  */
 @OptIn(ExperimentalContracts::class)
-@API(status = EXPERIMENTAL, since = "5.11")
+@API(status = MAINTAINED, since = "5.13.3")
 inline fun <reified T : Any> assertInstanceOf(
     actualValue: Any?,
     message: String? = null
@@ -593,7 +593,7 @@ inline fun <reified T : Any> assertInstanceOf(
  * @since 5.11
  */
 @OptIn(ExperimentalContracts::class)
-@API(status = EXPERIMENTAL, since = "5.11")
+@API(status = MAINTAINED, since = "5.13.3")
 inline fun <reified T : Any> assertInstanceOf(
     actualValue: Any?,
     noinline message: () -> String

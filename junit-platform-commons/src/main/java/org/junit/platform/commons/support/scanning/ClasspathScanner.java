@@ -28,7 +28,7 @@ import org.junit.platform.commons.support.Resource;
  *
  * @since 1.12
  */
-@API(status = Status.EXPERIMENTAL, since = "1.12")
+@API(status = Status.MAINTAINED, since = "1.13.3")
 public interface ClasspathScanner {
 
 	/**

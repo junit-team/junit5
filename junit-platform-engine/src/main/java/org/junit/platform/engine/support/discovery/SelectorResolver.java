@@ -12,7 +12,7 @@ package org.junit.platform.engine.support.discovery;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
@@ -315,7 +315,7 @@ public interface SelectorResolver {
 	 * Resolution#matches(Set) matches()}; never {@code null}
 	 * @see #resolve(DiscoverySelector, Context)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.9")
+	@API(status = MAINTAINED, since = "1.13.3")
 	default Resolution resolve(IterationSelector selector, Context context) {
 		return resolve((DiscoverySelector) selector, context);
 	}
