@@ -151,7 +151,7 @@ public final class ModifierSupport {
 	 * @since 1.13
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static boolean isNotAbstract(Class<?> clazz) {
 		return ReflectionUtils.isNotAbstract(clazz);
 	}
@@ -164,7 +164,7 @@ public final class ModifierSupport {
 	 * @since 1.13
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static boolean isNotAbstract(Member member) {
 		return ReflectionUtils.isNotAbstract(member);
 	}

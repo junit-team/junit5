@@ -243,7 +243,7 @@ public class LauncherConstants {
 	 * @since 1.13
 	 * @see org.junit.platform.engine.DiscoveryIssue.Severity
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static final String CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME = "junit.platform.discovery.issue.severity.critical";
 
 	/**
@@ -264,7 +264,7 @@ public class LauncherConstants {
 	 * @since 1.13
 	 * @see #CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static final String DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME = "junit.platform.discovery.issue.failure.phase";
 
 	private LauncherConstants() {

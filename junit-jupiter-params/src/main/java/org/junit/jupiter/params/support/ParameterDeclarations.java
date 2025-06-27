@@ -40,7 +40,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
  * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = EXPERIMENTAL, since = "6.0")
 public interface ParameterDeclarations {
 
 	/**

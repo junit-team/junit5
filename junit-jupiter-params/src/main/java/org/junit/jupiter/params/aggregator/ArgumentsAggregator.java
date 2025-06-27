@@ -84,7 +84,7 @@ public interface ArgumentsAggregator {
 	 * aggregation
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	default @Nullable Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {
 		throw new JUnitException(

@@ -158,7 +158,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = EXPERIMENTAL, since = "6.0")
 @ClassTemplateInvocationLifecycleMethod(classTemplateAnnotation = ParameterizedClass.class, lifecycleMethodAnnotation = BeforeParameterizedClassInvocation.class)
 public @interface BeforeParameterizedClassInvocation {
 

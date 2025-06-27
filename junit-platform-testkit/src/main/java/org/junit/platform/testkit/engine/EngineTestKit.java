@@ -156,7 +156,7 @@ public final class EngineTestKit {
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static EngineDiscoveryResults discover(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 		return discover(loadTestEngine(engineId.trim()), discoveryRequest);
@@ -181,7 +181,7 @@ public final class EngineTestKit {
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static EngineDiscoveryResults discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
@@ -443,7 +443,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = EXPERIMENTAL, since = "6.0")
 		public EngineDiscoveryResults discover() {
 			LauncherDiscoveryRequest request = this.requestBuilder.build();
 			return EngineTestKit.discover(this.testEngine, request);

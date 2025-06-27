@@ -29,7 +29,7 @@ import org.junit.jupiter.api.ClassTemplate;
  * @see ClassTemplate
  * @see ClassTemplateInvocationContextProvider
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = EXPERIMENTAL, since = "6.0")
 public interface ClassTemplateInvocationContext {
 
 	/**

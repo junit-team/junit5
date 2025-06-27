@@ -165,7 +165,7 @@ public class ExecutionRequest {
 	 * @since 1.13
 	 * @see NamespacedHierarchicalStore
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public NamespacedHierarchicalStore<Namespace> getStore() {
 		return Preconditions.notNull(this.requestLevelStore,
 			"No NamespacedHierarchicalStore was configured for this request");

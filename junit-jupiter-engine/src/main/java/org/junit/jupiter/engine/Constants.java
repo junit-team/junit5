@@ -217,7 +217,7 @@ public final class Constants {
 	 *
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public static final String CLOSING_STORED_AUTO_CLOSEABLE_ENABLED_PROPERTY_NAME = JupiterConfiguration.CLOSING_STORED_AUTO_CLOSEABLE_ENABLED_PROPERTY_NAME;
 
 	/**

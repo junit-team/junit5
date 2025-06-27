@@ -464,7 +464,7 @@ public interface ExtensionContext {
 	 * @see StoreScope
 	 * @see #getStore(Namespace)
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	Store getStore(StoreScope scope, Namespace namespace);
 
 	/**
@@ -826,7 +826,7 @@ public interface ExtensionContext {
 	 * @since 5.13
 	 * @see #getStore(StoreScope, Namespace)
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	enum StoreScope {
 
 		/**

@@ -34,7 +34,7 @@ import org.junit.platform.engine.UniqueId;
  * @since 1.13
  * @see SelectorResolver.Context
  */
-@API(status = EXPERIMENTAL, since = "1.13")
+@API(status = EXPERIMENTAL, since = "6.0")
 public interface DiscoveryIssueReporter {
 
 	/**

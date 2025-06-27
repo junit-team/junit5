@@ -149,7 +149,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = EXPERIMENTAL, since = "6.0")
 @ClassTemplate
 @ExtendWith(ParameterizedClassExtension.class)
 @SuppressWarnings("exports")

@@ -72,7 +72,7 @@ public interface ArgumentsProvider {
 	 * @return a stream of arguments; never {@code null}
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	default Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context)
 			throws Exception {
 		try {

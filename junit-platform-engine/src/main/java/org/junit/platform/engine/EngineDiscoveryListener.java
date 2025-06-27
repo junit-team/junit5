@@ -63,7 +63,7 @@ public interface EngineDiscoveryListener {
 	 * @since 1.13
 	 * @see DiscoveryIssue
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = EXPERIMENTAL, since = "6.0")
 	default void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 	}
 

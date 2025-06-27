@@ -335,7 +335,7 @@ public interface TestDescriptor {
 		 * is empty
 		 * @since 1.13
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = EXPERIMENTAL, since = "6.0")
 		static Visitor composite(Visitor... visitors) {
 			return CompositeTestDescriptorVisitor.from(visitors);
 		}
