@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +49,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
  * @see ParameterizedClass
  * @see ParameterizedTest
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = MAINTAINED, since = "5.13.3")
 public interface ParameterInfo {
 
 	/**

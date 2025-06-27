@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.store;
 
 import static java.util.Comparator.comparing;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
@@ -95,7 +94,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @return an {@code Optional} containing the parent store, or an empty {@code Optional} if there is no parent
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public Optional<NamespacedHierarchicalStore<N>> getParent() {
 		return Optional.ofNullable(this.parentStore);
 	}
@@ -462,7 +461,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	@FunctionalInterface
 	public interface CloseAction<N> {
 
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = MAINTAINED, since = "1.13.3")
 		static <N> CloseAction<N> closeAutoCloseables() {
 			return (__, ___, value) -> {
 				if (value instanceof AutoCloseable) {

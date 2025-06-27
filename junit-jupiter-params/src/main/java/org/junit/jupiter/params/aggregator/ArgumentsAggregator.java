@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -82,7 +82,7 @@ public interface ArgumentsAggregator {
 	 * aggregation
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {
 		throw new JUnitException(

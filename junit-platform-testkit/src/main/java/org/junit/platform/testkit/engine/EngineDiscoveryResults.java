@@ -11,7 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.Collections.unmodifiableList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
  *
  * @since 1.13
  */
-@API(status = EXPERIMENTAL, since = "1.13")
+@API(status = MAINTAINED, since = "1.13.3")
 public class EngineDiscoveryResults {
 
 	private final TestDescriptor engineDescriptor;

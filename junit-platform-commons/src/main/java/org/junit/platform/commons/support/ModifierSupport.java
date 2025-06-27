@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Member;
@@ -151,7 +150,7 @@ public final class ModifierSupport {
 	 * @since 1.13
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static boolean isNotAbstract(Class<?> clazz) {
 		return ReflectionUtils.isNotAbstract(clazz);
 	}
@@ -164,7 +163,7 @@ public final class ModifierSupport {
 	 * @since 1.13
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static boolean isNotAbstract(Member member) {
 		return ReflectionUtils.isNotAbstract(member);
 	}

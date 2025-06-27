@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -83,7 +83,7 @@ public interface ArgumentConverter {
 	 * conversion
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
 		throw new JUnitException(
 			String.format("ArgumentConverter does not override the convert(Object, FieldContext) method. "

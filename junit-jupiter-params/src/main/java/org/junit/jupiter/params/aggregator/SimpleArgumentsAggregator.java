@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -25,7 +25,7 @@ import org.junit.jupiter.params.support.FieldContext;
  * @since 5.0
  * @see ArgumentsAggregator
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = MAINTAINED, since = "5.13.3")
 public abstract class SimpleArgumentsAggregator implements ArgumentsAggregator {
 
 	public SimpleArgumentsAggregator() {
