@@ -3,7 +3,7 @@
 
 *Date of Release:* June 24, 2025
 
-*Scope:* Bug fixes and enhancements since 5.13.0
+*Scope:* Bug fixes and enhancements since 5.13.1
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/98?closed=1+[5.13.2] milestone page in the JUnit
@@ -33,8 +33,8 @@ repository on GitHub.
   `@Nested`.
 * Stop reporting discovery issues for _abstract_ inner classes that contain test methods
   but are not annotated with `@Nested`.
-* Stop reporting discovery issues for _abstract_ test methods. While they won't be
-  executed, it's a valid pattern to annotate them with `@Test` for documentation purposes
+* Stop reporting discovery issues for _abstract_ test methods. Although they will not be
+  executed, it is a valid pattern to annotate them with `@Test` for documentation purposes
   and override them in subclasses while re-declaring the `@Test` annotation.
 
 [[release-notes-5.13.2-junit-jupiter-new-features-and-improvements]]

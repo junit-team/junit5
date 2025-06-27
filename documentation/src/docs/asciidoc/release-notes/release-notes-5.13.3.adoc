@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:* Bug fixes and enhancements since 5.13.2
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/100?closed=1+[5.13.3] milestone page in the JUnit
