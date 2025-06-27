@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.commons;
+package org.junit.platform.suite.engine;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -215,7 +215,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		// @formatter:off
 		LauncherDiscoveryRequest request = builder
-				.filterStandardClassNamePatterns(true)
+				.filterStandardClassNamePatterns()
 				.applySelectorsAndFiltersFromSuite(Suite.class)
 				.build();
 		// @formatter:on
@@ -274,7 +274,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@Test
 	void selectClassesByName() {
-		@SelectClasses(names = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase")
+		@SelectClasses(names = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase")
 		class Suite {
 		}
 
@@ -302,13 +302,13 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@TestFactory
 	Stream<DynamicTest> selectOneMethodWithNoParameters() {
-		@SelectMethod("org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod")
+		@SelectMethod("org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod")
 		class SuiteA {
 		}
 		@SelectMethod(type = NoParameterTestCase.class, name = "testMethod")
 		class SuiteB {
 		}
-		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase", name = "testMethod")
+		@SelectMethod(typeName = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase", name = "testMethod")
 		class SuiteC {
 		}
 
@@ -329,7 +329,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 	@TestFactory
 	Stream<DynamicTest> selectOneMethodWithOneParameter() {
-		@SelectMethod("org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase#testMethod(int)")
+		@SelectMethod("org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase#testMethod(int)")
 		class SuiteA {
 		}
 		@SelectMethod(type = OneParameterTestCase.class, name = "testMethod", parameterTypeNames = "int")
@@ -338,10 +338,10 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		@SelectMethod(type = OneParameterTestCase.class, name = "testMethod", parameterTypes = int.class)
 		class SuiteC {
 		}
-		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypeNames = "int")
+		@SelectMethod(typeName = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypeNames = "int")
 		class SuiteD {
 		}
-		@SelectMethod(typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypes = int.class)
+		@SelectMethod(typeName = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$OneParameterTestCase", name = "testMethod", parameterTypes = int.class)
 		class SuiteE {
 		}
 
@@ -390,7 +390,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		@SelectMethod(value = "irrelevant", type = NoParameterTestCase.class)
 		class ValueAndType {
 		}
-		@SelectMethod(value = "SomeClass#someMethod", typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
+		@SelectMethod(value = "SomeClass#someMethod", typeName = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
 		class ValueAndTypeName {
 		}
 		@SelectMethod(value = "SomeClass#someMethod", name = "testMethod")
@@ -405,7 +405,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		@SelectMethod(type = NoParameterTestCase.class)
 		class MissingMethodName {
 		}
-		@SelectMethod(name = "testMethod", type = NoParameterTestCase.class, typeName = "org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
+		@SelectMethod(name = "testMethod", type = NoParameterTestCase.class, typeName = "org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase")
 		class TypeAndTypeName {
 		}
 		@SelectMethod(name = "testMethod", parameterTypes = int.class, parameterTypeNames = "int")
@@ -633,8 +633,8 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	void selectByIdentifier() {
 		// @formatter:off
 		@Select({
-				"class:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase",
-				"method:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod"
+				"class:org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase",
+				"method:org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod"
 		})
 		// @formatter:on
 		class Suite {

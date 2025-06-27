@@ -15,7 +15,7 @@ import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.suite.engine.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -50,7 +50,6 @@ import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
-import org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder;
 
 /**
  * {@link TestDescriptor} for tests based on the JUnit Platform Suite API.
@@ -118,8 +117,8 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 		// @formatter:off
 		LauncherDiscoveryRequest request = discoveryRequestBuilder
-				.filterStandardClassNamePatterns(true)
-				.enableImplicitConfigurationParameters(false)
+				.filterStandardClassNamePatterns()
+				.disableImplicitConfigurationParameters()
 				.parentConfigurationParameters(configurationParameters)
 				.applyConfigurationParametersFromSuite(suiteClass)
 				.outputDirectoryProvider(outputDirectoryProvider)

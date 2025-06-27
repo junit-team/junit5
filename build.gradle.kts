@@ -27,7 +27,6 @@ val platformProjects by extra(listOf(
 		projects.junitPlatformReporting,
 		projects.junitPlatformSuite,
 		projects.junitPlatformSuiteApi,
-		projects.junitPlatformSuiteCommons,
 		projects.junitPlatformSuiteEngine,
 		projects.junitPlatformTestkit
 ).map { dependencyProject(it) })

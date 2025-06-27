@@ -26,7 +26,6 @@ on `junit-platform-suite-api` and `junit-platform-suite-engine`.
 [[junit-platform-suite-engine-setup-transitive-dependencies]]
 ===== Transitive Dependencies
 
-* `junit-platform-suite-commons` in _test_ scope
 * `junit-platform-launcher` in _test_ scope
 * `junit-platform-engine` in _test_ scope
 * `junit-platform-commons` in _test_ scope

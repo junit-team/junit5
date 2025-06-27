@@ -53,7 +53,6 @@ module org.junit.platform.commons {
 			org.junit.platform.launcher,
 			org.junit.platform.reporting,
 			org.junit.platform.suite.api,
-			org.junit.platform.suite.commons,
 			org.junit.platform.suite.engine,
 			org.junit.platform.testkit,
 			org.junit.vintage.engine;

@@ -21,7 +21,6 @@ module org.junit.platform.suite.engine {
 	requires static org.jspecify;
 
 	requires org.junit.platform.suite.api;
-	requires org.junit.platform.suite.commons;
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
 	requires org.junit.platform.launcher;

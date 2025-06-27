@@ -78,8 +78,6 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
   `junit-platform-suite-api`::
     Annotations for configuring test suites on the JUnit Platform. Supported by the
     <<junit-platform-suite-engine, JUnit Platform Suite Engine>>.
-  `junit-platform-suite-commons`::
-    Common support utilities for executing test suites on the JUnit Platform.
   `junit-platform-suite-engine`::
     Engine that executes test suites on the JUnit Platform; only required at runtime. See
     <<junit-platform-suite-engine,JUnit Platform Suite Engine>> for details.
