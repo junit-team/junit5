@@ -73,8 +73,6 @@ console ..> reporting
 
 launcher ..> engine
 
-jfr ..> launcher
-
 engine ....> opentest4j
 engine ..> commons
 
