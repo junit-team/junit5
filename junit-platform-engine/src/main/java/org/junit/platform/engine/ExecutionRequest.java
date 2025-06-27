@@ -11,7 +11,6 @@
 package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -162,7 +161,7 @@ public class ExecutionRequest {
 	 * @since 1.13
 	 * @see NamespacedHierarchicalStore
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public NamespacedHierarchicalStore<Namespace> getStore() {
 		return Preconditions.notNull(this.requestLevelStore,
 			"No NamespacedHierarchicalStore was configured for this request");

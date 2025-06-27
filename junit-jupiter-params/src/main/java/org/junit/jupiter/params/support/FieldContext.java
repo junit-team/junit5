@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Field;
 
@@ -28,7 +28,7 @@ import org.junit.jupiter.params.ParameterizedClass;
  * @see ParameterizedClass
  * @see Parameter
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = MAINTAINED, since = "5.13.3")
 public interface FieldContext extends AnnotatedElementContext {
 
 	/**

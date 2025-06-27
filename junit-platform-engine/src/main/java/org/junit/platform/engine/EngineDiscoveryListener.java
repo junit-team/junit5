@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -63,7 +63,7 @@ public interface EngineDiscoveryListener {
 	 * @since 1.13
 	 * @see DiscoveryIssue
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	default void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 	}
 

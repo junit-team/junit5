@@ -12,7 +12,6 @@ package org.junit.jupiter.api;
 
 import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -333,7 +332,7 @@ public interface DisplayNameGenerator {
 		 */
 		@Target({ ElementType.TYPE, ElementType.METHOD })
 		@Retention(RetentionPolicy.RUNTIME)
-		@API(status = EXPERIMENTAL, since = "5.13")
+		@API(status = MAINTAINED, since = "5.13.3")
 		public @interface SentenceFragment {
 
 			/**

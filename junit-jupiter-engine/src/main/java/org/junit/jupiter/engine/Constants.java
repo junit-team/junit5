@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
@@ -218,7 +217,7 @@ public final class Constants {
 	 *
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String CLOSING_STORED_AUTO_CLOSEABLE_ENABLED_PROPERTY_NAME = JupiterConfiguration.CLOSING_STORED_AUTO_CLOSEABLE_ENABLED_PROPERTY_NAME;
 
 	/**

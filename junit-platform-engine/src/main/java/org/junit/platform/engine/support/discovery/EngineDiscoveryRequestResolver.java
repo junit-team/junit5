@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.discovery;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -137,7 +136,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	 * @see SelectorResolver
 	 * @see TestDescriptor.Visitor
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor, DiscoveryIssueReporter issueReporter) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
@@ -208,7 +207,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 * {@code null}
 		 * @return this builder for method chaining
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = MAINTAINED, since = "1.13.3")
 		public Builder<T> addClassContainerSelectorResolverWithContext(
 				Function<InitializationContext<T>, Predicate<Class<?>>> classFilterCreator) {
 			Preconditions.notNull(classFilterCreator, "classFilterCreator must not be null");
@@ -346,7 +345,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 *
 		 * @since 1.13
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = MAINTAINED, since = "1.13.3")
 		DiscoveryIssueReporter getIssueReporter();
 	}
 

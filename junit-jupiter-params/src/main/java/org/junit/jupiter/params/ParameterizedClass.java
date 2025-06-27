@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -149,7 +149,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = MAINTAINED, since = "5.13.3")
 @ClassTemplate
 @ExtendWith(ParameterizedClassExtension.class)
 @SuppressWarnings("exports")

@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.ClassTemplate;
  * @see ClassTemplate
  * @see ClassTemplateInvocationContextProvider
  */
-@API(status = EXPERIMENTAL, since = "5.13")
+@API(status = MAINTAINED, since = "5.13.3")
 public interface ClassTemplateInvocationContext {
 
 	/**

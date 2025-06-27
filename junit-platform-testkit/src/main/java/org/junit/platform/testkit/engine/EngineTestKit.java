@@ -13,7 +13,6 @@ package org.junit.platform.testkit.engine;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
@@ -159,7 +158,7 @@ public final class EngineTestKit {
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static EngineDiscoveryResults discover(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 		return discover(loadTestEngine(engineId.trim()), discoveryRequest);
@@ -184,7 +183,7 @@ public final class EngineTestKit {
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.13")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static EngineDiscoveryResults discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
@@ -550,7 +549,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = MAINTAINED, since = "1.13.3")
 		public EngineDiscoveryResults discover() {
 			LauncherDiscoveryRequest request = this.requestBuilder.build();
 			return EngineTestKit.discover(this.testEngine, request);

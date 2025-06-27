@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public interface TestTemplateInvocationContext {
 	 * @param context The invocation-level extension context.
 	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default void prepareInvocation(ExtensionContext context) {
 	}
 

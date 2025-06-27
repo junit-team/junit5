@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -334,7 +333,7 @@ public interface TestDescriptor {
 		 * is empty
 		 * @since 1.13
 		 */
-		@API(status = EXPERIMENTAL, since = "1.13")
+		@API(status = MAINTAINED, since = "1.13.3")
 		static Visitor composite(Visitor... visitors) {
 			return CompositeTestDescriptorVisitor.from(visitors);
 		}
