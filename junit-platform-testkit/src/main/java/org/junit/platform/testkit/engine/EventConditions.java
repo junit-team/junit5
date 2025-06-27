@@ -532,7 +532,7 @@ public final class EventConditions {
 	 *
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Condition<Event> fileEntry(Predicate<FileEntry> predicate) {
 		return new Condition<>(byPayload(FileEntry.class, predicate), "event for file entry with custom predicate");
 	}

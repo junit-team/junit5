@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ import org.apiguardian.api.API;
  * @see ReflectionSupport#streamAllResourcesInPackage(String, Predicate)
  * @see ReflectionSupport#streamAllResourcesInModule(String, Predicate)
  */
-@API(status = EXPERIMENTAL, since = "1.11")
+@API(status = MAINTAINED, since = "1.13.3")
 public interface Resource {
 
 	/**

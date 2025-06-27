@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
@@ -77,7 +77,7 @@ public @interface Execution {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = MAINTAINED, since = "5.13.3")
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
 
 	/**
@@ -96,7 +96,7 @@ public @interface Execution {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = MAINTAINED, since = "5.13.3")
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default";
 
 	/**

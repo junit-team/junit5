@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.discovery;
 
 import static java.util.stream.Collectors.toCollection;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -227,7 +228,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 * @return this builder for method chaining
 		 * @since 1.12
 		 */
-		@API(status = EXPERIMENTAL, since = "1.12")
+		@API(status = MAINTAINED, since = "1.13.3")
 		public Builder<T> addResourceContainerSelectorResolver(Predicate<Resource> resourceFilter) {
 			Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
 			return addSelectorResolver(
@@ -336,7 +337,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 * {@code null}
 		 * @since 1.12
 		 */
-		@API(status = EXPERIMENTAL, since = "1.12")
+		@API(status = MAINTAINED, since = "1.13.3")
 		Predicate<String> getPackageFilter();
 
 		/**

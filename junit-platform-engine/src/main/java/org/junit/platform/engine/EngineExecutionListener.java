@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -156,7 +156,7 @@ public interface EngineExecutionListener {
 	* the file entry belongs
 	 * @param file a {@code FileEntry} instance to be attached
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	default void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
 	}
 }

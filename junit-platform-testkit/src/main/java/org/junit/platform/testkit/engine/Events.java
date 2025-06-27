@@ -13,7 +13,6 @@ package org.junit.platform.testkit.engine;
 import static java.util.Collections.sort;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.testkit.engine.Event.byPayload;
@@ -215,7 +214,7 @@ public final class Events {
 	 * @return the filtered {@code Events}; never {@code null}
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public Events fileEntryPublished() {
 		return new Events(eventsByType(EventType.FILE_ENTRY_PUBLISHED), this.category + " File Entry Published");
 	}

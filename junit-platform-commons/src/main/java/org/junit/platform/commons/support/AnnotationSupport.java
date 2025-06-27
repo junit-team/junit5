@@ -11,7 +11,6 @@
 package org.junit.platform.commons.support;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Annotation;
@@ -213,7 +212,7 @@ public final class AnnotationSupport {
 	 * @since 1.12
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static <A extends Annotation> Optional<A> findAnnotation(Class<?> clazz, Class<A> annotationType,
 			List<Class<?>> enclosingInstanceTypes) {
 

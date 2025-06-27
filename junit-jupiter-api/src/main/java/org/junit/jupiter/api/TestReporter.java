@@ -11,7 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.IOException;
@@ -98,7 +98,7 @@ public interface TestReporter {
 	 * {@link MediaType#APPLICATION_OCTET_STREAM} if unknown
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default void publishFile(Path file, MediaType mediaType) {
 		Preconditions.condition(Files.exists(file), () -> "file must exist: " + file);
 		Preconditions.condition(Files.isRegularFile(file), () -> "file must be a regular file: " + file);
@@ -115,7 +115,7 @@ public interface TestReporter {
 	 * @param directory the file to be attached; never {@code null} or blank
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default void publishDirectory(Path directory) {
 		Preconditions.condition(Files.exists(directory), () -> "directory must exist: " + directory);
 		Preconditions.condition(Files.isDirectory(directory), () -> "directory must be a directory: " + directory);
@@ -153,7 +153,7 @@ public interface TestReporter {
 	 * @param action the action to be executed to write the file; never {@code null}
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action) {
 		throw new UnsupportedOperationException();
 	}
@@ -171,7 +171,7 @@ public interface TestReporter {
 	 * @param action the action to be executed to write the file; never {@code null}
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default void publishDirectory(String name, ThrowingConsumer<Path> action) {
 		throw new UnsupportedOperationException();
 	}
