@@ -43,7 +43,6 @@ class HelperTests {
 			"junit-platform-reporting", //
 			"junit-platform-suite", //
 			"junit-platform-suite-api", //
-			"junit-platform-suite-commons", //
 			"junit-platform-suite-engine", //
 			"junit-platform-testkit", //
 			"junit-vintage-engine"//

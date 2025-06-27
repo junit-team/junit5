@@ -8,29 +8,25 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.suite.commons;
+package org.junit.platform.suite.engine;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
-import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectFile;
+import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectClasspathResource;
+import static org.junit.platform.suite.engine.AdditionalDiscoverySelectors.selectFile;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -74,47 +70,13 @@ import org.junit.platform.suite.api.SelectUris;
  * for generating a {@link LauncherDiscoveryRequest} specifically tailored for
  * suite execution.
  *
- * <h2>Example</h2>
- *
- * <pre>{@code
- * SuiteLauncherDiscoveryRequestBuilder.request()
- *   .selectors(
- *        selectPackage("org.example.user"),
- *        selectClass("org.example.payment.PaymentTests"),
- *        selectClass(ShippingTests.class),
- *        selectMethod("org.example.order.OrderTests#test1"),
- *        selectMethod("org.example.order.OrderTests#test2()"),
- *        selectMethod("org.example.order.OrderTests#test3(java.lang.String)"),
- *        selectMethod("org.example.order.OrderTests", "test4"),
- *        selectMethod(OrderTests.class, "test5"),
- *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots(Collections.singleton(Paths.get("/my/local/path1"))),
- *        selectUniqueId("unique-id-1"),
- *        selectUniqueId("unique-id-2")
- *   )
- *   .filters(
- *        includeEngines("junit-jupiter", "spek"),
- *        // excludeEngines("junit-vintage"),
- *        includeTags("fast"),
- *        // excludeTags("slow"),
- *        includeClassNamePatterns(".*Test[s]?")
- *        // includeClassNamePatterns("org\.example\.tests.*")
- *   )
- *   .configurationParameter("key", "value")
- *   .enableImplicitConfigurationParameters(true)
- *   .applyConfigurationParametersFromSuite(MySuite.class)
- *   .applySelectorsAndFiltersFromSuite(MySuite.class)
- *   .build();
- * }</pre>
- *
- * @since 1.8
+ * @since 1.8 (originally in junit-platform-suite-commons)
  * @see org.junit.platform.engine.discovery.DiscoverySelectors
  * @see org.junit.platform.engine.discovery.ClassNameFilter
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(status = INTERNAL, since = "1.8", consumers = "org.junit.platform.suite.engine")
-public final class SuiteLauncherDiscoveryRequestBuilder {
+final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder delegate = LauncherDiscoveryRequestBuilder.request();
 	private final Set<String> selectedClassNames = new LinkedHashSet<>();
@@ -133,7 +95,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 *
 	 * @return a new builder
 	 */
-	public static SuiteLauncherDiscoveryRequestBuilder request() {
+	static SuiteLauncherDiscoveryRequestBuilder request() {
 		return new SuiteLauncherDiscoveryRequestBuilder();
 	}
 
@@ -141,30 +103,24 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * Add all supplied {@code selectors} to the request.
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
-	 * @return this builder for method chaining
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
+	void selectors(DiscoverySelector... selectors) {
 		this.delegate.selectors(selectors);
-		return this;
 	}
 
 	/**
 	 * Add all supplied {@code selectors} to the request.
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
-	 * @return this builder for method chaining
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
+	private void selectors(List<? extends DiscoverySelector> selectors) {
 		this.delegate.selectors(selectors);
-		return this;
 	}
 
 	/**
 	 * Add all supplied {@code filters} to the request.
-	 *
 	 * <p>The {@code filters} are combined using AND semantics, i.e. all of them
 	 * have to include a resource for it to end up in the test plan.
-	 *
 	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
 	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
 	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
@@ -172,24 +128,19 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * undesirable results (i.e., zero engines being active).
 	 *
 	 * @param filters the {@code Filter}s to add; never {@code null}
-	 * @return this builder for method chaining
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
+	private void filters(Filter<?>... filters) {
 		this.delegate.filters(filters);
-		return this;
 	}
 
 	/**
 	 * Specify whether to filter standard class name patterns.
 	 * <p>If set to {@code true}, standard class name patterns are filtered.
 	 *
-	 * @param filterStandardClassNamePatterns {@code true} to filter standard class
-	 * name patterns, {@code false} otherwise
 	 * @return this builder for method chaining
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder filterStandardClassNamePatterns(
-			boolean filterStandardClassNamePatterns) {
-		this.filterStandardClassNamePatterns = filterStandardClassNamePatterns;
+	SuiteLauncherDiscoveryRequestBuilder filterStandardClassNamePatterns() {
+		this.filterStandardClassNamePatterns = true;
 		return this;
 	}
 
@@ -201,45 +152,29 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * @param value the value to store
 	 * @return this builder for method chaining
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
+	SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		this.delegate.configurationParameter(key, value);
 		return this;
 	}
 
-	/**
-	 * Add all supplied configuration parameters to the request.
-	 *
-	 * @param configurationParameters the map of configuration parameters to add;
-	 * never {@code null}
-	 * @return this builder for method chaining
-	 * @see #configurationParameter(String, String)
-	 */
-	public SuiteLauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		this.delegate.configurationParameters(configurationParameters);
-		return this;
-	}
-
-	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String resourceFile) {
+	void configurationParametersResource(String resourceFile) {
 		this.delegate.configurationParametersResources(resourceFile);
-		return this;
 	}
 
 	/**
 	 * Set the parent configuration parameters to use for the request.
 	 *
 	 * <p>Any explicit configuration parameters configured via
-	 * {@link #configurationParameter(String, String)} or
-	 * {@link #configurationParameters(Map)} takes precedence over the supplied
-	 * configuration parameters.
+	 * {@link #configurationParameter(String, String)} takes precedence over the
+	 * supplied configuration parameters.
 	 *
 	 * @param parentConfigurationParameters the parent instance to use for looking
 	 * up configuration parameters that have not been explicitly configured;
 	 * never {@code null}
 	 * @return this builder for method chaining
 	 * @see #configurationParameter(String, String)
-	 * @see #configurationParameters(Map)
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder parentConfigurationParameters(
+	SuiteLauncherDiscoveryRequestBuilder parentConfigurationParameters(
 			ConfigurationParameters parentConfigurationParameters) {
 		this.parentConfigurationParameters = parentConfigurationParameters;
 		return this;
@@ -247,34 +182,27 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	/**
 	 * Configure whether implicit configuration parameters should be considered.
-	 *
 	 * <p>By default, in addition to those parameters that are passed explicitly
 	 * to this builder, configuration parameters are read from system properties
 	 * and from the {@code junit-platform.properties} classpath resource.
 	 * Passing {@code false} to this method, disables the latter two sources so
 	 * that only explicit configuration parameters are taken into account.
 	 *
-	 * @param enabled {@code true} if implicit configuration parameters should be
-	 * considered
 	 * @return this builder for method chaining
 	 * @see #configurationParameter(String, String)
-	 * @see #configurationParameters(Map)
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
-		this.delegate.enableImplicitConfigurationParameters(enabled);
+	SuiteLauncherDiscoveryRequestBuilder disableImplicitConfigurationParameters() {
+		this.delegate.enableImplicitConfigurationParameters(false);
 		return this;
 	}
 
-	public SuiteLauncherDiscoveryRequestBuilder outputDirectoryProvider(
-			OutputDirectoryProvider outputDirectoryProvider) {
+	SuiteLauncherDiscoveryRequestBuilder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 		delegate.outputDirectoryProvider(outputDirectoryProvider);
 		return this;
 	}
 
-	@API(status = INTERNAL, since = "1.13")
-	public SuiteLauncherDiscoveryRequestBuilder listener(LauncherDiscoveryListener listener) {
+	void listener(LauncherDiscoveryListener listener) {
 		delegate.listeners(listener);
-		return this;
 	}
 
 	/**
@@ -289,8 +217,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * {@link #applySelectorsAndFiltersFromSuite}
 	 */
 	@Deprecated
-	@API(status = DEPRECATED, since = "1.11")
-	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
+	SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 		applyConfigurationParametersFromSuite(suiteClass);
 		applySelectorsAndFiltersFromSuite(suiteClass);
@@ -312,7 +239,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * @since 1.11
 	 * @see org.junit.platform.suite.api.Suite
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder applyConfigurationParametersFromSuite(Class<?> suiteClass) {
+	SuiteLauncherDiscoveryRequestBuilder applyConfigurationParametersFromSuite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
 		// @formatter:off
@@ -357,7 +284,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * @since 1.11
 	 * @see org.junit.platform.suite.api.Suite
 	 */
-	public SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
+	SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
 		addExcludeFilters(suiteClass);
@@ -444,7 +371,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * Build the {@link LauncherDiscoveryRequest} that has been configured via
 	 * this builder.
 	 */
-	public LauncherDiscoveryRequest build() {
+	LauncherDiscoveryRequest build() {
 		if (this.filterStandardClassNamePatterns && !this.includeClassNamePatternsUsed) {
 			this.delegate.filters(createIncludeClassNameFilter(STANDARD_INCLUDE_PATTERN));
 		}

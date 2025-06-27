@@ -24,7 +24,6 @@ package org.junit.platform {
     [junit-platform-reporting] as reporting
     [junit-platform-suite] as suite
     [junit-platform-suite-api] as suite_api
-    [junit-platform-suite-commons] as suite_commons
     [junit-platform-suite-engine] as suite_engine
     [junit-platform-testkit] as testkit
 }
@@ -82,10 +81,8 @@ reporting ......> otr_tooling_spi
 suite ..> suite_api
 suite ..> suite_engine
 
-suite_engine ..> suite_commons
-
-suite_commons ..> launcher
-suite_commons ..> suite_api
+suite_engine ..> launcher
+suite_engine ..> suite_api
 
 testkit ....> opentest4j
 testkit ..> launcher
