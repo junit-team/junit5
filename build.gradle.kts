@@ -10,6 +10,7 @@ plugins {
 }
 
 description = "JUnit"
+group = "org.junit"
 
 val license by extra(License(
 	name = "Eclipse Public License v2.0",
