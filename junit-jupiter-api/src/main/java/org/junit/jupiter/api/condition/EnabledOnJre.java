@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -110,7 +110,7 @@ public @interface EnabledOnJre {
 	 * @see JRE#version()
 	 * @see Runtime.Version#feature()
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	int[] versions() default {};
 
 	/**

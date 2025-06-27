@@ -12,7 +12,6 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.net.URI;
@@ -250,7 +249,7 @@ public class DynamicTest extends DynamicNode {
 	 * @see #stream(Stream)
 	 * @see NamedExecutable
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static <T extends Named<E>, E extends Executable> Stream<DynamicTest> stream(
 			Iterator<? extends T> iterator) {
 		Preconditions.notNull(iterator, "iterator must not be null");
@@ -280,7 +279,7 @@ public class DynamicTest extends DynamicNode {
 	 * @see #stream(Iterator)
 	 * @see NamedExecutable
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static <T extends Named<E>, E extends Executable> Stream<DynamicTest> stream(
 			Stream<? extends T> inputStream) {
 		Preconditions.notNull(inputStream, "inputStream must not be null");

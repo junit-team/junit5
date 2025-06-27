@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
@@ -118,7 +118,7 @@ public @interface ResourceLock {
 	 * @see ResourceLocksProvider.Lock
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	Class<? extends ResourceLocksProvider>[] providers() default {};
 
 	/**
@@ -132,7 +132,7 @@ public @interface ResourceLock {
 	 * @see ResourceLockTarget
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	ResourceLockTarget target() default ResourceLockTarget.SELF;
 
 }

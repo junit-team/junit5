@@ -14,6 +14,7 @@ import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
@@ -131,7 +132,7 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the nested class; never blank
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 		return generateDisplayNameForNestedClass(nestedClass);
 	}
@@ -180,7 +181,7 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the test; never blank
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	default String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
 			Method testMethod) {
 		return generateDisplayNameForMethod(testClass, testMethod);

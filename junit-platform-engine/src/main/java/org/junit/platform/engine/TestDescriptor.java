@@ -11,6 +11,7 @@
 package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -189,7 +190,7 @@ public interface TestDescriptor {
 	 * @param orderer a unary operator to order the children of this test descriptor
 	 * @since 1.12
 	 */
-	@API(since = "1.12", status = EXPERIMENTAL)
+	@API(status = MAINTAINED, since = "1.13.3")
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");
 		Set<? extends TestDescriptor> originalChildren = getChildren();

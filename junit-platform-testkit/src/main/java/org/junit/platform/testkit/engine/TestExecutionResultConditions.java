@@ -11,7 +11,6 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
@@ -96,7 +95,7 @@ public final class TestExecutionResultConditions {
 	 * @see #cause(Condition...)
 	 * @see #suppressed(int, Condition...)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static Condition<Throwable> rootCause(Condition<Throwable>... conditions) {

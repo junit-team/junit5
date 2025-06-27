@@ -11,8 +11,8 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.Collections.unmodifiableSet;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.LinkedHashSet;
@@ -96,7 +96,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 *
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public Set<Resource> getClasspathResources() {
 		if (this.classpathResources == null) {
 			Try<Set<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);

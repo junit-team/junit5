@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -128,7 +128,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public @Nullable ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
@@ -210,7 +210,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * @see #getParameterTypeNames()
 	 * @see Method#getParameterTypes()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public Class<?>[] getParameterTypes() {
 		return lazyLoadParameterTypes().clone();
 	}

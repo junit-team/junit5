@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public interface EngineDiscoveryRequest {
 	 * @return the output directory provider; never {@code null}
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	default OutputDirectoryProvider getOutputDirectoryProvider() {
 		throw new JUnitException(
 			"OutputDirectoryProvider not available; probably due to unaligned versions of the junit-platform-engine and junit-platform-launcher jars on the classpath/module path.");

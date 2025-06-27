@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
+
 import org.apiguardian.api.API;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
@@ -28,7 +30,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * @see ParameterizedClass#argumentCountValidation()
  * @see ParameterizedTest#argumentCountValidation()
  */
-@API(status = API.Status.EXPERIMENTAL, since = "5.12")
+@API(status = MAINTAINED, since = "5.13.3")
 public enum ArgumentCountValidationMode {
 
 	/**

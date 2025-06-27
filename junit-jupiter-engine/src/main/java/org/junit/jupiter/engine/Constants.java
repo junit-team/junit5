@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
@@ -189,7 +190,7 @@ public final class Constants {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME;
 
 	/**
@@ -275,7 +276,7 @@ public final class Constants {
 	 *
 	 * @since 5.10
 	 */
-	@API(status = EXPERIMENTAL, since = "5.10")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 
@@ -293,7 +294,7 @@ public final class Constants {
 	 *
 	 * @since 5.10
 	 */
-	@API(status = EXPERIMENTAL, since = "5.10")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_SATURATE_PROPERTY_NAME;
 
@@ -440,7 +441,7 @@ public final class Constants {
 	 * @see Timeout
 	 * @see Timeout.ThreadMode
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME = Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME;
 
 	/**
@@ -450,7 +451,7 @@ public final class Constants {
 	 * @since 5.10
 	 * @see TempDir#DEFAULT_FACTORY_PROPERTY_NAME
 	 */
-	@API(status = EXPERIMENTAL, since = "5.10")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME = TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
 
 	/**
@@ -460,7 +461,7 @@ public final class Constants {
 	 * @since 5.12
 	 * @see org.junit.jupiter.api.extension.TestInstantiationAwareExtension
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static final String DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextScope.DEFAULT_SCOPE_PROPERTY_NAME;
 
 	private Constants() {

@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
@@ -348,7 +348,7 @@ public final class DiscoverySelectors {
 	 * @see ClasspathResourceSelector
 	 * @see ReflectionSupport#tryToGetResources(String)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static ClasspathResourceSelector selectClasspathResource(Set<Resource> classpathResources) {
 		Preconditions.notEmpty(classpathResources, "classpath resources must not be null or empty");
 		Preconditions.containsNoNullElements(classpathResources, "individual classpath resources must not be null");
@@ -444,7 +444,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see ClassSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static ClassSelector selectClass(@Nullable ClassLoader classLoader, String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		return new ClassSelector(classLoader, className);
@@ -512,7 +512,7 @@ public final class DiscoverySelectors {
 	 * @see #selectMethod(String)
 	 * @see MethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static MethodSelector selectMethod(@Nullable ClassLoader classLoader, String fullyQualifiedMethodName)
 			throws PreconditionViolationException {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
@@ -544,7 +544,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static MethodSelector selectMethod(@Nullable ClassLoader classLoader, String className, String methodName) {
 		return selectMethod(classLoader, className, methodName, "");
 	}
@@ -588,7 +588,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static MethodSelector selectMethod(@Nullable ClassLoader classLoader, String className, String methodName,
 			String parameterTypeNames) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
@@ -644,7 +644,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static MethodSelector selectMethod(String className, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
@@ -665,7 +665,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see MethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static MethodSelector selectMethod(Class<?> javaClass, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
@@ -729,7 +729,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see NestedClassSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static NestedClassSelector selectNestedClass(@Nullable ClassLoader classLoader,
 			List<String> enclosingClassNames, String nestedClassName) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
@@ -765,7 +765,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see NestedMethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static NestedMethodSelector selectNestedMethod(@Nullable ClassLoader classLoader,
 			List<String> enclosingClassNames, String nestedClassName, String methodName)
 			throws PreconditionViolationException {
@@ -814,7 +814,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see #selectNestedMethod(List, String, String, String)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static NestedMethodSelector selectNestedMethod(@Nullable ClassLoader classLoader,
 			List<String> enclosingClassNames, String nestedClassName, String methodName, String parameterTypeNames) {
 
@@ -840,7 +840,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see NestedMethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, Class<?>... parameterTypes) {
 
@@ -909,7 +909,7 @@ public final class DiscoverySelectors {
 	 * @since 1.10
 	 * @see NestedMethodSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
 			String methodName, Class<?>... parameterTypes) {
 
@@ -973,7 +973,7 @@ public final class DiscoverySelectors {
 	 * @since 1.9
 	 * @see IterationSelector
 	 */
-	@API(status = EXPERIMENTAL, since = "1.9")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static IterationSelector selectIteration(DiscoverySelector parentSelector, int... iterationIndices) {
 		Preconditions.notNull(parentSelector, "Parent selector must not be null");
 		Preconditions.notEmpty(iterationIndices, "iteration indices must not be empty");
@@ -990,7 +990,7 @@ public final class DiscoverySelectors {
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Optional<? extends DiscoverySelector> parse(String identifier) {
 		return DiscoverySelectorIdentifierParsers.parse(identifier);
 	}
@@ -1005,7 +1005,7 @@ public final class DiscoverySelectors {
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
 		return DiscoverySelectorIdentifierParsers.parse(identifier);
 	}
@@ -1021,7 +1021,7 @@ public final class DiscoverySelectors {
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Stream<? extends DiscoverySelector> parseAll(String... identifiers) {
 		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
 	}
@@ -1037,7 +1037,7 @@ public final class DiscoverySelectors {
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
 	}

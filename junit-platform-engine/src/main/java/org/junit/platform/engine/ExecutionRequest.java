@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -147,7 +148,7 @@ public class ExecutionRequest {
 	 * is not available
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return Preconditions.notNull(this.outputDirectoryProvider,
 			"No OutputDirectoryProvider was configured for this request");

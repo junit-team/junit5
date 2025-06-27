@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.store;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
@@ -45,7 +46,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @param <N> Namespace type
  * @since 1.10
  */
-@API(status = EXPERIMENTAL, since = "1.10")
+@API(status = MAINTAINED, since = "1.13.3")
 public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();
@@ -108,7 +109,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @since 1.11
 	 * @see #close()
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public boolean isClosed() {
 		return this.closed;
 	}

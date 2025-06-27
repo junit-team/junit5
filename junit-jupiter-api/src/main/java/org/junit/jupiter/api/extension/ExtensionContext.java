@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -155,7 +156,7 @@ public interface ExtensionContext {
 	 * @since 5.12.1
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(Class, Class, List)
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12.1")
+	@API(status = MAINTAINED, since = "5.13.3")
 	List<Class<?>> getEnclosingTestClasses();
 
 	/**
@@ -411,7 +412,7 @@ public interface ExtensionContext {
 	 * @since 5.12
 	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action);
 
 	/**
@@ -427,7 +428,7 @@ public interface ExtensionContext {
 	 * @since 5.12
 	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	void publishDirectory(String name, ThrowingConsumer<Path> action);
 
 	/**

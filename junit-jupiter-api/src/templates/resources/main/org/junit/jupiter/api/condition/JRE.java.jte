@@ -9,7 +9,7 @@ ${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -44,7 +44,7 @@ public enum JRE {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	UNDEFINED(-1),
 @for(var jre : allJres)
 	/**
@@ -107,7 +107,7 @@ public enum JRE {
 	 * @see Runtime.Version#feature()
 	 * @see #currentVersionNumber()
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public int version() {
 		return this.version;
 	}
@@ -163,7 +163,7 @@ public enum JRE {
 	 * @see Runtime.Version#feature()
 	 * @see #currentJre()
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static int currentVersionNumber() {
 		return CURRENT_VERSION;
 	}
@@ -177,7 +177,7 @@ public enum JRE {
 	 * @since 5.12
 	 * @see Runtime.Version#feature()
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = MAINTAINED, since = "5.13.3")
 	public static boolean isCurrentVersion(int version) {
 		return version == CURRENT_VERSION;
 	}

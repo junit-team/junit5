@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Field;
@@ -88,7 +87,7 @@ public final class ReflectionSupport {
 	 * @since 1.10
 	 * @see #tryToLoadClass(String)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Try<Class<?>> tryToLoadClass(String name, ClassLoader classLoader) {
 		return ReflectionUtils.tryToLoadClass(name, classLoader);
 	}
@@ -111,7 +110,7 @@ public final class ReflectionSupport {
 	 * @since 1.12
 	 * @see #tryToGetResources(String, ClassLoader)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName);
 	}
@@ -135,7 +134,7 @@ public final class ReflectionSupport {
 	 * @since 1.12
 	 * @see #tryToGetResources(String)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName, classLoader);
 	}
@@ -179,7 +178,7 @@ public final class ReflectionSupport {
 	 * @see #findAllResourcesInPackage(String, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
 		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter);
 	}
@@ -225,7 +224,7 @@ public final class ReflectionSupport {
 	 * @see #streamAllResourcesInPackage(String, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
 		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter);
 	}
@@ -272,7 +271,7 @@ public final class ReflectionSupport {
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
 		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter);
 	}
@@ -322,7 +321,7 @@ public final class ReflectionSupport {
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
 			Predicate<Resource> resourceFilter) {
 
@@ -370,7 +369,7 @@ public final class ReflectionSupport {
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #findAllResourcesInPackage(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
 		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter);
 	}
@@ -416,7 +415,7 @@ public final class ReflectionSupport {
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #streamAllResourcesInPackage(String, Predicate)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
 		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter);
 	}
@@ -690,7 +689,7 @@ public final class ReflectionSupport {
 	 * @since 1.12
 	 * @see Field#setAccessible(boolean)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public static Field makeAccessible(Field field) {
 		return ReflectionUtils.makeAccessible(Preconditions.notNull(field, "field must not be null"));
 	}

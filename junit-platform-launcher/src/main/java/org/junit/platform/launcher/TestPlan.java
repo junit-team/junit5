@@ -14,7 +14,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.synchronizedSet;
 import static java.util.Collections.unmodifiableSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -268,7 +267,7 @@ public class TestPlan {
 	 * @return the output directory provider; never {@code null}
 	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.12")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return this.outputDirectoryProvider;
 	}
@@ -280,7 +279,7 @@ public class TestPlan {
 	 * @param visitor the visitor to accept; never {@code null}
 	 * @since 1.10
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public void accept(Visitor visitor) {
 		getRoots().forEach(it -> accept(visitor, it));
 	}
@@ -301,7 +300,7 @@ public class TestPlan {
 	 *
 	 * @since 1.10
 	 */
-	@API(status = EXPERIMENTAL, since = "1.10")
+	@API(status = MAINTAINED, since = "1.13.3")
 	public interface Visitor {
 
 		/**
