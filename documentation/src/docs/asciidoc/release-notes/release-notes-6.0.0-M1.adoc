@@ -5,14 +5,14 @@
 
 *Scope:*
 
-* Require Java 17 and Kotlin 2.2
+* Java 17 and Kotlin 2.2 baseline
 * Single version number for Platform, Jupiter, and Vintage
-* Use JSpecify's annotations to document nullability
-* Remove various deprecated behaviors and APIs
-* Integrate JFR functionality into junit-platform-launcher
-* Discontinue junit-platform-runner and junit-platform-jfr
-* Switch to FastCSV library for `@Csv\{File}Source`
-* Add support for using Kotlin `suspend` functions as test methods
+* Use of JSpecify annotations to document nullability
+* Removal of various deprecated behaviors and APIs
+* Integration of JFR functionality into `junit-platform-launcher`
+* Removal of `junit-platform-runner` and `junit-platform-jfr`
+* Switch to FastCSV library for `@CsvSource` and `@CsvFileSource`
+* Support for using Kotlin `suspend` functions as test methods
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/87?closed=1+[6.0.0-M1] milestone page in the JUnit
@@ -27,12 +27,12 @@ repository on GitHub.
 
 * Minimum required Java version is now 17.
 * Minimum required Kotlin version is now 2.2.
-* Platform, Jupiter, and Vintage artifacts now use the same version number.
+* Platform artifacts now use the same version number as Jupiter and Vintage artifacts.
 
 [[release-notes-6.0.0-M1-overall-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* All JUnit modules now use https://jspecify.dev/[JSpecify]'s nullability annotations to
+* All JUnit modules now use https://jspecify.dev/[JSpecify] nullability annotations to
   indicate which method parameters, return types, etc. can be `null`.
 
 
