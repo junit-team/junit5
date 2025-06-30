@@ -42,6 +42,7 @@ import junit.runner.Version;
 import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -862,6 +863,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
+	@DisabledInEclipse
 	void executesUnrolledSpockFeatureMethod() {
 		Class<?> testClass = SpockTestCaseWithUnrolledAndRegularFeatureMethods.class;
 		var request = LauncherDiscoveryRequestBuilder.request().selectors(
@@ -880,6 +882,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
+	@DisabledInEclipse
 	void executesRegularSpockFeatureMethod() {
 		Class<?> testClass = SpockTestCaseWithUnrolledAndRegularFeatureMethods.class;
 		var request = LauncherDiscoveryRequestBuilder.request().selectors(selectMethod(testClass, "regular")).build();

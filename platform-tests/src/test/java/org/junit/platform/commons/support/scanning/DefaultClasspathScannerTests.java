@@ -44,6 +44,7 @@ import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -301,8 +302,8 @@ class DefaultClasspathScannerTests {
 			uriOf("/org/junit/platform/commons/other-example.resource"));
 	}
 
-	@Test
-	// #2500
+	@Test // #2500
+	@DisabledInEclipse
 	void scanForClassesInPackageWithinModulesSharingNamePrefix(@TempDir Path temp) throws Exception {
 		var moduleSourcePath = Path.of(getClass().getResource("/modules-2500/").toURI()).toString();
 		run("javac", "--module", "foo,foo.bar", "--module-source-path", moduleSourcePath, "-d", temp.toString());
