@@ -102,7 +102,7 @@ public final class EngineTestKit {
 	 */
 	public static Builder engine(String engineId) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
-		return engine(loadTestEngine(engineId.trim()));
+		return engine(loadTestEngine(engineId.strip()));
 	}
 
 	/**
@@ -159,7 +159,7 @@ public final class EngineTestKit {
 	@API(status = EXPERIMENTAL, since = "6.0")
 	public static EngineDiscoveryResults discover(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
-		return discover(loadTestEngine(engineId.trim()), discoveryRequest);
+		return discover(loadTestEngine(engineId.strip()), discoveryRequest);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public final class EngineTestKit {
 	 */
 	public static EngineExecutionResults execute(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
-		return execute(loadTestEngine(engineId.trim()), discoveryRequest);
+		return execute(loadTestEngine(engineId.strip()), discoveryRequest);
 	}
 
 	/**

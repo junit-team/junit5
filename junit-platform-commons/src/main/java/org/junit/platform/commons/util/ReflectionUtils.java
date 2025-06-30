@@ -747,15 +747,15 @@ public final class ReflectionUtils {
 	public static Try<Class<?>> tryToLoadClass(String name, ClassLoader classLoader) {
 		Preconditions.notBlank(name, "Class name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
-		String trimmedName = name.trim();
+		String strippedName = name.strip();
 
-		if (classNameToTypeMap.containsKey(trimmedName)) {
-			return Try.success(classNameToTypeMap.get(trimmedName));
+		if (classNameToTypeMap.containsKey(strippedName)) {
+			return Try.success(classNameToTypeMap.get(strippedName));
 		}
 
 		return Try.call(() -> {
 			// Arrays such as "java.lang.String[]", "int[]", "int[][][][]", etc.
-			Matcher matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(trimmedName);
+			Matcher matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(strippedName);
 			if (matcher.matches()) {
 				String componentTypeName = matcher.group(1);
 				String bracketPairs = matcher.group(2);
@@ -766,7 +766,7 @@ public final class ReflectionUtils {
 			}
 
 			// Fallback to standard VM class loading
-			return Class.forName(trimmedName, false, classLoader);
+			return Class.forName(strippedName, false, classLoader);
 		});
 	}
 
@@ -1475,7 +1475,7 @@ public final class ReflectionUtils {
 
 		// @formatter:off
 		return Arrays.stream(parameterTypeNames.split(","))
-				.map(String::trim)
+				.map(String::strip)
 				.map(typeName -> loadRequiredParameterType(clazz, methodName, typeName))
 				.toArray(Class[]::new);
 		// @formatter:on

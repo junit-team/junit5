@@ -204,7 +204,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 		static ParameterProvider propertiesFile(String configFileName) {
 			Preconditions.notBlank(configFileName, "configFileName must not be null or blank");
-			Properties properties = loadClasspathResource(configFileName.trim());
+			Properties properties = loadClasspathResource(configFileName.strip());
 			return new ParameterProvider() {
 				@Override
 				public String getValue(String key) {

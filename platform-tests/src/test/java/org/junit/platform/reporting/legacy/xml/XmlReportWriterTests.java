@@ -113,9 +113,9 @@ class XmlReportWriterTests {
 		assertThat(testsuite.find("system-out").text(1)) //
 				.containsSubsequence("Report Entry #1 (timestamp: ", "- foo: bar", "Report Entry #2 (timestamp: ",
 					"- baz: qux");
-		assertThat(testsuite.find("system-out").text(2).trim()) //
+		assertThat(testsuite.find("system-out").text(2).strip()) //
 				.isEqualTo("normal output");
-		assertThat(testsuite.find("system-err").text().trim()) //
+		assertThat(testsuite.find("system-err").text().strip()) //
 				.isEqualTo("error output");
 	}
 

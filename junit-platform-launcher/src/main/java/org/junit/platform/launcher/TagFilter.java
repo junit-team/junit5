@@ -168,7 +168,7 @@ public final class TagFilter {
 	}
 
 	private static String formatToString(List<String> tagExpressions) {
-		return tagExpressions.stream().map(String::trim).sorted().collect(Collectors.joining(","));
+		return tagExpressions.stream().map(String::strip).sorted().collect(Collectors.joining(","));
 	}
 
 	private static List<TagExpression> parseAll(List<String> tagExpressions) {

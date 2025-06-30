@@ -51,7 +51,7 @@ public class EnumConfigurationParameterConverter<E extends Enum<E>> {
 		if (value.isPresent()) {
 			String constantName = null;
 			try {
-				constantName = value.get().trim().toUpperCase(Locale.ROOT);
+				constantName = value.get().strip().toUpperCase(Locale.ROOT);
 				E result = Enum.valueOf(enumType, constantName);
 				logger.config(() -> "Using %s '%s' set via the '%s' configuration parameter.".formatted(enumDisplayName,
 					result, key));

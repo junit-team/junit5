@@ -41,7 +41,7 @@ class InstantiatingConfigurationParameterConverter<T> {
 	Supplier<Optional<T>> supply(ConfigurationParameters configurationParameters, String key) {
 		// @formatter:off
 		return configurationParameters.get(key)
-				.map(String::trim)
+				.map(String::strip)
 				.filter(className -> !className.isEmpty())
 				.map(className -> newInstanceSupplier(className, key))
 				.orElse(Optional::empty);

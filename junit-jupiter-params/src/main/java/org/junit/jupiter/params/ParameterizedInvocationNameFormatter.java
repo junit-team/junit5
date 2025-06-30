@@ -61,7 +61,7 @@ class ParameterizedInvocationNameFormatter {
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
 						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
 				: name;
-		pattern = Preconditions.notBlank(pattern.trim(),
+		pattern = Preconditions.notBlank(pattern.strip(),
 			() -> "Configuration error: @%s on %s must be declared with a non-empty name.".formatted(
 				declarationContext.getAnnotationName(),
 				declarationContext.getResolverFacade().getIndexedParameterDeclarations().getSourceElementDescription()));
