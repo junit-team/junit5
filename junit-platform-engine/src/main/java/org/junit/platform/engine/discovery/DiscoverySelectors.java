@@ -370,7 +370,7 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.10")
 	public static ModuleSelector selectModule(String moduleName) {
 		Preconditions.notBlank(moduleName, "Module name must not be null or blank");
-		return new ModuleSelector(moduleName.trim());
+		return new ModuleSelector(moduleName.strip());
 	}
 
 	/**
@@ -407,9 +407,9 @@ public final class DiscoverySelectors {
 	 */
 	public static PackageSelector selectPackage(String packageName) {
 		Preconditions.notNull(packageName, "Package name must not be null");
-		Preconditions.condition(packageName.isEmpty() || !packageName.trim().isEmpty(),
+		Preconditions.condition(packageName.isEmpty() || !packageName.isBlank(),
 			"Package name must not contain only whitespace");
-		return new PackageSelector(packageName.trim());
+		return new PackageSelector(packageName.strip());
 	}
 
 	/**
@@ -594,7 +594,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
-		return new MethodSelector(classLoader, className, methodName, parameterTypeNames.trim());
+		return new MethodSelector(classLoader, className, methodName, parameterTypeNames.strip());
 	}
 
 	/**
@@ -629,7 +629,7 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
-		return new MethodSelector(javaClass, methodName, parameterTypeNames.trim());
+		return new MethodSelector(javaClass, methodName, parameterTypeNames.strip());
 	}
 
 	/**
@@ -823,7 +823,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
 		return new NestedMethodSelector(classLoader, enclosingClassNames, nestedClassName, methodName,
-			parameterTypeNames.trim());
+			parameterTypeNames.strip());
 	}
 
 	/**
@@ -893,7 +893,7 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(nestedClass, "Nested class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter types must not be null");
-		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, parameterTypeNames.trim());
+		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, parameterTypeNames.strip());
 	}
 
 	/**

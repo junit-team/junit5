@@ -37,9 +37,9 @@ import org.apiguardian.api.API;
  * <h2>Syntax Rules for Tags</h2>
  * <ul>
  * <li>A tag must not be blank.</li>
- * <li>A trimmed tag must not contain whitespace.</li>
- * <li>A trimmed tag must not contain ISO control characters.</li>
- * <li>A trimmed tag must not contain <em>reserved characters</em>.</li>
+ * <li>A stripped tag must not contain whitespace.</li>
+ * <li>A stripped tag must not contain ISO control characters.</li>
+ * <li>A stripped tag must not contain <em>reserved characters</em>.</li>
  * </ul>
  *
  * <p><em>Reserved characters</em> that are not permissible as part of a tag name.
@@ -67,7 +67,7 @@ public @interface IncludeTags {
 	/**
 	 * One or more tags to include.
 	 *
-	 * <p>Note: each tag will be {@linkplain String#trim() trimmed} and
+	 * <p>Note: each tag will be {@linkplain String#strip() stripped} and
 	 * validated according to the <em>Syntax Rules for Tags</em> (see
 	 * {@linkplain IncludeTags class-level Javadoc} for details).
 	 */

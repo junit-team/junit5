@@ -18,6 +18,7 @@ import static kotlin.reflect.jvm.KTypesJvm.getJvmErasure;
 import static kotlin.reflect.jvm.ReflectJvmMapping.getJavaType;
 import static kotlinx.coroutines.BuildersKt.runBlocking;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
+import static org.junit.platform.commons.util.ReflectionUtils.EMPTY_CLASS_ARRAY;
 import static org.junit.platform.commons.util.ReflectionUtils.getUnderlyingCause;
 
 import java.lang.reflect.Method;
@@ -60,7 +61,7 @@ class KotlinSuspendingFunctionUtils {
 	static Class<?>[] getParameterTypes(Method method) {
 		var parameterCount = method.getParameterCount();
 		if (parameterCount == 1) {
-			return new Class<?>[0];
+			return EMPTY_CLASS_ARRAY;
 		}
 		return Arrays.stream(method.getParameterTypes()).limit(parameterCount - 1).toArray(Class<?>[]::new);
 	}

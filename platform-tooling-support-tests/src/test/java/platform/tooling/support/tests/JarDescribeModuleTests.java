@@ -49,8 +49,8 @@ class JarDescribeModuleTests {
 		assertEquals("", result.stdErr(), "error log isn't empty");
 
 		var expectedLines = replaceVersionPlaceholders(
-			Files.readString(sourceDirectory.resolve(module + ".expected.txt")).trim());
-		assertLinesMatch(expectedLines.lines().toList(), result.stdOut().trim().lines().toList());
+			Files.readString(sourceDirectory.resolve(module + ".expected.txt")).strip());
+		assertLinesMatch(expectedLines.lines().toList(), result.stdOut().strip().lines().toList());
 	}
 
 	@ParameterizedTest

@@ -73,7 +73,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 	// package-private for testing
 	static Field findField(Class<?> testClass, String fieldName) {
 		Preconditions.notBlank(fieldName, "Field name must not be blank");
-		fieldName = fieldName.trim();
+		fieldName = fieldName.strip();
 
 		Class<?> clazz = testClass;
 		if (fieldName.contains("#") || fieldName.contains(".")) {

@@ -298,7 +298,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private void addExcludeFilters(Class<?> suiteClass) {
 		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value) //
-				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed) //
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::stripped) //
 				.map(ClassNameFilter::excludeClassNamePatterns) //
 				.ifPresent(this::filters);
 		findAnnotationValues(suiteClass, ExcludeEngines.class, ExcludeEngines::value) //
@@ -324,7 +324,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private void addIncludeFilters(Class<?> suiteClass) {
 		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value) //
-				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed) //
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::stripped) //
 				.map(this::createIncludeClassNameFilter) //
 				.ifPresent(filters -> {
 					this.includeClassNamePatternsUsed = true;
@@ -412,11 +412,11 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		}
 
 		Class<?> type = annotation.type() == Class.class ? null : annotation.type();
-		String typeName = annotation.typeName().isEmpty() ? null : annotation.typeName().trim();
+		String typeName = annotation.typeName().isEmpty() ? null : annotation.typeName().strip();
 		String methodName = Preconditions.notBlank(annotation.name(),
 			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass, "method name must not be blank"));
 		Class<?>[] parameterTypes = annotation.parameterTypes().length == 0 ? null : annotation.parameterTypes();
-		String parameterTypeNames = annotation.parameterTypeNames().trim();
+		String parameterTypeNames = annotation.parameterTypeNames().strip();
 		if (parameterTypes != null) {
 			Preconditions.condition(parameterTypeNames.isEmpty(),
 				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
@@ -482,14 +482,14 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 		return findAnnotation(element, annotationType).map(valueExtractor).filter(values -> values.length > 0);
 	}
 
-	private static Optional<String[]> trimmed(String[] patterns) {
+	private static Optional<String[]> stripped(String[] patterns) {
 		if (patterns.length == 0) {
 			return Optional.empty();
 		}
 		// @formatter:off
 		return Optional.of(Arrays.stream(patterns)
 				.filter(StringUtils::isNotBlank)
-				.map(String::trim)
+				.map(String::strip)
 				.toArray(String[]::new));
 		// @formatter:on
 	}

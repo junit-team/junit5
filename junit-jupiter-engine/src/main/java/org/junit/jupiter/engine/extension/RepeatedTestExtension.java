@@ -77,7 +77,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 
 	private RepeatedTestDisplayNameFormatter displayNameFormatter(RepeatedTest repeatedTest, Method method,
 			String displayName) {
-		String pattern = Preconditions.notBlank(repeatedTest.name().trim(),
+		String pattern = Preconditions.notBlank(repeatedTest.name().strip(),
 			() -> "Configuration error: @RepeatedTest on method [%s] must be declared with a non-empty name.".formatted(
 				method));
 		return new RepeatedTestDisplayNameFormatter(pattern, displayName);

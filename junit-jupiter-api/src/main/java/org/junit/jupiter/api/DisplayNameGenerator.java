@@ -391,7 +391,7 @@ public interface DisplayNameGenerator {
 
 			String sentenceFragment = findAnnotation(testClass, DisplayName.class)//
 					.map(DisplayName::value)//
-					.map(String::trim)//
+					.map(String::strip)//
 					.orElseGet(() -> getSentenceFragment(testClass));
 
 			if (enclosingClass == null || isStatic(testClass)) { // top-level class
@@ -508,7 +508,7 @@ public interface DisplayNameGenerator {
 					.map(sentenceFragment -> {
 						Preconditions.notBlank(sentenceFragment,
 							"@SentenceFragment on [%s] must be declared with a non-blank value.".formatted(element));
-						return sentenceFragment.trim();
+						return sentenceFragment.strip();
 					}) //
 					.orElse(null);
 		}
