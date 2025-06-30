@@ -103,13 +103,20 @@ public class KotlinReflectionUtils {
 		if (isStatic(method) && method.getParameterCount() > 0) {
 			var parameterTypes = method.getParameterTypes();
 			if (parameterTypes[0] == enclosingClass) {
-				var originalParameterTypes = parameterTypes.length == 1 //
-						? EMPTY_CLASS_ARRAY //
-						: Arrays.stream(parameterTypes).skip(1).toArray(Class[]::new);
+				var originalParameterTypes = copyWithoutFirst(parameterTypes);
 				return findMethod(enclosingClass, method.getName(), originalParameterTypes).isPresent();
 			}
 		}
 		return false;
+	}
+
+	private static Class<?>[] copyWithoutFirst(Class<?>[] values) {
+		if (values.length == 1) {
+			return EMPTY_CLASS_ARRAY;
+		}
+		var result = new Class<?>[values.length - 1];
+		System.arraycopy(values, 1, result, 0, result.length);
+		return result;
 	}
 
 	private static boolean isKotlinType(Class<?> clazz) {
