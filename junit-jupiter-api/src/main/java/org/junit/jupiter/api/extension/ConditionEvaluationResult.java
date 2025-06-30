@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -35,7 +36,7 @@ public class ConditionEvaluationResult {
 	 * or an <em>empty</em> reason if the reason is unknown
 	 * @see StringUtils#isBlank(String)
 	 */
-	public static ConditionEvaluationResult enabled(String reason) {
+	public static ConditionEvaluationResult enabled(@Nullable String reason) {
 		return new ConditionEvaluationResult(true, reason);
 	}
 
@@ -48,7 +49,7 @@ public class ConditionEvaluationResult {
 	 * or an <em>empty</em> reason if the reason is unknown
 	 * @see StringUtils#isBlank(String)
 	 */
-	public static ConditionEvaluationResult disabled(String reason) {
+	public static ConditionEvaluationResult disabled(@Nullable String reason) {
 		return new ConditionEvaluationResult(false, reason);
 	}
 
@@ -69,7 +70,8 @@ public class ConditionEvaluationResult {
 	 * @see StringUtils#isBlank(String)
 	 */
 	@API(status = STABLE, since = "5.7")
-	public static ConditionEvaluationResult disabled(String reason, String customReason) {
+	@SuppressWarnings("NullAway") // StringUtils.isBlank() does not yet have a nullability @Contract
+	public static ConditionEvaluationResult disabled(@Nullable String reason, @Nullable String customReason) {
 		if (StringUtils.isBlank(reason)) {
 			return disabled(customReason);
 		}
@@ -84,7 +86,7 @@ public class ConditionEvaluationResult {
 	private final Optional<String> reason;
 
 	@SuppressWarnings("NullAway") // StringUtils.isNotBlank() does not yet have a nullability @Contract
-	private ConditionEvaluationResult(boolean enabled, String reason) {
+	private ConditionEvaluationResult(boolean enabled, @Nullable String reason) {
 		this.enabled = enabled;
 		this.reason = StringUtils.isNotBlank(reason) ? Optional.of(reason.strip()) : Optional.empty();
 	}
