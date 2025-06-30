@@ -34,11 +34,12 @@ import org.junit.platform.commons.function.Try;
 @API(status = INTERNAL, since = "5.13.3")
 public class KotlinReflectionUtils {
 
+	private static final String DEFAULT_IMPLS_CLASS_NAME = "DefaultImpls";
+
 	private static final @Nullable Class<? extends Annotation> kotlinMetadata;
 	private static final @Nullable Class<?> kotlinCoroutineContinuation;
 	private static final boolean kotlinReflectPresent;
 	private static final boolean kotlinxCoroutinesPresent;
-	public static final String DEFAULT_IMPLS_CLASS_NAME = "DefaultImpls";
 
 	static {
 		var metadata = tryToLoadKotlinMetadataClass();
