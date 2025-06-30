@@ -254,7 +254,9 @@ public class TestClassPredicatesTests {
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
 
 			var issue = DiscoveryIssue.builder(Severity.WARNING,
-				"@Nested class '%s' must not be static. It will not be executed.".formatted(candidate.getName())) //
+				"@Nested class '%s' must not be static. ".formatted(candidate.getName())
+						+ "It will only be executed if discovered as a standalone test class. "
+						+ "You should remove the annotation or make it non-static to resolve this warning.") //
 					.source(ClassSource.from(candidate)) //
 					.build();
 			assertThat(discoveryIssues.stream().distinct()).containsExactly(issue);
@@ -268,8 +270,9 @@ public class TestClassPredicatesTests {
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
 
 			var issue = DiscoveryIssue.builder(Severity.WARNING,
-				"@Nested class '%s' must not be a top-level class. It will not be executed.".formatted(
-					candidate.getName())) //
+				("Top-level class '%s' must not be annotated with @Nested. ".formatted(candidate.getName())
+						+ "It will be executed anyway for backward compatibility. "
+						+ "You should remove the @Nested annotation to resolve this warning.")) //
 					.source(ClassSource.from(candidate)) //
 					.build();
 			assertThat(discoveryIssues.stream().distinct()).containsExactly(issue);
@@ -312,7 +315,9 @@ public class TestClassPredicatesTests {
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
 
 			var issue = DiscoveryIssue.builder(Severity.WARNING,
-				"@Nested class '%s' must not be static. It will not be executed.".formatted(candidate.getName())) //
+				"@Nested class '%s' must not be static. ".formatted(candidate.getName())
+						+ "It will only be executed if discovered as a standalone test class. "
+						+ "You should remove the annotation or make it non-static to resolve this warning.") //
 					.source(ClassSource.from(candidate)) //
 					.build();
 			assertThat(discoveryIssues.stream().distinct()).containsExactly(issue);
