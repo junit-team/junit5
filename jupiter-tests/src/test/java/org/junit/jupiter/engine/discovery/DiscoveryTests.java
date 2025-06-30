@@ -14,9 +14,11 @@ import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+import static org.junit.platform.commons.test.IdeUtils.runningInEclipse;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -39,14 +41,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
-import org.junit.jupiter.engine.kotlin.KotlinDefaultImplsTestCase;
-import org.junit.jupiter.engine.kotlin.KotlinInterfaceImplementationTestCase;
-import org.junit.jupiter.engine.kotlin.KotlinInterfaceTestCase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -79,14 +79,19 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { InterfaceTestCase.class, KotlinInterfaceTestCase.class })
-	void doNotDiscoverTestInterface() {
-		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(InterfaceTestCase.class)).build();
+	@ValueSource(strings = { "org.junit.jupiter.engine.discovery.DiscoveryTests$InterfaceTestCase",
+			"org.junit.jupiter.engine.kotlin.KotlinInterfaceTestCase" })
+	void doNotDiscoverTestInterface(String className) {
+
+		assumeFalse(runningInEclipse() && className.contains(".kotlin."));
+
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(className)).build();
 		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
+	@DisabledInEclipse
 	void doNotDiscoverGeneratedKotlinDefaultImplsClass() {
 		LauncherDiscoveryRequest request = defaultRequest() //
 				.selectors(selectClass("org.junit.jupiter.engine.kotlin.KotlinInterfaceTestCase$DefaultImpls")) //
@@ -96,19 +101,23 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	@DisabledInEclipse
 	void discoverDeclaredKotlinDefaultImplsClass() {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(
-			selectClass(KotlinDefaultImplsTestCase.DefaultImpls.class)).build();
+			selectClass("org.junit.jupiter.engine.kotlin.KotlinDefaultImplsTestCase$DefaultImpls")).build();
 		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { ConcreteImplementationOfInterfaceTestCase.class,
-			KotlinInterfaceImplementationTestCase.class })
-	void discoverTestClassInheritingTestsFromInterface() {
-		LauncherDiscoveryRequest request = defaultRequest().selectors(
-			selectClass(ConcreteImplementationOfInterfaceTestCase.class)).build();
+	@ValueSource(strings = {
+			"org.junit.jupiter.engine.discovery.DiscoveryTests$ConcreteImplementationOfInterfaceTestCase",
+			"org.junit.jupiter.engine.kotlin.KotlinInterfaceImplementationTestCase" })
+	void discoverTestClassInheritingTestsFromInterface(String className) {
+
+		assumeFalse(runningInEclipse() && className.contains(".kotlin."));
+
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(className)).build();
 		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
