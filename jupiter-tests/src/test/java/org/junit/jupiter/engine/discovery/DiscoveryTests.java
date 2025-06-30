@@ -44,9 +44,13 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.engine.kotlin.KotlinDefaultImplsTestCase;
+import org.junit.jupiter.engine.kotlin.KotlinInterfaceImplementationTestCase;
+import org.junit.jupiter.engine.kotlin.KotlinInterfaceTestCase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
@@ -72,6 +76,41 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
 		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { InterfaceTestCase.class, KotlinInterfaceTestCase.class })
+	void doNotDiscoverTestInterface() {
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(InterfaceTestCase.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	void doNotDiscoverGeneratedKotlinDefaultImplsClass() {
+		LauncherDiscoveryRequest request = defaultRequest() //
+				.selectors(selectClass("org.junit.jupiter.engine.kotlin.KotlinInterfaceTestCase$DefaultImpls")) //
+				.build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	void discoverDeclaredKotlinDefaultImplsClass() {
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectClass(KotlinDefaultImplsTestCase.DefaultImpls.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { ConcreteImplementationOfInterfaceTestCase.class,
+			KotlinInterfaceImplementationTestCase.class })
+	void discoverTestClassInheritingTestsFromInterface() {
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectClass(ConcreteImplementationOfInterfaceTestCase.class)).build();
+		TestDescriptor engineDescriptor = discoverTestsWithoutIssues(request);
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -522,6 +561,15 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("\t")
 		void test() {
 		}
+	}
+
+	interface InterfaceTestCase {
+		@Test
+		default void test() {
+		}
+	}
+
+	static class ConcreteImplementationOfInterfaceTestCase implements InterfaceTestCase {
 	}
 
 }

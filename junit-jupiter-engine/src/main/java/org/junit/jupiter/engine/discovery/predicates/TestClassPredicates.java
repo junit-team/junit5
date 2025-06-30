@@ -15,6 +15,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotPrivate;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinInterfaceDefaultImplsClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
 import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
@@ -74,7 +75,7 @@ public class TestClassPredicates {
 	}
 
 	private boolean looksLikeIntendedTestClass(Class<?> candidate, Set<Class<?>> seen) {
-		if (seen.add(candidate)) {
+		if (seen.add(candidate) && !isKotlinInterfaceDefaultImplsClass(candidate)) {
 			return this.isAnnotatedWithClassTemplate.test(candidate) //
 					|| hasTestOrTestFactoryOrTestTemplateMethods(candidate) //
 					|| hasNestedTests(candidate, seen);

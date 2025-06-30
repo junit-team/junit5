@@ -113,7 +113,7 @@ public final class ReflectionUtils {
 	// ++ => possessive quantifier
 	private static final Pattern SOURCE_CODE_SYNTAX_ARRAY_PATTERN = Pattern.compile("^([^\\[\\]]+)((?>\\[\\])++)$");
 
-	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+	static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = ClasspathScannerLoader.getInstance();
 
