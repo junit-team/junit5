@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout.ThreadMode;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
@@ -35,9 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 // Mockito cannot mock this class: class org.junit.jupiter.engine.execution.NamespaceAwareStore.
 // You are seeing this disclaimer because Mockito is configured to create inlined mocks.
 // Byte Buddy could not instrument all classes within the mock's type hierarchy.
-@DisabledIf(//
-		value = "org.junit.platform.commons.test.IdeUtils#runningInEclipse()", //
-		disabledReason = "Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
+@DisabledInEclipse("Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
 @DisplayName("TimeoutInvocationFactory")
 @ExtendWith(MockitoExtension.class)
 class TimeoutInvocationFactoryTests {

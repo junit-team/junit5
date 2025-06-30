@@ -42,7 +42,7 @@ import junit.runner.Version;
 import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -865,7 +865,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	@DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
+	@DisabledInEclipse
 	void executesUnrolledSpockFeatureMethod() {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
@@ -888,7 +888,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
-	@DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
+	@DisabledInEclipse
 	void executesRegularSpockFeatureMethod() {
 		// Load Groovy class via reflection to avoid compilation errors in Eclipse IDE.
 		String testClassName = "org.junit.vintage.engine.samples.spock.SpockTestCaseWithUnrolledAndRegularFeatureMethods";
