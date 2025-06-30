@@ -11,8 +11,8 @@
 package org.junit.platform.commons.util;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.EMPTY_CLASS_ARRAY;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToLoadClass;
 
@@ -29,9 +29,9 @@ import org.junit.platform.commons.function.Try;
 /**
  * Internal Kotlin-specific reflection utilities
  *
- * @since 6.0
+ * @since 5.13.3
  */
-@API(status = INTERNAL, since = "6.0")
+@API(status = INTERNAL, since = "5.13.3")
 public class KotlinReflectionUtils {
 
 	private static final @Nullable Class<? extends Annotation> kotlinMetadata;
@@ -61,6 +61,10 @@ public class KotlinReflectionUtils {
 				.andThenTry(it -> (Class<? extends Annotation>) it);
 	}
 
+	/**
+	 * @since 6.0
+	 */
+	@API(status = INTERNAL, since = "6.0")
 	public static boolean isKotlinSuspendingFunction(Method method) {
 		if (kotlinCoroutineContinuation != null && isKotlinType(method.getDeclaringClass())) {
 			int parameterCount = method.getParameterCount();
