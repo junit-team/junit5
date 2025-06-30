@@ -81,7 +81,7 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 			logger.warn(() -> "Cannot @AutoClose field %s because it is null.".formatted(getQualifiedName(field)));
 		}
 		else {
-			invokeCloseMethod(field, fieldValue, methodName.trim());
+			invokeCloseMethod(field, fieldValue, methodName.strip());
 		}
 	}
 

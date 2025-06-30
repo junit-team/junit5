@@ -42,7 +42,7 @@ import java.util.logging.LogRecord;
 import java.util.spi.ToolProvider;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -301,7 +301,7 @@ class DefaultClasspathScannerTests {
 	}
 
 	@Test // #2500
-	@DisabledIf("runningInEclipse")
+	@DisabledInEclipse
 	void scanForClassesInPackageWithinModulesSharingNamePrefix(@TempDir Path temp) throws Exception {
 		var moduleSourcePath = Path.of(getClass().getResource("/modules-2500/").toURI()).toString();
 		run("javac", "--module", "foo,foo.bar", "--module-source-path", moduleSourcePath, "-d", temp.toString());
@@ -628,14 +628,6 @@ class DefaultClasspathScannerTests {
 		public Enumeration<URL> getResources(String name) throws IOException {
 			throw new IOException("Demo I/O error");
 		}
-	}
-
-	/**
-	 * Determine if the current code is running in the Eclipse IDE.
-	 */
-	static boolean runningInEclipse() {
-		return StackWalker.getInstance().walk(
-			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
 	}
 
 }

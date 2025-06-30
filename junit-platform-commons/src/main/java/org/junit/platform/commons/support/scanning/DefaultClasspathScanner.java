@@ -87,7 +87,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
-		basePackageName = basePackageName.trim();
+		basePackageName = basePackageName.strip();
 
 		List<URI> roots = getRootUrisForPackageNameOnClassPathAndModulePath(basePackageName);
 		return findClassesForUris(roots, basePackageName, classFilter);
@@ -107,7 +107,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
 		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
-		basePackageName = basePackageName.trim();
+		basePackageName = basePackageName.strip();
 
 		List<URI> roots = getRootUrisForPackageNameOnClassPathAndModulePath(basePackageName);
 		return findResourcesForUris(roots, basePackageName, resourceFilter);

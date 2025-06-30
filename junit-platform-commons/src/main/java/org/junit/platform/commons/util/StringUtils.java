@@ -66,10 +66,11 @@ public final class StringUtils {
 	 *
 	 * @param str the string to check; may be {@code null}
 	 * @return {@code true} if the string is blank
+	 * @see String#isBlank()
 	 * @see #isNotBlank(String)
 	 */
 	public static boolean isBlank(@Nullable String str) {
-		return (str == null || str.trim().isEmpty());
+		return (str == null || str.isBlank());
 	}
 
 	/**

@@ -108,7 +108,7 @@ class ParameterizedTestDemo {
 		@EmptySource
 		@ValueSource(strings = { " ", "   ", "\t", "\n" })
 		void nullEmptyAndBlankStrings(String text) {
-			assertTrue(text == null || text.trim().isEmpty());
+			assertTrue(text == null || text.isBlank());
 		}
 		// end::NullAndEmptySource_example1[]
 	}
@@ -121,7 +121,7 @@ class ParameterizedTestDemo {
 		@NullAndEmptySource
 		@ValueSource(strings = { " ", "   ", "\t", "\n" })
 		void nullEmptyAndBlankStrings(String text) {
-			assertTrue(text == null || text.trim().isEmpty());
+			assertTrue(text == null || text.isBlank());
 		}
 		// end::NullAndEmptySource_example2[]
 	}

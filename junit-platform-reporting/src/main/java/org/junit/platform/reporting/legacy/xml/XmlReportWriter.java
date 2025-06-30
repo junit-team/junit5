@@ -294,7 +294,7 @@ class XmlReportWriter {
 							formattedReportEntries);
 					}
 				}
-				systemOutElements.add(formattedReportEntries.toString().trim());
+				systemOutElements.add(formattedReportEntries.toString().strip());
 				systemOutElements.addAll(systemOutElementsForCapturedOutput);
 			}
 		}

@@ -22,6 +22,6 @@ interface DetailsPrintingListener extends TestExecutionListener {
 	void listTests(TestPlan testPlan);
 
 	static String indented(String message, String indentation) {
-		return LINE_START_PATTERN.matcher(message).replaceAll(indentation).trim();
+		return LINE_START_PATTERN.matcher(message).replaceAll(indentation).strip();
 	}
 }

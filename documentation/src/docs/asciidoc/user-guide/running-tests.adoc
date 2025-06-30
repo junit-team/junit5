@@ -961,9 +961,9 @@ own annotation or other means for users to specify tags.
 Regardless how a tag is specified, the JUnit Platform enforces the following rules:
 
 * A tag must not be `null` or _blank_.
-* A _trimmed_ tag must not contain whitespace.
-* A _trimmed_ tag must not contain ISO control characters.
-* A _trimmed_ tag must not contain any of the following _reserved characters_.
+* A _stripped_ tag must not contain whitespace.
+* A _stripped_ tag must not contain ISO control characters.
+* A _stripped_ tag must not contain any of the following _reserved characters_.
 - `,`: _comma_
 - `(`: _left parenthesis_
 - `)`: _right parenthesis_
@@ -971,8 +971,8 @@ Regardless how a tag is specified, the JUnit Platform enforces the following rul
 - `|`: _vertical bar_
 - `!`: _exclamation point_
 
-NOTE: In the above context, "trimmed" means that leading and trailing whitespace
-characters have been removed.
+NOTE: In the above context, "stripped" means that leading and trailing whitespace
+characters have been removed using `java.lang.String.strip()`.
 
 [[running-tests-tag-expressions]]
 ==== Tag Expressions
