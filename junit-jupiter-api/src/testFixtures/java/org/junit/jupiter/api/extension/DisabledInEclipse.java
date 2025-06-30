@@ -24,5 +24,5 @@ import org.junit.jupiter.api.condition.DisabledIf;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @DisabledIf("org.junit.platform.commons.test.IdeUtils#runningInEclipse()")
 public @interface DisabledInEclipse {
-	String reason() default "";
+	String value() default "";
 }

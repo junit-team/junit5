@@ -35,7 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 // Mockito cannot mock this class: class org.junit.jupiter.engine.execution.NamespaceAwareStore.
 // You are seeing this disclaimer because Mockito is configured to create inlined mocks.
 // Byte Buddy could not instrument all classes within the mock's type hierarchy.
-@DisabledInEclipse(reason = "Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
+@DisabledInEclipse("Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
 @DisplayName("TimeoutInvocationFactory")
 @ExtendWith(MockitoExtension.class)
 class TimeoutInvocationFactoryTests {
