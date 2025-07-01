@@ -101,8 +101,6 @@ errorProne = { id = "net.ltgt.errorprone", version = "4.3.0" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "1.0.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
-# Remove `sshj` constraint in gradle/plugins/publishing/build.gradle.kts when updating
-# see https://github.com/jreleaser/jreleaser/issues/1900
 jreleaser = { id = "org.jreleaser", version = "1.19.0" }
 # check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0" }
