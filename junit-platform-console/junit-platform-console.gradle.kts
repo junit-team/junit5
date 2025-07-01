@@ -16,7 +16,7 @@ dependencies {
 	api(projects.junitPlatformReporting)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	shadowed(libs.picocli)
 

@@ -11,7 +11,7 @@ dependencies {
 	api(projects.junitPlatformSuiteApi)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	implementation(projects.junitPlatformLauncher)
 
