@@ -18,21 +18,6 @@ group = when (project) {
 	else -> "org.junit"
 }
 
-// ensure project is built successfully before publishing it
-tasks.withType<PublishToMavenRepository>().configureEach {
-	dependsOn(provider {
-		val tempRepoName: String by rootProject
-		if (repository.name != tempRepoName) {
-			listOf(tasks.build)
-		} else {
-			emptyList()
-		}
-	})
-}
-tasks.withType<PublishToMavenLocal>().configureEach {
-	dependsOn(tasks.build)
-}
-
 val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(project.version.isSnapshot() || buildParameters.ci))
 
 signing {
