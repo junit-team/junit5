@@ -86,4 +86,10 @@ tasks {
 	named("spotlessMisc") {
 		outputs.doNotCacheIf("negative avoidance savings") { true }
 	}
+	if (System.getenv("CI") == null) {
+		named("spotlessCheck") {
+			dependsOn("spotlessApply")
+			mustRunAfter("spotlessApply")
+		}
+	}
 }

@@ -76,18 +76,23 @@ Whenever an acronym is included as part of a field name or parameter name:
 
 #### Code
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless)
-Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing
-license headers to source files. Formatter and import order settings for Eclipse are
-available in the repository under
-[junit-eclipse-formatter-settings.xml](gradle/config/eclipse/junit-eclipse-formatter-settings.xml)
-and [junit-eclipse.importorder](gradle/config/eclipse/junit-eclipse.importorder),
-respectively. For IntelliJ IDEA there's a
-[plugin](https://plugins.jetbrains.com/plugin/6546) you can use in conjunction with the
-Eclipse settings.
+Code formatting is automatically enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin during the build process. The build will:
 
-It is forbidden to use _wildcard imports_ (e.g., `import static org.junit.jupiter.api.Assertions.*;`)
-in Java code.
+- Automatically format all code
+- Add missing license headers
+- Correct import order
+- Fix other style issues
+
+You can run the plugin goal `gradle spotlessApply` to apply formation.
+Nevertheless, that´s not required, as the build handles everything automatically.
+
+IDE configuration is available for consistency:
+- **Eclipse**: Use our predefined settings:
+  - [Formatter config](gradle/config/eclipse/junit-eclipse-formatter-settings.xml)
+  - [Import order](gradle/config/eclipse/junit-eclipse.importorder)
+- **IntelliJ**: Install the [Eclipse Code Formatter plugin](https://plugins.jetbrains.com/plugin/6546) with our settings
+
+**Important**: Wildcard imports (e.g., `import static org.junit.jupiter.api.Assertions.*;`) remain strictly forbidden.
 
 #### Documentation
 
