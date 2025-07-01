@@ -18,13 +18,13 @@ repository on GitHub.
 
 * If Git information is included in the Open Test Reporting XML format (see below), any
   credentials that may be configured as part the `remote.origin.url` setting in Git were
-  written to the `originUrl` attribute of `<git:repository>` elements. For example, when
-  cloning a GitHub repository using a URL like
-  `https://username:password@github.com/organization/repository.git` both username and
-  password were included in the XML report. Since this report may be shared, published, or
-  archived (for example, on a CI server) while including this information, this was
-  reported as a potential security vulnerability (CVE-2025-53103). Any credentials are now
-  being replaced with `\***` before writing them to the XML report.
+  previously written to the `originUrl` attribute of `<git:repository>` elements. For
+  example, when cloning a GitHub repository using a URL like
+  `https://username:password@github.com/organization/repository.git`, both username and
+  password were included in the XML report. Since a report which includes this information
+  may be shared, published, or archived (for example, on a CI server), this was reported
+  as a potential security vulnerability (CVE-2025-53103). Any credentials are now replaced
+  with `\***` before writing them to the XML report.
 
 [[release-notes-5.13.2-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
