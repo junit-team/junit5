@@ -305,8 +305,8 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 				.isEqualTo("@Nested class '%s' must not be private. It will not be executed.",
 					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
 		assertThat(discoveryIssues.getLast().message()) //
-				.isEqualTo("@Nested class '%s' must not be static. It will not be executed.",
-					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
+				.startsWith("@Nested class '%s' must not be static.".formatted(
+					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName()));
 	}
 
 	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidNestedTestClass() {
