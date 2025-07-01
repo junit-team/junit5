@@ -1,4 +1,5 @@
 before_install:
+  - sdk update
   - sdk install java 24-open
   - sdk use java 24-open
 install:
