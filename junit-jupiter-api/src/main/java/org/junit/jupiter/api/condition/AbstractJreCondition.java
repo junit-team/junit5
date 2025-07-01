@@ -14,6 +14,7 @@ import static java.util.function.Predicate.isEqual;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.function.*;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 

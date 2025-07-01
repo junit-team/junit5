@@ -38,6 +38,7 @@ spotless {
 			trimTrailingWhitespace()
 			endWithNewline()
 			removeUnusedImports()
+			removeWildcardImports()
 		}
 
 		format("moduleDescriptor") {
