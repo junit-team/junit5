@@ -13,7 +13,7 @@ dependencies {
 	api(projects.junitPlatformCommons)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	compileOnly(kotlin("stdlib"))
 

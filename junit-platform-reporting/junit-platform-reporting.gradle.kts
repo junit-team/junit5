@@ -16,7 +16,7 @@ dependencies {
 	implementation(libs.openTestReporting.tooling.spi)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	shadowed(libs.openTestReporting.events)
 

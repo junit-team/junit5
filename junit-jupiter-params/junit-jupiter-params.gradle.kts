@@ -17,7 +17,7 @@ dependencies {
 	api(projects.junitJupiterApi)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	shadowed(libs.fastcsv)
 

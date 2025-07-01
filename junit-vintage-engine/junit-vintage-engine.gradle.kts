@@ -15,7 +15,7 @@ dependencies {
 	api(libs.junit4)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jspecify)
+	compileOnlyApi(libs.jspecify)
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)

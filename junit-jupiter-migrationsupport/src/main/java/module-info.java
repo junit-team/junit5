@@ -16,7 +16,7 @@
 module org.junit.jupiter.migrationsupport {
 
 	requires static transitive org.apiguardian.api;
-	requires static org.jspecify;
+	requires static transitive org.jspecify;
 
 	requires transitive junit; // 4
 	requires transitive org.junit.jupiter.api;

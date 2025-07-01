@@ -17,7 +17,7 @@
 module org.junit.platform.console {
 
 	requires static org.apiguardian.api;
-	requires static org.jspecify;
+	requires static transitive org.jspecify;
 
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
