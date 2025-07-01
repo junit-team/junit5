@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -52,4 +53,8 @@ class DelegatingLauncher implements Launcher {
 		delegate.execute(testPlan, listeners);
 	}
 
+	@Override
+	public void execute(TestPlan testPlan, CancellationToken cancellationToken, TestExecutionListener... listeners) {
+		delegate.execute(testPlan, cancellationToken, listeners);
+	}
 }

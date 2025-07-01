@@ -10,9 +10,11 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.CancellationToken;
 
 /**
  * The {@code Launcher} API is the main entry point for client code that
@@ -126,5 +128,26 @@ public interface Launcher {
 	 */
 	@API(status = STABLE, since = "1.4")
 	void execute(TestPlan testPlan, TestExecutionListener... listeners);
+
+	/**
+	 * Execute the supplied {@link TestPlan} and notify
+	 * {@linkplain #registerTestExecutionListeners registered listeners} about
+	 * the progress and results of the execution.
+	 *
+	 * <p>Supplied test execution listeners are registered in addition to
+	 * already registered listeners but only for the execution of the supplied
+	 * test plan.
+	 *
+	 * <p>Additionally, it's possible to request cancellation
+	 *
+	 * @apiNote The supplied {@link TestPlan} must not have been executed
+	 * previously.
+	 *
+	 * @param testPlan the test plan to execute; never {@code null}
+	 * @param listeners additional test execution listeners; never {@code null}
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	void execute(TestPlan testPlan, CancellationToken cancellationToken, TestExecutionListener... listeners);
 
 }
