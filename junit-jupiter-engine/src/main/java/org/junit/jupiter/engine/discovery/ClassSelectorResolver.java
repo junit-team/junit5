@@ -15,6 +15,7 @@ import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor.getEnclosingTestClasses;
+import static org.junit.jupiter.engine.discovery.predicates.TestClassPredicates.NestedClassInvalidityReason.NOT_INNER;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 import static org.junit.platform.commons.util.FunctionUtils.where;
@@ -45,6 +46,7 @@ import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestClassAware;
 import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates;
+import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates.NestedClassInvalidityReason;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils.CycleErrorHandling;
@@ -86,13 +88,22 @@ class ClassSelectorResolver implements SelectorResolver {
 
 		if (this.predicates.isAnnotatedWithNested.test(testClass)) {
 			// Class name filter is not applied to nested test classes
-			if (this.predicates.isValidNestedTestClass(testClass)) {
+			NestedClassInvalidityReason invalidityReason = this.predicates.validateNestedTestClass(testClass);
+			if (invalidityReason == null) {
 				return toResolution(
 					context.addToParent(() -> DiscoverySelectors.selectClass(testClass.getEnclosingClass()),
 						parent -> Optional.of(newMemberClassTestDescriptor(parent, testClass))));
 			}
+			if (invalidityReason == NOT_INNER) {
+				return resolveStandaloneTestClass(context, testClass);
+			}
+			return unresolved();
 		}
-		else if (isAcceptedStandaloneTestClass(testClass)) {
+		return resolveStandaloneTestClass(context, testClass);
+	}
+
+	private Resolution resolveStandaloneTestClass(Context context, Class<?> testClass) {
+		if (isAcceptedStandaloneTestClass(testClass)) {
 			return toResolution(
 				context.addToParent(parent -> Optional.of(newStandaloneClassTestDescriptor(parent, testClass))));
 		}

@@ -275,6 +275,40 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 				.haveExactly(1, finishedWithFailure(message(it -> it.contains(expectedMessage))));
 	}
 
+	@Test
+	void discoversButWarnsAboutTopLevelNestedTestClasses() {
+		var results = discoverTestsForClass(TopLevelNestedTestCase.class);
+
+		var engineDescriptor = results.getEngineDescriptor();
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo(
+					"Top-level class '%s' must not be annotated with @Nested. "
+							+ "It will be executed anyway for backward compatibility. "
+							+ "You should remove the @Nested annotation to resolve this warning.",
+					TopLevelNestedTestCase.class.getName());
+	}
+
+	@Test
+	void discoversButWarnsAboutStaticNestedTestClasses() {
+		var results = discoverTestsForClass(StaticNestedTestCase.TestCase.class);
+
+		var engineDescriptor = results.getEngineDescriptor();
+		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo(
+					"@Nested class '%s' must not be static. "
+							+ "It will only be executed if discovered as a standalone test class. "
+							+ "You should remove the annotation or make it non-static to resolve this warning.",
+					StaticNestedTestCase.TestCase.class.getName());
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

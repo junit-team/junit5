@@ -55,15 +55,16 @@ public class TestClassPredicates {
 		candidate) || looksLikeIntendedTestClass(candidate);
 	public final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod;
 
-	private final Condition<Class<?>> isValidNestedTestClass;
+	private final Condition<Class<?>> isNotPrivateUnlessAbstractNestedClass;
+	private final Condition<Class<?>> isInnerNestedClass;
 	private final Condition<Class<?>> isValidStandaloneTestClass;
 
 	public TestClassPredicates(DiscoveryIssueReporter issueReporter) {
 		this.isTestOrTestFactoryOrTestTemplateMethod = new IsTestMethod(issueReporter) //
 				.or(new IsTestFactoryMethod(issueReporter)) //
 				.or(new IsTestTemplateMethod(issueReporter));
-		this.isValidNestedTestClass = isNotPrivateUnlessAbstract("@Nested", issueReporter) //
-				.and(isInner(issueReporter));
+		this.isNotPrivateUnlessAbstractNestedClass = isNotPrivateUnlessAbstract("@Nested", issueReporter);
+		this.isInnerNestedClass = isInner(issueReporter);
 		this.isValidStandaloneTestClass = isNotPrivateUnlessAbstract("Test", issueReporter) //
 				.and(isNotLocal(issueReporter)) //
 				.and(isNotInnerUnlessAbstract(issueReporter)) //
@@ -84,8 +85,16 @@ public class TestClassPredicates {
 	}
 
 	public boolean isValidNestedTestClass(Class<?> candidate) {
-		return this.isValidNestedTestClass.check(candidate) //
-				&& isNotAbstract(candidate);
+		return validateNestedTestClass(candidate) == null;
+	}
+
+	public NestedClassInvalidityReason validateNestedTestClass(Class<?> candidate) {
+		boolean isInner = this.isInnerNestedClass.check(candidate);
+		boolean isNotPrivateUnlessAbstract = this.isNotPrivateUnlessAbstractNestedClass.check(candidate);
+		if (isNotPrivateUnlessAbstract && isNotAbstract(candidate)) {
+			return isInner ? null : NestedClassInvalidityReason.NOT_INNER;
+		}
+		return NestedClassInvalidityReason.OTHER;
 	}
 
 	public boolean isValidStandaloneTestClass(Class<?> candidate) {
@@ -124,9 +133,13 @@ public class TestClassPredicates {
 	private static Condition<Class<?>> isInner(DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(ReflectionUtils::isInnerClass, testClass -> {
 			if (testClass.getEnclosingClass() == null) {
-				return createIssue("@Nested", testClass, "must not be a top-level class");
+				return createIssue("Top-level", testClass, "must not be annotated with @Nested",
+					"It will be executed anyway for backward compatibility. "
+							+ "You should remove the @Nested annotation to resolve this warning.");
 			}
-			return createIssue("@Nested", testClass, "must not be static");
+			return createIssue("@Nested", testClass, "must not be static",
+				"It will only be executed if discovered as a standalone test class. "
+						+ "You should remove the annotation or make it non-static to resolve this warning.");
 		});
 	}
 
@@ -141,8 +154,11 @@ public class TestClassPredicates {
 	}
 
 	private static DiscoveryIssue createIssue(String prefix, Class<?> testClass, String detailMessage) {
-		String message = String.format("%s class '%s' %s. It will not be executed.", prefix, testClass.getName(),
-			detailMessage);
+		return createIssue(prefix, testClass, detailMessage, "It will not be executed.");
+	}
+
+	private static DiscoveryIssue createIssue(String prefix, Class<?> testClass, String detailMessage, String effect) {
+		String message = String.format("%s class '%s' %s. %s", prefix, testClass.getName(), detailMessage, effect);
 		return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message) //
 				.source(ClassSource.from(testClass)) //
 				.build();
@@ -150,5 +166,10 @@ public class TestClassPredicates {
 
 	private static boolean isAnnotatedButNotComposed(Class<?> candidate, Class<? extends Annotation> annotationType) {
 		return !candidate.isAnnotation() && isAnnotated(candidate, annotationType);
+	}
+
+	@API(status = INTERNAL, since = "5.13.3")
+	public enum NestedClassInvalidityReason {
+		NOT_INNER, OTHER
 	}
 }
