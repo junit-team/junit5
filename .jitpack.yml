@@ -2,5 +2,4 @@ before_install:
   - sdk install java 24-open
   - sdk use java 24-open
 install:
-  - ./gradlew --version
-  - ./gradlew publishToMavenLocal
+  - ./gradlew --show-version javaToolchains publishToMavenLocal
