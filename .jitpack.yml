@@ -3,4 +3,4 @@ before_install:
   - sdk use java 24-open
 install:
   - ./gradlew --version
-  - ./gradlew publishToMavenLocal -x test
+  - ./gradlew publishToMavenLocal
