@@ -33,7 +33,7 @@ public class ConditionEvaluationResult {
 	 * be {@code null} or <em>blank</em> if the reason is unknown
 	 * @return an enabled {@code ConditionEvaluationResult} with the given reason
 	 * or an <em>empty</em> reason if the reason is unknown
-	 * @see StringUtils#isBlank()
+	 * @see StringUtils#isBlank(String)
 	 */
 	public static ConditionEvaluationResult enabled(String reason) {
 		return new ConditionEvaluationResult(true, reason);
@@ -46,7 +46,7 @@ public class ConditionEvaluationResult {
 	 * be {@code null} or <em>blank</em> if the reason is unknown
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reason
 	 * or an <em>empty</em> reason if the reason is unknown
-	 * @see StringUtils#isBlank()
+	 * @see StringUtils#isBlank(String)
 	 */
 	public static ConditionEvaluationResult disabled(String reason) {
 		return new ConditionEvaluationResult(false, reason);
@@ -66,7 +66,7 @@ public class ConditionEvaluationResult {
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reason(s)
 	 * or an <em>empty</em> reason if the reasons are unknown
 	 * @since 5.7
-	 * @see StringUtils#isBlank()
+	 * @see StringUtils#isBlank(String)
 	 */
 	@API(status = STABLE, since = "5.7")
 	public static ConditionEvaluationResult disabled(String reason, String customReason) {
