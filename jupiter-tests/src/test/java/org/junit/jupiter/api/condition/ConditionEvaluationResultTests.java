@@ -156,7 +156,7 @@ class ConditionEvaluationResultTests {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@ParameterizedTest
+	@ParameterizedTest(name = "[{index}] reason=\"{0}\"")
 	@NullSource
 	@ValueSource(strings = { "", " ", "   ", "\t", "\n" })
 	@interface EmptyReasonsTest {
