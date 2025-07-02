@@ -29,8 +29,11 @@ public class ConditionEvaluationResult {
 	/**
 	 * Factory for creating <em>enabled</em> results.
 	 *
-	 * @param reason the reason why the container or test should be enabled
+	 * @param reason the reason why the container or test should be enabled; may
+	 * be {@code null} or <em>blank</em> if the reason is unknown
 	 * @return an enabled {@code ConditionEvaluationResult} with the given reason
+	 * or an <em>empty</em> reason if the reason is unknown
+	 * @see StringUtils#isBlank()
 	 */
 	public static ConditionEvaluationResult enabled(String reason) {
 		return new ConditionEvaluationResult(true, reason);
@@ -39,8 +42,11 @@ public class ConditionEvaluationResult {
 	/**
 	 * Factory for creating <em>disabled</em> results.
 	 *
-	 * @param reason the reason why the container or test should be disabled
+	 * @param reason the reason why the container or test should be disabled; may
+	 * be {@code null} or <em>blank</em> if the reason is unknown
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reason
+	 * or an <em>empty</em> reason if the reason is unknown
+	 * @see StringUtils#isBlank()
 	 */
 	public static ConditionEvaluationResult disabled(String reason) {
 		return new ConditionEvaluationResult(false, reason);
@@ -50,13 +56,23 @@ public class ConditionEvaluationResult {
 	 * Factory for creating <em>disabled</em> results with custom reasons
 	 * added by the user.
 	 *
-	 * @param reason the default reason why the container or test should be disabled
-	 * @param customReason the custom reason why the container or test should be disabled
-	 * @return a disabled {@code ConditionEvaluationResult} with the given reasons
+	 * <p>If non-blank default and custom reasons are provided, they will be
+	 * concatenated using the format: <code>"reason&nbsp;==&gt;&nbsp;customReason"</code>.
+	 *
+	 * @param reason the default reason why the container or test should be disabled;
+	 * may be {@code null} or <em>blank</em> if the default reason is unknown
+	 * @param customReason the custom reason why the container or test should be
+	 * disabled; may be {@code null} or <em>blank</em> if the custom reason is unknown
+	 * @return a disabled {@code ConditionEvaluationResult} with the given reason(s)
+	 * or an <em>empty</em> reason if the reasons are unknown
 	 * @since 5.7
+	 * @see StringUtils#isBlank()
 	 */
 	@API(status = STABLE, since = "5.7")
 	public static ConditionEvaluationResult disabled(String reason, String customReason) {
+		if (StringUtils.isBlank(reason)) {
+			return disabled(customReason);
+		}
 		if (StringUtils.isBlank(customReason)) {
 			return disabled(reason);
 		}
@@ -69,7 +85,7 @@ public class ConditionEvaluationResult {
 
 	private ConditionEvaluationResult(boolean enabled, String reason) {
 		this.enabled = enabled;
-		this.reason = Optional.ofNullable(reason);
+		this.reason = StringUtils.isNotBlank(reason) ? Optional.of(reason.trim()) : Optional.empty();
 	}
 
 	/**

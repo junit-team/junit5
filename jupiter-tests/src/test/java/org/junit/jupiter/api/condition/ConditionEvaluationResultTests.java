@@ -38,24 +38,14 @@ class ConditionEvaluationResultTests {
 				.isEqualTo("ConditionEvaluationResult [enabled = true, reason = 'reason']");
 	}
 
-	@EmptyReasonsTest
-	void enabledWithInvalidReason(String reason) {
-		@SuppressWarnings("NullAway")
+	@BlankReasonsTest
+	void enabledWithBlankReason(String reason) {
 		var result = ConditionEvaluationResult.enabled(reason);
 
 		assertThat(result.isDisabled()).isFalse();
-
-		if (reason == null) {
-			assertThat(result.getReason()).isEmpty();
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = true, reason = '<unknown>']");
-		}
-		// TODO Remove else-block once issues are addressed.
-		else {
-			assertThat(result.getReason()).contains(reason);
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = true, reason = '%s']", reason);
-		}
+		assertThat(result.getReason()).isEmpty();
+		assertThat(result).asString()//
+				.isEqualTo("ConditionEvaluationResult [enabled = true, reason = '<unknown>']");
 	}
 
 	@Test
@@ -68,29 +58,18 @@ class ConditionEvaluationResultTests {
 				.isEqualTo("ConditionEvaluationResult [enabled = false, reason = 'default']");
 	}
 
-	@EmptyReasonsTest
-	void disabledWithInvalidDefaultReason(String reason) {
-		@SuppressWarnings("NullAway")
+	@BlankReasonsTest
+	void disabledWithBlankDefaultReason(String reason) {
 		var result = ConditionEvaluationResult.disabled(reason);
 
 		assertThat(result.isDisabled()).isTrue();
-
-		if (reason == null) {
-			assertThat(result.getReason()).isEmpty();
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '<unknown>']");
-		}
-		// TODO Remove else-block once issues are addressed.
-		else {
-			assertThat(result.getReason()).contains(reason);
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '%s']", reason);
-		}
+		assertThat(result.getReason()).isEmpty();
+		assertThat(result).asString()//
+				.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '<unknown>']");
 	}
 
-	@EmptyReasonsTest
-	void disabledWithValidDefaultReasonAndInvalidCustomReason(String customReason) {
-		@SuppressWarnings("NullAway")
+	@BlankReasonsTest
+	void disabledWithDefaultReasonAndBlankCustomReason(String customReason) {
 		var result = ConditionEvaluationResult.disabled("default", customReason);
 
 		assertThat(result.isDisabled()).isTrue();
@@ -99,53 +78,28 @@ class ConditionEvaluationResultTests {
 				.isEqualTo("ConditionEvaluationResult [enabled = false, reason = 'default']");
 	}
 
-	@EmptyReasonsTest
-	void disabledWithInvalidDefaultReasonAndValidCustomReason(String reason) {
-		@SuppressWarnings("NullAway")
+	@BlankReasonsTest
+	void disabledWithBlankDefaultReasonAndCustomReason(String reason) {
 		var result = ConditionEvaluationResult.disabled(reason, "custom");
 
 		assertThat(result.isDisabled()).isTrue();
-
-		// TODO Convert to single assertion once issues are addressed.
-		// The following should hold for all null/blank default reasons.
-		// assertThat(result).asString().isEqualTo("ConditionEvaluationResult [enabled = false, reason = 'custom']");
-
-		if (reason == null) {
-			assertThat(result.getReason()).contains("null ==> custom");
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = 'null ==> custom']");
-		}
-		else {
-			var generatedReason = reason + " ==> custom";
-			assertThat(result.getReason()).contains(generatedReason);
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '%s']", generatedReason);
-		}
+		assertThat(result.getReason()).contains("custom");
+		assertThat(result).asString().isEqualTo("ConditionEvaluationResult [enabled = false, reason = 'custom']");
 	}
 
-	@EmptyReasonsTest
-	void disabledWithInvalidDefaultReasonAndInvalidCustomReason(String reason) {
+	@BlankReasonsTest
+	void disabledWithBlankDefaultReasonAndBlankCustomReason(String reason) {
 		// We intentionally use the reason as both the default and custom reason.
-		@SuppressWarnings("NullAway")
 		var result = ConditionEvaluationResult.disabled(reason, reason);
 
 		assertThat(result.isDisabled()).isTrue();
-
-		if (reason == null) {
-			assertThat(result.getReason()).isEmpty();
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '<unknown>']");
-		}
-		// TODO Remove else-block once issues are addressed.
-		else {
-			assertThat(result.getReason()).contains(reason);
-			assertThat(result).asString()//
-					.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '%s']", reason);
-		}
+		assertThat(result.getReason()).isEmpty();
+		assertThat(result).asString()//
+				.isEqualTo("ConditionEvaluationResult [enabled = false, reason = '<unknown>']");
 	}
 
 	@Test
-	void disabledWithValidDefaultReasonAndCustomReason() {
+	void disabledWithDefaultReasonAndCustomReason() {
 		var result = ConditionEvaluationResult.disabled("default", "custom");
 
 		assertThat(result.isDisabled()).isTrue();
@@ -158,7 +112,7 @@ class ConditionEvaluationResultTests {
 	@ParameterizedTest(name = "[{index}] reason=\"{0}\"")
 	@NullSource
 	@ValueSource(strings = { "", " ", "   ", "\t", "\n" })
-	@interface EmptyReasonsTest {
+	@interface BlankReasonsTest {
 	}
 
 }
