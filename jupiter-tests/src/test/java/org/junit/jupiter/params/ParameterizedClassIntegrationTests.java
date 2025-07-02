@@ -727,10 +727,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var expectedMessage = """
 					2 configuration errors:
-					- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
-					- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
-					""";
-			expectedMessage = expectedMessage.strip() //
+					- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: \
+					expected type 'int' but found 'long'
+					- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith"""//
 					.replace("\n", System.lineSeparator()); // use platform-specific line separators
 
 			var failedResult = getFirstTestExecutionResult(results.containerEvents().failed());
