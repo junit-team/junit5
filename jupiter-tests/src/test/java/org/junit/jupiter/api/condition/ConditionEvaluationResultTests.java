@@ -106,7 +106,16 @@ class ConditionEvaluationResultTests {
 
 	@Test
 	void disabledWithDefaultReasonAndCustomReason() {
-		var result = ConditionEvaluationResult.disabled("default", "custom");
+		disabledWithDefaultReasonAndCustomReason("default", "custom");
+	}
+
+	@Test
+	void disabledWithDefaultReasonAndCustomReasonWithLeadingAndTrailingWhitespace() {
+		disabledWithDefaultReasonAndCustomReason("   default   ", "   custom   ");
+	}
+
+	private static void disabledWithDefaultReasonAndCustomReason(String defaultReason, String customReason) {
+		var result = ConditionEvaluationResult.disabled(defaultReason, customReason);
 
 		assertThat(result.isDisabled()).isTrue();
 		assertThat(result.getReason()).contains("default ==> custom");
