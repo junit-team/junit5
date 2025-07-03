@@ -59,6 +59,7 @@ repository on GitHub.
   that both `null` and _blank_ values are supported for reason strings and that such
   values will result in an _empty_ `Optional` returned from
   `ConditionEvaluationResult.getReason()`.
+* Improve message of discovery issues reported for ineffective `@Order` annotations.
 
 
 [[release-notes-5.13.3-junit-vintage]]

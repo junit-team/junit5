@@ -374,6 +374,7 @@ class OrderedMethodTests {
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::message) //
 				.allMatch(it -> it.startsWith("Ineffective @Order annotation on method")
+						&& it.contains("The annotation may be directly present or meta-present on the method.")
 						&& it.endsWith("It will not be applied because MethodOrderer.OrderAnnotation is not in use."));
 		var testClass = WithoutTestMethodOrderTestCase.class;
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::source).extracting(Optional::orElseThrow) //

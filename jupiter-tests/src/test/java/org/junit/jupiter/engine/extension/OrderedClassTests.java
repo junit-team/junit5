@@ -205,6 +205,7 @@ class OrderedClassTests {
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::message) //
 				.allMatch(it -> it.startsWith("Ineffective @Order annotation on class")
+						&& it.contains("The annotation may be directly present or meta-present on the class.")
 						&& it.endsWith("It will not be applied because ClassOrderer.OrderAnnotation is not in use."));
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::source).extracting(Optional::orElseThrow) //
 				.containsExactlyInAnyOrder(ClassSource.from(A_TestCase.class), ClassSource.from(C_TestCase.class));
