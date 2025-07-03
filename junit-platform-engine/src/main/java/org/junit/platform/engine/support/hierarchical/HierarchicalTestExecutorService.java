@@ -101,6 +101,7 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 		 * Get the {@linkplain TestDescriptor test descriptor} of this task.
 		 *
 		 * @throws UnsupportedOperationException if not supported for this TestTask implementation
+		 * @since 6.0
 		 */
 		@API(status = EXPERIMENTAL, since = "6.0")
 		default TestDescriptor getTestDescriptor() {
