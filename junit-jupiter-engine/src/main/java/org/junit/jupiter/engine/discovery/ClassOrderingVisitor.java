@@ -48,10 +48,11 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 		this.globalOrderer = createGlobalOrderer(configuration);
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
 			testDescriptor -> !isAnnotated(testDescriptor.getTestClass(), Order.class), testDescriptor -> {
-				String message = "Ineffective @Order annotation on class '%s'. ".formatted(
-					testDescriptor.getTestClass().getName())
-						+ "The annotation may be directly present or meta-present on the class. "
-						+ "It will not be applied because ClassOrderer.OrderAnnotation is not in use.";
+				String message = """
+						Ineffective @Order annotation on class '%s'. \
+						It will not be applied because ClassOrderer.OrderAnnotation is not in use. \
+						Note that the annotation may be either directly present or meta-present on the class."""//
+						.formatted(testDescriptor.getTestClass().getName());
 				return DiscoveryIssue.builder(Severity.INFO, message) //
 						.source(testDescriptor.getSource()) //
 						.build();
