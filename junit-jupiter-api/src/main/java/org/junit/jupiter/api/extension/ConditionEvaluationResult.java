@@ -83,7 +83,7 @@ public class ConditionEvaluationResult {
 
 	private final Optional<String> reason;
 
-	@SuppressWarnings("NullAway") // StringUtils.isBlank() does not yet have a nullability @Contract
+	@SuppressWarnings("NullAway") // StringUtils.isNotBlank() does not yet have a nullability @Contract
 	private ConditionEvaluationResult(boolean enabled, String reason) {
 		this.enabled = enabled;
 		this.reason = StringUtils.isNotBlank(reason) ? Optional.of(reason.strip()) : Optional.empty();
