@@ -27,7 +27,8 @@ repository on GitHub.
 [[release-notes-6.0.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduce `TestTask.getTestDescriptor()` method for use in
+  `HierarchicalTestExecutorService` implementations.
 
 
 [[release-notes-6.0.0-M2-junit-jupiter]]
