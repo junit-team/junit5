@@ -31,7 +31,6 @@ import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition;
 
@@ -51,11 +50,12 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 		this.configuration = configuration;
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
 			testDescriptor -> !isAnnotated(testDescriptor.getTestMethod(), Order.class), testDescriptor -> {
-				String message = String.format(
-					"Ineffective @Order annotation on method '%s'. It will not be applied because MethodOrderer.OrderAnnotation is not in use.",
-					testDescriptor.getTestMethod().toGenericString());
+				String message = String.format("Ineffective @Order annotation on method '%s'. ",
+					testDescriptor.getTestMethod().toGenericString())
+						+ "It will not be applied because MethodOrderer.OrderAnnotation is not in use. "
+						+ "Note that the annotation may be either directly present or meta-present on the method.";
 				return DiscoveryIssue.builder(Severity.INFO, message) //
-						.source(MethodSource.from(testDescriptor.getTestMethod())) //
+						.source(testDescriptor.getSource()) //
 						.build();
 			});
 		this.methodsBeforeNestedClassesOrderer = createMethodsBeforeNestedClassesOrderer();
