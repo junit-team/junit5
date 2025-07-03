@@ -87,6 +87,11 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	@Override
+	public TestDescriptor getTestDescriptor() {
+		return testDescriptor;
+	}
+
+	@Override
 	public String toString() {
 		return "NodeTestTask [" + testDescriptor + "]";
 	}
