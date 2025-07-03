@@ -28,7 +28,6 @@ import org.junit.platform.commons.util.LruCache;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition;
 
@@ -49,10 +48,13 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 		this.globalOrderer = createGlobalOrderer(configuration);
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
 			testDescriptor -> !isAnnotated(testDescriptor.getTestClass(), Order.class), testDescriptor -> {
-				String message = "Ineffective @Order annotation on class '%s'. It will not be applied because ClassOrderer.OrderAnnotation is not in use.".formatted(
-					testDescriptor.getTestClass().getName());
+				String message = """
+						Ineffective @Order annotation on class '%s'. \
+						It will not be applied because ClassOrderer.OrderAnnotation is not in use. \
+						Note that the annotation may be either directly present or meta-present on the class."""//
+						.formatted(testDescriptor.getTestClass().getName());
 				return DiscoveryIssue.builder(Severity.INFO, message) //
-						.source(ClassSource.from(testDescriptor.getTestClass())) //
+						.source(testDescriptor.getSource()) //
 						.build();
 			});
 	}
