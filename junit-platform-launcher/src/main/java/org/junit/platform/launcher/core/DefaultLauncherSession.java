@@ -123,6 +123,12 @@ class DefaultLauncherSession implements LauncherSession {
 		}
 
 		@Override
+		public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, CancellationToken cancellationToken,
+				TestExecutionListener... listeners) {
+			throw new PreconditionViolationException("Launcher session has already been closed");
+		}
+
+		@Override
 		public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 			throw new PreconditionViolationException("Launcher session has already been closed");
 		}

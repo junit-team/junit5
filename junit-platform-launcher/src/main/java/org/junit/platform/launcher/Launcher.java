@@ -111,6 +111,37 @@ public interface Launcher {
 	void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners);
 
 	/**
+	 * Execute a {@link TestPlan} which is built according to the supplied
+	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
+	 * collecting their results, and notify
+	 * {@linkplain #registerTestExecutionListeners registered listeners} about
+	 * the progress and results of the execution.
+	 *
+	 * <p>Supplied test execution listeners are registered in addition to already
+	 * registered listeners but only for the supplied launcher discovery request.
+	 *
+	 * <p>Additionally, it's possible to request cancellation of the started
+	 * execution via the supplied {@link CancellationToken}.
+	 *
+	 * @apiNote Calling this method will cause test discovery to be executed for
+	 * all registered engines. If the same {@link LauncherDiscoveryRequest} was
+	 * previously passed to {@link #discover(LauncherDiscoveryRequest)}, you
+	 * should instead call {@link #execute(TestPlan, TestExecutionListener...)}
+	 * and pass the already acquired {@link TestPlan} to avoid the potential
+	 * performance degradation (e.g., classpath scanning) of running test
+	 * discovery twice.
+	 *
+	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
+	 * @param cancellationToken the token used to request cancellation of the
+	 * started execution; never {@code null}
+	 * @param listeners additional test execution listeners; never {@code null}
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, CancellationToken cancellationToken,
+			TestExecutionListener... listeners);
+
+	/**
 	 * Execute the supplied {@link TestPlan} and notify
 	 * {@linkplain #registerTestExecutionListeners registered listeners} about
 	 * the progress and results of the execution.
@@ -138,12 +169,15 @@ public interface Launcher {
 	 * already registered listeners but only for the execution of the supplied
 	 * test plan.
 	 *
-	 * <p>Additionally, it's possible to request cancellation
+	 * <p>Additionally, it's possible to request cancellation of the started
+	 * execution via the supplied {@link CancellationToken}.
 	 *
 	 * @apiNote The supplied {@link TestPlan} must not have been executed
 	 * previously.
 	 *
 	 * @param testPlan the test plan to execute; never {@code null}
+	 * @param cancellationToken the token used to request cancellation of the
+	 * started execution; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
 	 * @since 6.0
 	 */

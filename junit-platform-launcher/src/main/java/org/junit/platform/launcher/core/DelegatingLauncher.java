@@ -49,6 +49,12 @@ class DelegatingLauncher implements Launcher {
 	}
 
 	@Override
+	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, CancellationToken cancellationToken,
+			TestExecutionListener... listeners) {
+		delegate.execute(launcherDiscoveryRequest, cancellationToken, listeners);
+	}
+
+	@Override
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		delegate.execute(testPlan, listeners);
 	}
