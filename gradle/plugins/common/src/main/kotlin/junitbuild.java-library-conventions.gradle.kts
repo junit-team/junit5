@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import junitbuild.extensions.dependencyFromLibs
 import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
@@ -21,7 +22,7 @@ rewrite {
 }
 
 dependencies {
-	rewrite(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.release"))
+	rewrite(platform(dependencyFromLibs("openrewrite-recipe-bom")))
 	rewrite("org.openrewrite.recipe:rewrite-migrate-java")
 }
 
