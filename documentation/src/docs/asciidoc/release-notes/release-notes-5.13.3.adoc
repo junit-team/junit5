@@ -1,7 +1,7 @@
 [[release-notes-5.13.3]]
 == 5.13.3
 
-*Date of Release:* ❓
+*Date of Release:* July 4, 2025
 
 *Scope:* Bug fixes and enhancements since 5.13.2
 
@@ -13,20 +13,7 @@ repository on GitHub.
 [[release-notes-5.13.3-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.13.3-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.3-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.3-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-5.13.3-junit-jupiter]]
@@ -44,11 +31,6 @@ repository on GitHub.
   `"my&nbsp;custom&nbsp;reason"` instead of
   `"null&nbsp;++==>++&nbsp;my&nbsp;custom&nbsp;reason"`.
 
-[[release-notes-5.13.3-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-5.13.3-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
@@ -65,17 +47,4 @@ repository on GitHub.
 [[release-notes-5.13.3-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.13.3-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.3-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.3-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
