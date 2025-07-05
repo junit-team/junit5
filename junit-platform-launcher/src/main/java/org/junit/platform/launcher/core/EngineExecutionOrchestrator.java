@@ -231,7 +231,10 @@ public class EngineExecutionOrchestrator {
 			NamespacedHierarchicalStore<Namespace> requestLevelStore, CancellationToken cancellationToken) {
 
 		if (cancellationToken.isCancellationRequested()) {
-			listener.executionSkipped(engineDescriptor, "Cancellation of execution requested");
+			listener.executionStarted(engineDescriptor);
+			engineDescriptor.getChildren().forEach(
+				child -> listener.executionSkipped(child, "Cancellation of execution requested"));
+			listener.executionFinished(engineDescriptor, TestExecutionResult.aborted(null));
 			return;
 		}
 
