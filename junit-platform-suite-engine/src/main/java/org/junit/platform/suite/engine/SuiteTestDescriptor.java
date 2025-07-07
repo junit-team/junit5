@@ -154,6 +154,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 		if (cancellationToken.isCancellationRequested()) {
 			executionListener.executionSkipped(this, "Execution cancelled");
+			return;
 		}
 
 		executionListener.executionStarted(this);

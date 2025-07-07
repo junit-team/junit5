@@ -12,7 +12,6 @@ package org.junit.platform.suite.engine;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.not;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -669,13 +668,14 @@ class SuiteEngineTests {
 
 			var results = testKit.execute();
 
-			results.allEvents().debug().assertEventsMatchLooselyInOrder( //
-				event(container(CancellingSuite.class), started()), //
-				event(container(SingleTestTestCase.class), skippedWithReason("Execution cancelled")), //
-				event(container(CancellingSuite.class), finishedSuccessfully()), //
-				event(container(SelectMethodsSuite.class), not(container(MultipleTestsTestCase.class)),
-					skippedWithReason("Execution cancelled")) //
-			);
+			results.allEvents() //
+					.assertStatistics(stats -> stats.started(3).succeeded(2).aborted(1).skipped(2)) //
+					.assertEventsMatchLooselyInOrder( //
+						event(container(CancellingSuite.class), started()), //
+						event(container(SingleTestTestCase.class), skippedWithReason("Execution cancelled")), //
+						event(container(CancellingSuite.class), finishedSuccessfully()), //
+						event(container(SelectMethodsSuite.class), skippedWithReason("Execution cancelled")) //
+					);
 		}
 		finally {
 			CancellingSuite.cancellationToken = null;
