@@ -384,8 +384,9 @@ Cancelling tests relies on <<test-engines>> checking and responding to the
 `Launcher` will also check the token and cancel test execution when multiple test engines
 are present at runtime.
 
-At the time of writing the following test engines support cancellation:
+At the time of writing, the following test engines support cancellation:
 
 * `{junit-jupiter-engine}`
+* `{junit-platform-suite-engine}`
 * Any `{TestEngine}` extending `{HierarchicalTestEngine}` such as Spock and Cucumber
 ====

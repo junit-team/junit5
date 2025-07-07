@@ -59,13 +59,11 @@ class SuiteLauncher {
 		return discoveryOrchestrator.discover(discoveryRequest, parentId);
 	}
 
-	TestExecutionSummary execute(LauncherDiscoveryResult discoveryResult,
-			EngineExecutionListener parentEngineExecutionListener,
-			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
+	TestExecutionSummary execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener executionListener,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore, CancellationToken cancellationToken) {
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
-		// TODO #4725 Provide cancellation support for Suite engine
-		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener, requestLevelStore,
-			CancellationToken.disabled());
+		executionOrchestrator.execute(discoveryResult, executionListener, listener, requestLevelStore,
+			cancellationToken);
 		return listener.getSummary();
 	}
 

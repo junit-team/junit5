@@ -43,6 +43,7 @@ repository on GitHub.
   and a usage example.
 * Provide cancellation support for implementations of `{HierarchicalTestEngine}` such as
   JUnit Jupiter, Spock, and Cucumber.
+* Provide cancellation support for Suite engine
 * Introduce `TestTask.getTestDescriptor()` method for use in
   `HierarchicalTestExecutorService` implementations.
 
