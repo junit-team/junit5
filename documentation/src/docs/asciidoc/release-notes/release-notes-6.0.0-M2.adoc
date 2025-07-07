@@ -41,6 +41,8 @@ repository on GitHub.
   all registered test engines. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-cancellation, User Guide>> for details
   and a usage example.
+* Provide cancellation support for implementations of `{HierarchicalTestEngine}` such as
+  JUnit Jupiter, Spock, and Cucumber.
 * Introduce `TestTask.getTestDescriptor()` method for use in
   `HierarchicalTestExecutorService` implementations.
 

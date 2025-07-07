@@ -49,6 +49,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private static final Runnable NOOP = () -> {
 	};
 
+	static final SkipResult CANCELLED_SKIP_RESULT = SkipResult.skip("Execution cancelled");
+
 	private final NodeTestTaskContext taskContext;
 	private final TestDescriptor testDescriptor;
 	private final Node<C> node;
@@ -104,9 +106,11 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	public void execute() {
 		try {
 			throwableCollector = taskContext.throwableCollectorFactory().create();
-			prepare();
+			if (!taskContext.cancellationToken().isCancellationRequested()) {
+				prepare();
+			}
 			if (throwableCollector.isEmpty()) {
-				checkWhetherSkipped();
+				throwableCollector.execute(() -> skipResult = checkWhetherSkipped());
 			}
 			if (throwableCollector.isEmpty() && !requiredSkipResult().isSkipped()) {
 				executeRecursively();
@@ -144,8 +148,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		parentContext = null;
 	}
 
-	private void checkWhetherSkipped() {
-		requiredThrowableCollector().execute(() -> skipResult = node.shouldBeSkipped(requiredContext()));
+	private SkipResult checkWhetherSkipped() throws Exception {
+		return taskContext.cancellationToken().isCancellationRequested() //
+				? CANCELLED_SKIP_RESULT //
+				: node.shouldBeSkipped(requiredContext());
 	}
 
 	private void executeRecursively() {
@@ -193,7 +199,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		if (throwableCollector.isEmpty() && requiredSkipResult().isSkipped()) {
 			var skipResult = requiredSkipResult();
 			try {
-				node.nodeSkipped(requiredContext(), testDescriptor, skipResult);
+				node.nodeSkipped(requireNonNullElse(context, parentContext), testDescriptor, skipResult);
 			}
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
