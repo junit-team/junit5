@@ -375,9 +375,17 @@ include::{testDir}/example/UsingTheLauncherDemo.java[tags=cancellation]
 <4> Register the listener
 <5> Pass the `{LauncherExecutionRequest}` to `Launcher.execute`
 
-WARNING: Cancelling tests relies on <<test-engines>> checking and responding to the
+[NOTE]
+.Test Engine Support for Cancellation
+====
+Cancelling tests relies on <<test-engines>> checking and responding to the
 `{CancellationToken}` appropriately (see
 <<test-engines-requirements-cancellation, Test Engine Requirements>> for details). The
 `Launcher` will also check the token and cancel test execution when multiple test engines
 are present at runtime.
-// TODO #4725 List engines that are known to support cancellation here
+
+At the time of writing the following test engines support cancellation:
+
+* `{junit-jupiter-engine}`
+* Any `{TestEngine}` extending `{HierarchicalTestEngine}` such as Spock and Cucumber
+====

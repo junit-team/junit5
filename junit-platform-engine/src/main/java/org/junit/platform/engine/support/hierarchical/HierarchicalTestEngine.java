@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestEngine;
 
@@ -41,6 +42,9 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * its {@linkplain ExecutionRequest#getEngineExecutionListener() execution
 	 * listener} of test execution events.
 	 *
+	 * <p>Supports cancellation via the {@link CancellationToken} passed in the
+	 * supplied {@code request}.
+	 *
 	 * @see Node
 	 * @see #createExecutorService
 	 * @see #createExecutionContext
@@ -50,7 +54,6 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		try (HierarchicalTestExecutorService executorService = createExecutorService(request)) {
 			C executionContext = createExecutionContext(request);
 			ThrowableCollector.Factory throwableCollectorFactory = createThrowableCollectorFactory(request);
-			// TODO #4725 Provide cancellation support for implementations of HierarchicalTestEngine
 			new HierarchicalTestExecutor<>(request, executionContext, executorService,
 				throwableCollectorFactory).execute().get();
 		}
