@@ -16,8 +16,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
-import static org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore;
-import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -34,6 +32,8 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.in
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
@@ -47,7 +47,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -938,12 +937,13 @@ class VintageTestEngineExecutionTests {
 
 	@SuppressWarnings("deprecation")
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
-		TestEngine testEngine = new VintageTestEngine();
-		var discoveryRequest = request(testClass);
-		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
-		testEngine.execute(
-			ExecutionRequest.create(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters(),
-				dummyOutputDirectoryProvider(), dummyNamespacedHierarchicalStore()));
+		var testEngine = new VintageTestEngine();
+		var engineTestDescriptor = testEngine.discover(request(testClass), UniqueId.forEngine(testEngine.getId()));
+		ExecutionRequest executionRequest = mock();
+		when(executionRequest.getRootTestDescriptor()).thenReturn(engineTestDescriptor);
+		when(executionRequest.getEngineExecutionListener()).thenReturn(listener);
+		when(executionRequest.getConfigurationParameters()).thenReturn(mock());
+		testEngine.execute(executionRequest);
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {

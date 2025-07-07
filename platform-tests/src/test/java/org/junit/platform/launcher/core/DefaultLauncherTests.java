@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.unresolved;
+import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
@@ -31,11 +32,14 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.D
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +59,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
@@ -984,11 +989,57 @@ class DefaultLauncherTests {
 		assertThat(listener.stream(DiscoveryIssueNotifier.class, Level.WARNING)).hasSize(1);
 	}
 
+	@Test
+	void reportsChildrenOfEngineDescriptorAsSkippedAfterCancellationWasRequested() {
+		var engine = spy(new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var engineDescriptor = new EngineDescriptor(uniqueId, "Engine");
+				var container = new TestDescriptorStub(uniqueId.append("container", "1"), "Container");
+				var test = new TestDescriptorStub(container.getUniqueId().append("test", "1"), "Test");
+				container.addChild(test);
+				engineDescriptor.addChild(container);
+				return engineDescriptor;
+			}
+		});
+
+		var executionListener = mock(TestExecutionListener.class);
+
+		var cancellationToken = CancellationToken.create();
+		cancellationToken.cancel();
+
+		execute(engine, identity(), executionRequest -> executionRequest //
+				.listeners(executionListener) //
+				.cancellationToken(cancellationToken));
+
+		verify(engine, never()).execute(any());
+
+		var inOrder = inOrder(executionListener);
+		inOrder.verify(executionListener).testPlanExecutionStarted(any());
+		inOrder.verify(executionListener).executionStarted(
+			argThat(d -> d.getUniqueIdObject().equals(UniqueId.forEngine("engine-id"))));
+		inOrder.verify(executionListener).executionSkipped(
+			argThat(d -> d.getUniqueIdObject().getLastSegment().getType().equals("container")),
+			eq("Execution cancelled"));
+		inOrder.verify(executionListener).executionFinished(
+			argThat(d -> d.getUniqueIdObject().equals(UniqueId.forEngine("engine-id"))),
+			argThat(result -> result.getStatus() == ABORTED));
+		inOrder.verify(executionListener).testPlanExecutionFinished(any());
+		inOrder.verifyNoMoreInteractions();
+	}
+
 	private static ReportedData execute(TestEngine engine) {
 		return execute(engine, identity());
 	}
 
-	private static ReportedData execute(TestEngine engine, UnaryOperator<LauncherDiscoveryRequestBuilder> configurer) {
+	private static ReportedData execute(TestEngine engine,
+			UnaryOperator<LauncherDiscoveryRequestBuilder> discoveryConfigurer) {
+		return execute(engine, discoveryConfigurer, identity());
+	}
+
+	private static ReportedData execute(TestEngine engine,
+			UnaryOperator<LauncherDiscoveryRequestBuilder> discoveryConfigurer,
+			UnaryOperator<LauncherExecutionRequestBuilder> executionConfigurer) {
 		var executionListener = mock(TestExecutionListener.class);
 
 		AtomicReference<Instant> startTime = new AtomicReference<>();
@@ -1009,12 +1060,12 @@ class DefaultLauncherTests {
 				.enableImplicitConfigurationParameters(false) //
 				.configurationParameter(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, "execution") //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging");
-		var discoveryRequest = configurer.apply(discoveryRequestBuilder).build();
+		var discoveryRequest = discoveryConfigurer.apply(discoveryRequestBuilder).build();
 		var testPlan = launcher.discover(discoveryRequest);
 
-		var executionRequest = LauncherExecutionRequestBuilder.request(testPlan) //
-				.listeners(executionListener) //
-				.build();
+		var executionRequestBuilder = LauncherExecutionRequestBuilder.request(testPlan) //
+				.listeners(executionListener);
+		var executionRequest = executionConfigurer.apply(executionRequestBuilder).build();
 		launcher.execute(executionRequest);
 
 		var inOrder = inOrder(executionListener);

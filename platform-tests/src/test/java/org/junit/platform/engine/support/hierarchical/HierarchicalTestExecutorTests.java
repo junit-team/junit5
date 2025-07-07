@@ -18,8 +18,6 @@ import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
-import static org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore;
-import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -29,6 +27,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.quality.Strictness.LENIENT;
 
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.ThrowingConsumer;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -53,6 +51,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.stubbing.Answer;
 import org.opentest4j.TestAbortedException;
 
@@ -80,8 +79,9 @@ class HierarchicalTestExecutorTests {
 
 	private HierarchicalTestExecutor<MyEngineExecutionContext> createExecutor(
 			HierarchicalTestExecutorService executorService) {
-		var request = ExecutionRequest.create(root, listener, mock(ConfigurationParameters.class),
-			dummyOutputDirectoryProvider(), dummyNamespacedHierarchicalStore());
+		ExecutionRequest request = mock();
+		when(request.getRootTestDescriptor()).thenReturn(root);
+		when(request.getEngineExecutionListener()).thenReturn(listener);
 		return new HierarchicalTestExecutor<>(request, rootContext, executorService,
 			OpenTest4JAwareThrowableCollector::new);
 	}
@@ -552,6 +552,7 @@ class HierarchicalTestExecutorTests {
 	}
 
 	@Test
+	@MockitoSettings(strictness = LENIENT)
 	void canAbortExecutionOfDynamicChild() throws Exception {
 
 		var leafUniqueId = UniqueId.root("leaf", "child leaf");

@@ -28,6 +28,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 
@@ -38,14 +39,12 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.store.Namespace;
@@ -645,8 +644,10 @@ class SuiteEngineTests {
 		EngineExecutionListener listener = mock(EngineExecutionListener.class);
 		NamespacedHierarchicalStore<Namespace> requestLevelStore = NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore();
 
-		ExecutionRequest request = ExecutionRequest.create(engineDescriptor, listener,
-			mock(ConfigurationParameters.class), mock(OutputDirectoryProvider.class), requestLevelStore);
+		ExecutionRequest request = mock();
+		when(request.getRootTestDescriptor()).thenReturn(engineDescriptor);
+		when(request.getEngineExecutionListener()).thenReturn(listener);
+		when(request.getStore()).thenReturn(requestLevelStore);
 
 		new SuiteTestEngine().execute(request);
 

@@ -50,6 +50,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		try (HierarchicalTestExecutorService executorService = createExecutorService(request)) {
 			C executionContext = createExecutionContext(request);
 			ThrowableCollector.Factory throwableCollectorFactory = createThrowableCollectorFactory(request);
+			// TODO #4725 Provide cancellation support for implementations of HierarchicalTestEngine
 			new HierarchicalTestExecutor<>(request, executionContext, executorService,
 				throwableCollectorFactory).execute().get();
 		}

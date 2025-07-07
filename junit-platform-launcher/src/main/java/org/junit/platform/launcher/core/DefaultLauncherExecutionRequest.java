@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherExecutionRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -28,12 +29,14 @@ final class DefaultLauncherExecutionRequest implements LauncherExecutionRequest 
 	private final @Nullable LauncherDiscoveryRequest discoveryRequest;
 	private final @Nullable TestPlan testPlan;
 	private final List<? extends TestExecutionListener> executionListeners;
+	private final CancellationToken cancellationToken;
 
 	DefaultLauncherExecutionRequest(@Nullable LauncherDiscoveryRequest discoveryRequest, @Nullable TestPlan testPlan,
-			Collection<? extends TestExecutionListener> executionListeners) {
+			Collection<? extends TestExecutionListener> executionListeners, CancellationToken cancellationToken) {
 		this.discoveryRequest = discoveryRequest;
 		this.testPlan = testPlan;
 		this.executionListeners = List.copyOf(executionListeners);
+		this.cancellationToken = cancellationToken;
 	}
 
 	@Override
@@ -50,4 +53,10 @@ final class DefaultLauncherExecutionRequest implements LauncherExecutionRequest 
 	public Collection<? extends TestExecutionListener> getAdditionalTestExecutionListeners() {
 		return executionListeners;
 	}
+
+	@Override
+	public CancellationToken getCancellationToken() {
+		return cancellationToken;
+	}
+
 }
