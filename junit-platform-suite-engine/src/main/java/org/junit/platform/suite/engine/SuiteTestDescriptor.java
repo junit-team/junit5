@@ -27,6 +27,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.EngineDiscoveryListener;
@@ -148,20 +149,25 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	void execute(EngineExecutionListener parentEngineExecutionListener,
-			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
-		parentEngineExecutionListener.executionStarted(this);
+	void execute(EngineExecutionListener executionListener, NamespacedHierarchicalStore<Namespace> requestLevelStore,
+			CancellationToken cancellationToken) {
+
+		if (cancellationToken.isCancellationRequested()) {
+			executionListener.executionSkipped(this, "Execution cancelled");
+		}
+
+		executionListener.executionStarted(this);
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 
 		executeBeforeSuiteMethods(throwableCollector);
 
-		TestExecutionSummary summary = executeTests(parentEngineExecutionListener, requestLevelStore,
+		TestExecutionSummary summary = executeTests(executionListener, requestLevelStore, cancellationToken,
 			throwableCollector);
 
 		executeAfterSuiteMethods(throwableCollector);
 
 		TestExecutionResult testExecutionResult = computeTestExecutionResult(summary, throwableCollector);
-		parentEngineExecutionListener.executionFinished(this, testExecutionResult);
+		executionListener.executionFinished(this, testExecutionResult);
 	}
 
 	private void executeBeforeSuiteMethods(ThrowableCollector throwableCollector) {
@@ -176,8 +182,10 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
-	private @Nullable TestExecutionSummary executeTests(EngineExecutionListener parentEngineExecutionListener,
-			NamespacedHierarchicalStore<Namespace> requestLevelStore, ThrowableCollector throwableCollector) {
+	private @Nullable TestExecutionSummary executeTests(EngineExecutionListener executionListener,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore, CancellationToken cancellationToken,
+			ThrowableCollector throwableCollector) {
+
 		if (throwableCollector.isNotEmpty()) {
 			return null;
 		}
@@ -187,7 +195,9 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// be pruned accordingly.
 		LauncherDiscoveryResult discoveryResult = requireNonNull(this.launcherDiscoveryResult).withRetainedEngines(
 			getChildren()::contains);
-		return requireNonNull(launcher).execute(discoveryResult, parentEngineExecutionListener, requestLevelStore);
+
+		return requireNonNull(launcher).execute(discoveryResult, executionListener, requestLevelStore,
+			cancellationToken);
 	}
 
 	private void executeAfterSuiteMethods(ThrowableCollector throwableCollector) {

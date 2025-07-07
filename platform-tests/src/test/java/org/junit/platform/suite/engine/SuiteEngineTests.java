@@ -10,7 +10,9 @@
 
 package org.junit.platform.suite.engine;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.not;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -22,6 +24,8 @@ import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.skippedWithReason;
+import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -32,6 +36,7 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
@@ -39,6 +44,7 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -51,6 +57,8 @@ import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
+import org.junit.platform.suite.api.AfterSuite;
+import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.ConfigurationSensitiveTestCase;
@@ -628,11 +636,6 @@ class SuiteEngineTests {
 		// @formatter:on
 	}
 
-	@Suite
-	@SelectClasses(SingleTestTestCase.class)
-	abstract private static class AbstractPrivateSuite {
-	}
-
 	@Test
 	void suiteEnginePassesRequestLevelStoreToSuiteTestDescriptors() {
 		UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
@@ -643,15 +646,87 @@ class SuiteEngineTests {
 
 		EngineExecutionListener listener = mock(EngineExecutionListener.class);
 		NamespacedHierarchicalStore<Namespace> requestLevelStore = NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore();
+		var cancellationToken = CancellationToken.create();
 
 		ExecutionRequest request = mock();
 		when(request.getRootTestDescriptor()).thenReturn(engineDescriptor);
 		when(request.getEngineExecutionListener()).thenReturn(listener);
 		when(request.getStore()).thenReturn(requestLevelStore);
+		when(request.getCancellationToken()).thenReturn(cancellationToken);
 
 		new SuiteTestEngine().execute(request);
 
-		verify(mockDescriptor).execute(same(listener), same(requestLevelStore));
+		verify(mockDescriptor).execute(same(listener), same(requestLevelStore), same(cancellationToken));
+	}
+
+	@Test
+	void reportsSuiteClassAsSkippedWhenCancelledBeforeExecution() {
+		CancellingSuite.cancellationToken = CancellationToken.create();
+		try {
+			var testKit = EngineTestKit.engine(ENGINE_ID) //
+					.selectors(selectClass(CancellingSuite.class), selectClass(SelectMethodsSuite.class)) //
+					.cancellationToken(CancellingSuite.cancellationToken);
+
+			var results = testKit.execute();
+
+			results.allEvents().debug().assertEventsMatchLooselyInOrder( //
+				event(container(CancellingSuite.class), started()), //
+				event(container(SingleTestTestCase.class), skippedWithReason("Execution cancelled")), //
+				event(container(CancellingSuite.class), finishedSuccessfully()), //
+				event(container(SelectMethodsSuite.class), not(container(MultipleTestsTestCase.class)),
+					skippedWithReason("Execution cancelled")) //
+			);
+		}
+		finally {
+			CancellingSuite.cancellationToken = null;
+		}
+	}
+
+	@Test
+	void reportsChildrenOfEnginesInSuiteAsSkippedWhenCancelledDuringExecution() {
+		CancellingSuite.cancellationToken = CancellationToken.create();
+		try {
+			var testKit = EngineTestKit.engine(ENGINE_ID) //
+					.selectors(selectClass(CancellingSuite.class)) //
+					.cancellationToken(CancellingSuite.cancellationToken);
+
+			var results = testKit.execute();
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(container(SingleTestTestCase.class),
+						skippedWithReason("Execution cancelled"))).haveExactly(0, event(test(), started()));
+
+			assertThat(CancellingSuite.afterCalled) //
+					.describedAs("@AfterSuite method was called") //
+					.isTrue();
+		}
+		finally {
+			CancellingSuite.cancellationToken = null;
+		}
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+
+	static class CancellingSuite extends SelectClassesSuite {
+
+		static @Nullable CancellationToken cancellationToken;
+		static boolean afterCalled;
+
+		@BeforeSuite
+		static void beforeSuite() {
+			CancellingSuite.afterCalled = false;
+			requireNonNull(cancellationToken).cancel();
+		}
+
+		@AfterSuite
+		static void afterSuite() {
+			afterCalled = true;
+		}
+	}
+
+	@Suite
+	@SelectClasses(SingleTestTestCase.class)
+	abstract private static class AbstractPrivateSuite {
 	}
 
 	@Suite
