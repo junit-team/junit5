@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
@@ -329,7 +330,9 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * initialized to contain the resulting discovery request.
 	 *
 	 * @return a new {@link LauncherExecutionRequestBuilder}
+	 * @since 6.0
 	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
 	public LauncherExecutionRequestBuilder forExecution() {
 		return LauncherExecutionRequestBuilder.request(build());
 	}
