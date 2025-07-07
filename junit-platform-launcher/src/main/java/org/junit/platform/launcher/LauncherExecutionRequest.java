@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.CancellationToken;
 
 /**
  * {@code LauncherExecutionRequest} encapsulates a request for test execution
@@ -60,5 +61,10 @@ public interface LauncherExecutionRequest {
 	 * should be notified about events pertaining to this execution request}
 	 */
 	Collection<? extends TestExecutionListener> getAdditionalTestExecutionListeners();
+
+	/**
+	 * {@return the cancellation token for this execution request}
+	 */
+	CancellationToken getCancellationToken();
 
 }

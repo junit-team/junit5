@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
@@ -62,7 +63,9 @@ class SuiteLauncher {
 			EngineExecutionListener parentEngineExecutionListener,
 			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
-		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener, requestLevelStore);
+		// TODO #4725 Provide cancellation support for Suite engine
+		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener, requestLevelStore,
+			CancellationToken.disabled());
 		return listener.getSummary();
 	}
 

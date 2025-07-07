@@ -18,6 +18,7 @@ import static org.junit.platform.launcher.core.LauncherPhase.EXECUTION;
 import java.util.Collection;
 
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -94,16 +95,18 @@ class DefaultLauncher implements Launcher {
 				"Either a TestPlan or LauncherDiscoveryRequest must be present in the LauncherExecutionRequest");
 			return InternalTestPlan.from(discover(launcherExecutionRequest.getDiscoveryRequest().get(), EXECUTION));
 		});
-		execute(testPlan, launcherExecutionRequest.getAdditionalTestExecutionListeners());
+		execute(testPlan, launcherExecutionRequest.getAdditionalTestExecutionListeners(),
+			launcherExecutionRequest.getCancellationToken());
 	}
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest, LauncherPhase phase) {
 		return discoveryOrchestrator.discover(discoveryRequest, phase);
 	}
 
-	private void execute(InternalTestPlan internalTestPlan, Collection<? extends TestExecutionListener> listeners) {
+	private void execute(InternalTestPlan internalTestPlan, Collection<? extends TestExecutionListener> listeners,
+			CancellationToken cancellationToken) {
 		try (NamespacedHierarchicalStore<Namespace> requestLevelStore = createRequestLevelStore()) {
-			executionOrchestrator.execute(internalTestPlan, requestLevelStore, listeners);
+			executionOrchestrator.execute(internalTestPlan, requestLevelStore, listeners, cancellationToken);
 		}
 	}
 

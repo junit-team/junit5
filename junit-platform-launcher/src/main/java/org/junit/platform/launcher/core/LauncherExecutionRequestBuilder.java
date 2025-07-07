@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Objects.requireNonNullElseGet;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherExecutionRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -59,6 +61,7 @@ public final class LauncherExecutionRequestBuilder {
 	private final @Nullable LauncherDiscoveryRequest discoveryRequest;
 	private final @Nullable TestPlan testPlan;
 	private final Collection<TestExecutionListener> executionListeners = new ArrayList<>();
+	private @Nullable CancellationToken cancellationToken;
 
 	private LauncherExecutionRequestBuilder(@Nullable LauncherDiscoveryRequest discoveryRequest,
 			@Nullable TestPlan testPlan) {
@@ -83,11 +86,25 @@ public final class LauncherExecutionRequestBuilder {
 	}
 
 	/**
+	 * Set the cancellation token for the request.
+	 *
+	 * @param cancellationToken the {@code CancellationToken} to use; never
+	 * {@code null}.
+	 * @return this builder for method chaining
+	 * @see CancellationToken
+	 */
+	public LauncherExecutionRequestBuilder cancellationToken(CancellationToken cancellationToken) {
+		this.cancellationToken = Preconditions.notNull(cancellationToken, "CancellationToken must not be null");
+		return this;
+	}
+
+	/**
 	 * Build the {@link LauncherExecutionRequest} that has been configured via
 	 * this builder.
 	 */
 	public LauncherExecutionRequest build() {
-		return new DefaultLauncherExecutionRequest(discoveryRequest, testPlan, executionListeners);
+		return new DefaultLauncherExecutionRequest(this.discoveryRequest, this.testPlan, this.executionListeners,
+			requireNonNullElseGet(this.cancellationToken, CancellationToken::disabled));
 	}
 
 }

@@ -120,6 +120,13 @@ compatibility with build tools and IDEs:
   siblings or other nodes that are required for the execution of the selected tests.
 * `TestEngines` _should_ support <<running-tests-tags, tagging>> tests and containers so
   that tag filters can be applied when discovering tests.
+* [[test-engines-requirements-cancellation]] A `TestEngine` _should_ cancel its execution
+  when the `{CancellationToken}` it is passed as part of the `ExecutionRequest` indicates
+  that cancellation has been requested. In this case, it _should_ report any remaining
+  `TestDescriptors` as skipped but not report any events for their descendants. It _may_
+  report already started `TestDescriptors` as aborted in case they have not been executed
+  completely. If a `TestEngine` supports cancellation, it should clean up any resources
+  that it has created just like if execution had finished regularly.
 
 [[test-engines-discovery-issues]]
 ==== Reporting Discovery Issues
