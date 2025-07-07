@@ -41,6 +41,8 @@ repository on GitHub.
   all registered test engines. Please refer to the
   <<../user-guide/index.adoc#launcher-api-launcher-cancellation, User Guide>> for details
   and a usage example.
+* Passing the `--fail-fast` option to the `execute` subcommand of the `ConsoleLauncher`
+  now causes test execution to be cancelled after the first failed test.
 * Provide cancellation support for implementations of `{HierarchicalTestEngine}` such as
   JUnit Jupiter, Spock, and Cucumber.
 * Provide cancellation support for Suite engine

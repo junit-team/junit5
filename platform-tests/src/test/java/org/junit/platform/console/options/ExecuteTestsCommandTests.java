@@ -13,7 +13,10 @@ package org.junit.platform.console.options;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +39,7 @@ class ExecuteTestsCommandTests {
 
 	@BeforeEach
 	void setUp() {
-		when(consoleTestExecutor.execute(any(), any())).thenReturn(summary);
+		when(consoleTestExecutor.execute(any(), any(), anyBoolean())).thenReturn(summary);
 	}
 
 	@Test
@@ -102,6 +105,16 @@ class ExecuteTestsCommandTests {
 				() -> assertEquals(Optional.empty(), parseArgs().getReportsDir()),
 				() -> assertEquals(Optional.of(dir), parseArgs("--reports-dir", "build/test-results").getReportsDir()),
 				() -> assertEquals(Optional.of(dir), parseArgs("--reports-dir=build/test-results").getReportsDir())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseValidFailFast() {
+		// @formatter:off
+		assertAll(
+				() -> assertFalse(parseArgs().isFailFast()),
+				() -> assertTrue(parseArgs("--fail-fast").isFailFast())
 		);
 		// @formatter:on
 	}

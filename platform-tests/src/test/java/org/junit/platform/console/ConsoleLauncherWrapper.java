@@ -55,7 +55,7 @@ class ConsoleLauncherWrapper {
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
 			assertEquals(expectedValue, code, "ConsoleLauncher execute code mismatch!");
-			if (expectedValue != 0) {
+			if (expectedValue != 0 && expectedValue != 1) {
 				assertThat(errText).isNotBlank();
 			}
 		}
