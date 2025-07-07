@@ -10,7 +10,6 @@
 
 package example;
 
-// tag::imports[]
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -19,6 +18,8 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -40,15 +41,14 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
-// end::imports[]
 
 /**
  * @since 5.0
  */
 class UsingTheLauncherDemo {
 
-	@org.junit.jupiter.api.Tag("exclude")
-	@org.junit.jupiter.api.Test
+	@Tag("exclude")
+	@Test
 	@SuppressWarnings("unused")
 	void execution() {
 		// @formatter:off
@@ -87,7 +87,7 @@ class UsingTheLauncherDemo {
 		// @formatter:on
 	}
 
-	@org.junit.jupiter.api.Test
+	@Test
 	void launcherConfig() {
 		Path reportsDir = Path.of("target", "xml-reports");
 		PrintWriter out = new PrintWriter(System.out);
@@ -119,7 +119,7 @@ class UsingTheLauncherDemo {
 		// @formatter:on
 	}
 
-	@org.junit.jupiter.api.Test
+	@Test
 	@SuppressWarnings("unused")
 	void cancellation() {
 		// tag::cancellation[]
