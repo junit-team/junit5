@@ -43,12 +43,10 @@ public class RunnerExecutor {
 			engineExecutionListener.executionSkipped(runnerTestDescriptor, "Execution cancelled");
 			return;
 		}
-		var notifier = new RunNotifier();
+		RunNotifier notifier = new CancellationTokenAwareRunNotifier(cancellationToken);
 		var testRun = new TestRun(runnerTestDescriptor);
 		var listener = new RunListenerAdapter(testRun, engineExecutionListener, testSourceProvider);
 		notifier.addListener(listener);
-		CancellationToken.Listener cancellationListener = __ -> notifier.pleaseStop();
-		cancellationToken.addListener(cancellationListener);
 		try {
 			listener.testRunStarted(runnerTestDescriptor.getDescription());
 			runnerTestDescriptor.getRunner().run(notifier);
@@ -60,9 +58,6 @@ public class RunnerExecutor {
 		catch (Throwable t) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			reportUnexpectedFailure(testRun, runnerTestDescriptor, failed(t));
-		}
-		finally {
-			cancellationToken.removeListener(cancellationListener);
 		}
 	}
 
