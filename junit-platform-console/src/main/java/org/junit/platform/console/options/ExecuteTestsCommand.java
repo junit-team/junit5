@@ -60,11 +60,15 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 	@Override
 	protected TestExecutionSummary execute(PrintWriter out) {
 		return consoleTestExecutorFactory.create(toTestDiscoveryOptions(), toTestConsoleOutputOptions()) //
-				.execute(out, getReportsDir());
+				.execute(out, getReportsDir(), isFailFast());
 	}
 
 	Optional<Path> getReportsDir() {
 		return getReportingOptions().flatMap(ReportingOptions::getReportsDir);
+	}
+
+	boolean isFailFast() {
+		return getReportingOptions().map(options -> options.failFast).orElse(false);
 	}
 
 	private Optional<ReportingOptions> getReportingOptions() {
@@ -96,7 +100,13 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 	static class ReportingOptions {
 
 		@Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
-		private boolean failIfNoTests; // no single-dash equivalent: was introduced in 5.3-M1
+		private boolean failIfNoTests;
+
+		/**
+		 * @since 6.0
+		 */
+		@Option(names = "--fail-fast", description = "Stops test execution after the first failed test.")
+		private boolean failFast;
 
 		@Nullable
 		@Option(names = "--reports-dir", paramLabel = "DIR", description = "Enable report output into a specified local directory (will be created if it does not exist).")

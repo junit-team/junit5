@@ -53,7 +53,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).contains("Test run finished after", "2 tests found", "0 tests skipped",
 			"2 tests started", "0 tests aborted", "1 tests successful", "1 tests failed");
@@ -66,7 +66,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).contains("Test execution started.");
 	}
@@ -78,7 +78,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).doesNotContain("Test execution started.");
 	}
@@ -91,7 +91,7 @@ class ConsoleTestExecutorTests {
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).contains("Failures (2)", "failingTest", "failingContainer");
 	}
@@ -105,7 +105,7 @@ class ConsoleTestExecutorTests {
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
 	}
@@ -119,7 +119,7 @@ class ConsoleTestExecutorTests {
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
 		var task = new ConsoleTestExecutor(discoveryOptions, outputOptions, () -> createLauncher(dummyTestEngine));
-		task.execute(new PrintWriter(stringWriter), Optional.empty());
+		task.execute(new PrintWriter(stringWriter), Optional.empty(), false);
 
 		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
 	}
