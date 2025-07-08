@@ -71,7 +71,8 @@ public final class VintageTestEngine implements TestEngine {
 		VintageEngineDescriptor engineDescriptor = (VintageEngineDescriptor) request.getRootTestDescriptor();
 		// TODO #4725 Provide cancellation support for Vintage engine
 		engineExecutionListener.executionStarted(engineDescriptor);
-		new VintageExecutor(engineDescriptor, engineExecutionListener, request).executeAllChildren();
+		new VintageExecutor(engineDescriptor, engineExecutionListener,
+			request.getConfigurationParameters()).executeAllChildren(request.getCancellationToken());
 		engineExecutionListener.executionFinished(engineDescriptor, successful());
 	}
 }

@@ -27,8 +27,9 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.CancellationToken;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.vintage.engine.Constants;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
@@ -48,56 +49,54 @@ public class VintageExecutor {
 
 	private final VintageEngineDescriptor engineDescriptor;
 	private final EngineExecutionListener engineExecutionListener;
-	private final ExecutionRequest request;
+	private final ConfigurationParameters configurationParameters;
 
 	private final boolean parallelExecutionEnabled;
 	private final boolean classes;
 	private final boolean methods;
 
 	public VintageExecutor(VintageEngineDescriptor engineDescriptor, EngineExecutionListener engineExecutionListener,
-			ExecutionRequest request) {
+			ConfigurationParameters configurationParameters) {
 		this.engineDescriptor = engineDescriptor;
 		this.engineExecutionListener = engineExecutionListener;
-		this.request = request;
-		this.parallelExecutionEnabled = request.getConfigurationParameters().getBoolean(
-			Constants.PARALLEL_EXECUTION_ENABLED).orElse(false);
-		this.classes = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(
+		this.configurationParameters = configurationParameters;
+		this.parallelExecutionEnabled = configurationParameters.getBoolean(Constants.PARALLEL_EXECUTION_ENABLED).orElse(
 			false);
-		this.methods = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(
-			false);
+		this.classes = configurationParameters.getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
+		this.methods = configurationParameters.getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
 	}
 
-	public void executeAllChildren() {
+	public void executeAllChildren(CancellationToken cancellationToken) {
 
 		if (!parallelExecutionEnabled) {
-			executeClassesAndMethodsSequentially();
+			executeClassesAndMethodsSequentially(cancellationToken);
 			return;
 		}
 
 		if (!classes && !methods) {
 			logger.warn(() -> "Parallel execution is enabled but no scope is defined. "
 					+ "Falling back to sequential execution.");
-			executeClassesAndMethodsSequentially();
+			executeClassesAndMethodsSequentially(cancellationToken);
 			return;
 		}
 
-		boolean wasInterrupted = executeInParallel();
+		boolean wasInterrupted = executeInParallel(cancellationToken);
 		if (wasInterrupted) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
-	private void executeClassesAndMethodsSequentially() {
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+	private void executeClassesAndMethodsSequentially(CancellationToken cancellationToken) {
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, cancellationToken);
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
 			iterator.remove();
 		}
 	}
 
-	private boolean executeInParallel() {
+	private boolean executeInParallel(CancellationToken cancellationToken) {
 		ExecutorService executorService = Executors.newWorkStealingPool(getThreadPoolSize());
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, cancellationToken);
 
 		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(executorService);
 
@@ -110,7 +109,7 @@ public class VintageExecutor {
 	}
 
 	private int getThreadPoolSize() {
-		Optional<String> optionalPoolSize = request.getConfigurationParameters().get(Constants.PARALLEL_POOL_SIZE);
+		Optional<String> optionalPoolSize = configurationParameters.get(Constants.PARALLEL_POOL_SIZE);
 		if (optionalPoolSize.isPresent()) {
 			try {
 				int poolSize = Integer.parseInt(optionalPoolSize.get());

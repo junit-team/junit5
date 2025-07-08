@@ -44,6 +44,7 @@ import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.DisabledInEclipse;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -57,6 +58,7 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.StoppedByUserException;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.junit.vintage.engine.samples.junit3.IgnoredJUnit3TestCase;
@@ -64,6 +66,7 @@ import org.junit.vintage.engine.samples.junit3.JUnit3ParallelSuiteWithSubsuites;
 import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSubsuites;
 import org.junit.vintage.engine.samples.junit3.JUnit4SuiteWithIgnoredJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit4.CancellingTestCase;
 import org.junit.vintage.engine.samples.junit4.CompletelyDynamicTestCase;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
@@ -926,6 +929,32 @@ class VintageTestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void supportsCancellation() {
+		CancellingTestCase.cancellationToken = CancellationToken.create();
+		try {
+			var results = vintageTestEngine() //
+					.selectors(selectClass(CancellingTestCase.class),
+						selectClass(PlainJUnit4TestCaseWithSingleTestWhichFails.class)) //
+					.cancellationToken(CancellingTestCase.cancellationToken) //
+					.execute();
+
+			results.allEvents().assertEventsMatchExactly( //
+				event(engine(), started()), //
+				event(container(CancellingTestCase.class), started()), //
+				event(test(), started()), //
+				event(test(), finishedWithFailure()), //
+				event(test(), skippedWithReason("Execution cancelled")), //
+				event(container(CancellingTestCase.class), abortedWithReason(instanceOf(StoppedByUserException.class))), //
+				event(container(PlainJUnit4TestCaseWithSingleTestWhichFails.class),
+					skippedWithReason("Execution cancelled")), //
+				event(engine(), finishedSuccessfully()));
+		}
+		finally {
+			CancellingTestCase.cancellationToken = null;
+		}
+	}
+
 	private static EngineExecutionResults execute(Class<?> testClass) {
 		return execute(request(testClass));
 	}
@@ -936,6 +965,12 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@SuppressWarnings("deprecation")
+	private static EngineTestKit.Builder vintageTestEngine() {
+		return EngineTestKit.engine(new VintageTestEngine()) //
+				.enableImplicitConfigurationParameters(false);
+	}
+
+	@SuppressWarnings("deprecation")
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
 		var testEngine = new VintageTestEngine();
 		var engineTestDescriptor = testEngine.discover(request(testClass), UniqueId.forEngine(testEngine.getId()));
@@ -943,6 +978,7 @@ class VintageTestEngineExecutionTests {
 		when(executionRequest.getRootTestDescriptor()).thenReturn(engineTestDescriptor);
 		when(executionRequest.getEngineExecutionListener()).thenReturn(listener);
 		when(executionRequest.getConfigurationParameters()).thenReturn(mock());
+		when(executionRequest.getCancellationToken()).thenReturn(CancellationToken.disabled());
 		testEngine.execute(executionRequest);
 	}
 
