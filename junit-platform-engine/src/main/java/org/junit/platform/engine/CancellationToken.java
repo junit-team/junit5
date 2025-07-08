@@ -66,38 +66,4 @@ public sealed interface CancellationToken permits RegularCancellationToken, Disa
 	 */
 	void cancel();
 
-	/**
-	 * Add a listener that is notified when this token is cancelled.
-	 *
-	 * <p>If the token is already cancelled when this method is called, the
-	 * supplied listener is notified right away.
-	 *
-	 * @param listener the listener to be added; never {@code null}
-	 */
-	void addListener(Listener listener);
-
-	/**
-	 * Removes a previously registered listener.
-	 *
-	 * @param listener the listener to be removed; never {@code null}
-	 */
-	void removeListener(Listener listener);
-
-	/**
-	 * Listener to be notified when a {@code CancellationToken} is cancelled.
-	 *
-	 * @since 6.0
-	 */
-	interface Listener {
-
-		/**
-		 * Called when the supplied token is cancelled assuming this listener
-		 * was {@linkplain CancellationToken#addListener(Listener) registered}.
-		 *
-		 * @param token the cancelled token; never {@code null}
-		 */
-		void cancellationRequested(CancellationToken token);
-
-	}
-
 }
