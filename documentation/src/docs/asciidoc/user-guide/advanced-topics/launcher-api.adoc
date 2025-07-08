@@ -387,6 +387,7 @@ are present at runtime.
 At the time of writing, the following test engines support cancellation:
 
 * `{junit-jupiter-engine}`
+* `{junit-vintage-engine}`
 * `{junit-platform-suite-engine}`
 * Any `{TestEngine}` extending `{HierarchicalTestEngine}` such as Spock and Cucumber
 ====

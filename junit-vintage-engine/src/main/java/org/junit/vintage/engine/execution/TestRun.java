@@ -87,6 +87,12 @@ class TestRun {
 		return result;
 	}
 
+	Collection<TestDescriptor> getInProgressTestDescriptors() {
+		List<TestDescriptor> result = new ArrayList<>(inProgressDescriptors.keySet());
+		Collections.reverse(result);
+		return result;
+	}
+
 	boolean isDescendantOfRunnerTestDescriptor(TestDescriptor testDescriptor) {
 		return runnerDescendants.contains(testDescriptor);
 	}

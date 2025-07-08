@@ -27,6 +27,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
@@ -65,37 +66,37 @@ public class VintageExecutor {
 		this.methods = configurationParameters.getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
 	}
 
-	public void executeAllChildren() {
+	public void executeAllChildren(CancellationToken cancellationToken) {
 
 		if (!parallelExecutionEnabled) {
-			executeClassesAndMethodsSequentially();
+			executeClassesAndMethodsSequentially(cancellationToken);
 			return;
 		}
 
 		if (!classes && !methods) {
 			logger.warn(() -> "Parallel execution is enabled but no scope is defined. "
 					+ "Falling back to sequential execution.");
-			executeClassesAndMethodsSequentially();
+			executeClassesAndMethodsSequentially(cancellationToken);
 			return;
 		}
 
-		boolean wasInterrupted = executeInParallel();
+		boolean wasInterrupted = executeInParallel(cancellationToken);
 		if (wasInterrupted) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
-	private void executeClassesAndMethodsSequentially() {
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+	private void executeClassesAndMethodsSequentially(CancellationToken cancellationToken) {
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, cancellationToken);
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
 			iterator.remove();
 		}
 	}
 
-	private boolean executeInParallel() {
+	private boolean executeInParallel(CancellationToken cancellationToken) {
 		ExecutorService executorService = Executors.newWorkStealingPool(getThreadPoolSize());
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, cancellationToken);
 
 		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(executorService);
 

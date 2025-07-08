@@ -15,9 +15,11 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.CancellationToken;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.notification.StoppedByUserException;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.TestSourceProvider;
 
@@ -28,26 +30,53 @@ import org.junit.vintage.engine.descriptor.TestSourceProvider;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
+	private final CancellationToken cancellationToken;
 	private final TestSourceProvider testSourceProvider = new TestSourceProvider();
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener, CancellationToken cancellationToken) {
 		this.engineExecutionListener = engineExecutionListener;
+		this.cancellationToken = cancellationToken;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
+		if (cancellationToken.isCancellationRequested()) {
+			engineExecutionListener.executionSkipped(runnerTestDescriptor, "Execution cancelled");
+			return;
+		}
 		var notifier = new RunNotifier();
 		var testRun = new TestRun(runnerTestDescriptor);
 		var listener = new RunListenerAdapter(testRun, engineExecutionListener, testSourceProvider);
 		notifier.addListener(listener);
+		CancellationToken.Listener cancellationListener = __ -> notifier.pleaseStop();
+		cancellationToken.addListener(cancellationListener);
 		try {
 			listener.testRunStarted(runnerTestDescriptor.getDescription());
 			runnerTestDescriptor.getRunner().run(notifier);
 			listener.testRunFinished();
 		}
+		catch (StoppedByUserException e) {
+			reportEventsForCancellation(e, testRun);
+		}
 		catch (Throwable t) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 			reportUnexpectedFailure(testRun, runnerTestDescriptor, failed(t));
 		}
+		finally {
+			cancellationToken.removeListener(cancellationListener);
+		}
+	}
+
+	private void reportEventsForCancellation(StoppedByUserException exception, TestRun testRun) {
+		testRun.getInProgressTestDescriptors().forEach(startedDescriptor -> {
+			startedDescriptor.getChildren().forEach(child -> {
+				if (!testRun.isFinishedOrSkipped(child)) {
+					engineExecutionListener.executionSkipped(child, "Execution cancelled");
+					testRun.markSkipped(child);
+				}
+			});
+			engineExecutionListener.executionFinished(startedDescriptor, TestExecutionResult.aborted(exception));
+			testRun.markFinished(startedDescriptor);
+		});
 	}
 
 	private void reportUnexpectedFailure(TestRun testRun, RunnerTestDescriptor runnerTestDescriptor,
