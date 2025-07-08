@@ -10,22 +10,51 @@
 
 package org.junit.platform.engine;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 6.0
  */
 final class RegularCancellationToken implements CancellationToken {
 
-	private final AtomicBoolean cancelled = new AtomicBoolean();
+	private final List<Listener> listeners = new ArrayList<>();
+	private volatile boolean cancelled = false;
 
 	@Override
-	public boolean isCancellationRequested() {
-		return cancelled.get();
+	public /* not synchronized */ boolean isCancellationRequested() {
+		return cancelled;
 	}
 
 	@Override
-	public void cancel() {
-		cancelled.set(true);
+	public synchronized void cancel() {
+		if (!cancelled) {
+			cancelled = true;
+			listeners.forEach(it -> it.cancellationRequested(this));
+			listeners.clear();
+		}
+	}
+
+	@Override
+	public void addListener(Listener listener) {
+		Preconditions.notNull(listener, "listener must not be null");
+		synchronized (this) {
+			if (cancelled) {
+				listener.cancellationRequested(this);
+			}
+			else {
+				listeners.add(listener);
+			}
+		}
+	}
+
+	@Override
+	public void removeListener(Listener listener) {
+		Preconditions.notNull(listener, "listener must not be null");
+		synchronized (this) {
+			listeners.remove(listener);
+		}
 	}
 }

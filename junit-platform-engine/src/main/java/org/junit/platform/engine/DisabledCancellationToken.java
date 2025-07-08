@@ -27,5 +27,16 @@ final class DisabledCancellationToken implements CancellationToken {
 
 	@Override
 	public void cancel() {
+		// do nothing
+	}
+
+	@Override
+	public void addListener(Listener listener) {
+		// do nothing
+	}
+
+	@Override
+	public void removeListener(Listener listener) {
+		// do nothing
 	}
 }
