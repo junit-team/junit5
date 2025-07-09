@@ -10,6 +10,16 @@ link:{junit-framework-repo}+/milestone/101?closed=1+[5.13.4] milestone page in t
 repository on GitHub.
 
 
+[[release-notes-5.13.4-overall-improvements]]
+=== Overall Changes
+
+[[release-notes-5.13.4-overall-new-features-and-improvements]]
+==== New Features and Improvements
+
+* Remove `java.*` packages from `Import-Package` headers in all jar manifests to maximize
+  compatibility with older OSGi runtimes.
+
+
 [[release-notes-5.13.4-junit-platform]]
 === JUnit Platform
 
