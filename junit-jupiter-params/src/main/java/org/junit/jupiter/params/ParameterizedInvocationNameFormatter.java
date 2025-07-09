@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
@@ -24,7 +25,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,24 +246,27 @@ class ParameterizedInvocationNameFormatter {
 			this.messageFormat.format(makeReadable(context.consumedArguments), result, new FieldPosition(0));
 		}
 
-		private @Nullable Object[] makeReadable(@Nullable Object[] arguments) {
-			@Nullable
-			Format[] formats = messageFormat.getFormatsByArgumentIndex();
-			@Nullable
-			Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
-			for (int i = 0; i < result.length; i++) {
-				if (formats[i] == null) {
-					result[i] = truncateIfExceedsMaxLength(StringUtils.nullSafeToString(arguments[i]));
-				}
-			}
-			return result;
+		@Nullable
+		private Object[] makeReadable(@Nullable Object[] arguments) {
+			return requireNonNull(makeReadable(arguments, messageFormat.getFormatsByArgumentIndex())).toArray();
 		}
 
-		private @Nullable String truncateIfExceedsMaxLength(@Nullable String argument) {
-			if (argument != null && argument.length() > this.argumentMaxLength) {
-				return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
-			}
-			return argument;
+		@Nullable
+		private List<Object> makeReadable(@Nullable Object[] arguments, Format[] formats) {
+			return IntStream.range(0, min(arguments.length, formats.length)).mapToObj(
+				i -> makeReadable(arguments, i, formats[i])).toList();
+		}
+
+		@Nullable
+		private Object makeReadable(@Nullable Object[] arguments, int index, @Nullable Format format) {
+			return format != null ? arguments == null ? "" : arguments[index]
+					: truncateIfExceedsMaxLength(StringUtils.nullSafeToString(arguments[index]));
+		}
+
+		private String truncateIfExceedsMaxLength(String argument) {
+			return argument.length() > this.argumentMaxLength
+					? argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS
+					: argument;
 		}
 	}
 
