@@ -67,6 +67,11 @@ tasks.withType<Jar>().named {
 				# Instruct the APIGuardianAnnotations how to operate.
 				# See https://bnd.bndtools.org/instructions/export-apiguardian.html
 				-export-apiguardian: *;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}
+
+				# Avoid including java packages in Import-Package header to maximize compatibility with older OSGi runtimes.
+				# See https://bnd.bndtools.org/instructions/noimportjava.html
+				# Issue: https://github.com/junit-team/junit-framework/issues/4733
+				-noimportjava: true
 			"""
 		)
 
