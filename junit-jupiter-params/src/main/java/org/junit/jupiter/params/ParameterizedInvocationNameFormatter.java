@@ -98,6 +98,7 @@ class ParameterizedInvocationNameFormatter {
 		}
 	}
 
+	@SuppressWarnings("JdkObsolete")
 	private String formatSafely(int invocationIndex, EvaluatedArgumentSet arguments) {
 		ArgumentsContext context = new ArgumentsContext(invocationIndex, arguments.getConsumedNames(),
 			arguments.getName());
@@ -200,6 +201,7 @@ class ParameterizedInvocationNameFormatter {
 	private record PlaceholderPosition(int index, String placeholder) {
 	}
 
+	@SuppressWarnings("ArrayRecordComponent")
 	private record ArgumentsContext(int invocationIndex, @Nullable Object[] consumedArguments,
 			Optional<String> argumentSetName) {
 	}

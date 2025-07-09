@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see org.junit.platform.engine.discovery.DirectorySelector
  */
 @API(status = STABLE, since = "1.0")
-public class DirectorySource implements FileSystemSource {
+public final class DirectorySource implements FileSystemSource {
 
 	@Serial
 	private static final long serialVersionUID = 1L;

@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
+import java.time.ZoneId;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -53,7 +54,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	private @Nullable XmlReportData reportData;
 
 	public LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out) {
-		this(reportsDir, out, Clock.systemDefaultZone());
+		this(reportsDir, out, Clock.system(ZoneId.systemDefault()));
 	}
 
 	// For tests only

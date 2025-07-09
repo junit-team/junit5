@@ -1,6 +1,7 @@
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import junitbuild.extensions.capitalized
 import junitbuild.extensions.dependencyProject
+import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
@@ -147,6 +148,12 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 				}
 			}
 		}
+	}
+}
+
+tasks.compileJava {
+	options.errorprone {
+		disableAllChecks = true
 	}
 }
 

@@ -31,7 +31,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.6
  * @see LauncherDiscoveryListeners#logging()
  */
-class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
+final class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingLauncherDiscoveryListener.class);
 

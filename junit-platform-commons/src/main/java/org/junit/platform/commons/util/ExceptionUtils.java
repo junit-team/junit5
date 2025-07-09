@@ -76,7 +76,7 @@ public final class ExceptionUtils {
 		return ExceptionUtils.throwAs(t);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "TypeParameterUnusedInFormals" })
 	private static <T extends Throwable> T throwAs(Throwable t) throws T {
 		throw (T) t;
 	}

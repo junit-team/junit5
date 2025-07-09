@@ -376,6 +376,7 @@ public final class Events {
 	 * @param out the {@code OutputStream} to print to; never {@code null}
 	 * @return this {@code Events} object for method chaining; never {@code null}
 	 */
+	@SuppressWarnings("DefaultCharset")
 	public Events debug(OutputStream out) {
 		Preconditions.notNull(out, "OutputStream must not be null");
 		debug(new PrintWriter(out, true));

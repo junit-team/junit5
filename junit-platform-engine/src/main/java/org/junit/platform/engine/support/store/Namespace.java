@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
  * lifecycle of a single extension.
  */
 @API(status = EXPERIMENTAL, since = "6.0")
-public class Namespace {
+public final class Namespace {
 
 	/**
 	 * The default, global namespace which allows access to stored data from

@@ -241,6 +241,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		private final Map<UniqueId, DynamicTaskState> unfinishedTasks = new ConcurrentHashMap<>();
 
 		@Override
+		@SuppressWarnings("FutureReturnValueIgnored")
 		public void execute(TestDescriptor testDescriptor) {
 			execute(testDescriptor, taskContext.listener());
 		}

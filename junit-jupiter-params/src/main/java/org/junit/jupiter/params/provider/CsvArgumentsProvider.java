@@ -103,6 +103,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		return ((NamedCsvRecord) record).getHeader();
 	}
 
+	@SuppressWarnings({ "ReferenceEquality", "StringEquality" })
 	private static @Nullable String resolveNullMarker(String record) {
 		return record == CsvReaderFactory.DefaultFieldModifier.NULL_MARKER ? null : record;
 	}

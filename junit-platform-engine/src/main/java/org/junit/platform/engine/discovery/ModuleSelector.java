@@ -31,7 +31,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see DiscoverySelectors#selectModules(java.util.Set)
  */
 @API(status = STABLE, since = "1.1")
-public class ModuleSelector implements DiscoverySelector {
+public final class ModuleSelector implements DiscoverySelector {
 
 	private final String moduleName;
 

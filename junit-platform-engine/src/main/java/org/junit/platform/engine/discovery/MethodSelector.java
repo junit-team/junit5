@@ -58,7 +58,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see org.junit.platform.engine.support.descriptor.MethodSource
  */
 @API(status = STABLE, since = "1.0")
-public class MethodSelector implements DiscoverySelector {
+public final class MethodSelector implements DiscoverySelector {
 
 	private final @Nullable ClassLoader classLoader;
 	private final String className;

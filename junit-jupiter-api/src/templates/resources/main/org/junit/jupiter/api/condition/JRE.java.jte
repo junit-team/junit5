@@ -113,9 +113,9 @@ public enum JRE {
 	}
 
 	/**
-	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
+	 * {@return {@code true} if <em>this</em> {@code JRE} is known to be the
 	 * Java Runtime Environment version for the currently executing JVM or if
-	 * the version is {@link #OTHER}
+	 * the version is {@link #OTHER}}
 	 *
 	 * @see #currentJre()
 	 * @see #currentVersionNumber()
@@ -125,8 +125,8 @@ public enum JRE {
 	}
 
 	/**
-	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER}
+	 * {@return the {@link JRE} for the currently executing JVM, potentially
+	 * {@link #OTHER}}
 	 *
 	 * @since 5.7
 	 * @see #currentVersionNumber()
@@ -139,8 +139,8 @@ public enum JRE {
 	}
 
 	/**
-	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER}
+	 * {@return the {@link JRE} for the currently executing JVM, potentially
+	 * {@link #OTHER}}
 	 *
 	 * @since 5.12
 	 * @see #currentVersionNumber()
@@ -156,8 +156,8 @@ public enum JRE {
 	}
 
 	/**
-	 * @return the version number for the currently executing JVM, or {@code -1}
-	 * if the current JVM version could not be determined
+	 * {@return the version number for the currently executing JVM, or {@code -1}
+	 * if the current JVM version could not be determined}
 	 *
 	 * @since 5.12
 	 * @see Runtime.Version#feature()
@@ -169,10 +169,10 @@ public enum JRE {
 	}
 
 	/**
-	 * @return {@code true} if the supplied version number is known to be the
+	 * {@return {@code true} if the supplied version number is known to be the
 	 * Java Runtime Environment version for the currently executing JVM or if
 	 * the supplied version number is {@code -1} and the current JVM version
-	 * could not be determined
+	 * could not be determined}
 	 *
 	 * @since 5.12
 	 * @see Runtime.Version#feature()

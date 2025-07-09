@@ -254,6 +254,7 @@ class TestRun {
 		 *
 		 * @param description the {@code Description} to look up
 		 */
+		@SuppressWarnings("ReferenceEquality")
 		Optional<VintageTestDescriptor> getUnambiguously(Description description) {
 			if (descriptors.isEmpty()) {
 				return Optional.empty();

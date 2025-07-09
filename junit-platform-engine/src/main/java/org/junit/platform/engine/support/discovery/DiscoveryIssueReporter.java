@@ -165,6 +165,7 @@ public interface DiscoveryIssueReporter {
 		 *
 		 * @return the composed condition; never {@code null}
 		 */
+		@SuppressWarnings("ShortCircuitBoolean")
 		default Condition<T> and(Condition<? super T> that) {
 			Preconditions.notNull(that, "condition must not be null");
 			return value -> this.check(value) & that.check(value);

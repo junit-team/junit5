@@ -15,9 +15,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
 import static org.junit.platform.launcher.core.LauncherPhase.getDiscoveryIssueFailurePhase;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -177,7 +177,7 @@ public class EngineDiscoveryOrchestrator {
 
 		engineFilterer.performSanityChecks();
 
-		List<PostDiscoveryFilter> filters = new LinkedList<>(postDiscoveryFilters);
+		List<PostDiscoveryFilter> filters = new ArrayList<>(postDiscoveryFilters);
 		filters.addAll(request.getPostDiscoveryFilters());
 
 		applyPostDiscoveryFilters(testEngineDescriptors, filters);
@@ -238,7 +238,7 @@ public class EngineDiscoveryOrchestrator {
 
 	private void populateExclusionReasonInMap(Optional<String> reason, TestDescriptor testDescriptor,
 			Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
-		excludedTestDescriptorsByReason.computeIfAbsent(reason.orElse("Unknown"), list -> new LinkedList<>()).add(
+		excludedTestDescriptorsByReason.computeIfAbsent(reason.orElse("Unknown"), __ -> new ArrayList<>()).add(
 			testDescriptor);
 	}
 

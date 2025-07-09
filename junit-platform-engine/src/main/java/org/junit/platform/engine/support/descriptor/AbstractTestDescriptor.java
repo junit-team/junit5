@@ -190,6 +190,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
+	@SuppressWarnings("EqualsGetClass")
 	public final boolean equals(Object other) {
 		if (other == null) {
 			return false;

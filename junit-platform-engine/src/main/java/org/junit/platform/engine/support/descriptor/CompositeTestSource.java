@@ -29,7 +29,7 @@ import org.junit.platform.engine.TestSource;
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
-public class CompositeTestSource implements TestSource {
+public final class CompositeTestSource implements TestSource {
 
 	@Serial
 	private static final long serialVersionUID = 1L;

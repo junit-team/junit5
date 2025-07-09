@@ -46,7 +46,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see org.junit.platform.engine.support.descriptor.ClassSource
  */
 @API(status = STABLE, since = "1.0")
-public class ClassSelector implements DiscoverySelector {
+public final class ClassSelector implements DiscoverySelector {
 
 	private final @Nullable ClassLoader classLoader;
 

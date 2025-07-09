@@ -35,6 +35,7 @@ public class ConsoleUtils {
 	/**
 	 * {@return the charset of the console}
 	 */
+	@SuppressWarnings("SystemConsoleNull")
 	public static Charset charset() {
 		Console console = System.console();
 		return console != null ? console.charset() : Charset.defaultCharset();

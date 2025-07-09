@@ -751,7 +751,7 @@ public interface ExtensionContext {
 	 * mixing data between extensions or across different invocations within the
 	 * lifecycle of a single extension.
 	 */
-	class Namespace {
+	final class Namespace {
 
 		/**
 		 * The default, global namespace which allows access to stored data from

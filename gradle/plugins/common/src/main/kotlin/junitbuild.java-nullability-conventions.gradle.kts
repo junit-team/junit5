@@ -19,9 +19,23 @@ nullaway {
 
 tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
-		disableAllChecks = true
+		val onJ9 = java.toolchain.implementation.orNull == JvmImplementation.J9
+		if (name == "compileJava" && !onJ9) {
+			disable(
+				"BadImport",
+				"UnnecessaryLambda",
+				"AnnotateFormatMethod",
+				"StringSplitter",
+				"DoNotCallSuggester",
+				"InlineMeSuggester",
+				"ImmutableEnumChecker",
+				"MissingSummary"
+			)
+		} else {
+			disableAllChecks = true
+		}
 		nullaway {
-			if (java.toolchain.implementation.orNull == JvmImplementation.J9) {
+			if (onJ9) {
 				disable()
 			} else {
 				enable()

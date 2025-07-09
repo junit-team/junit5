@@ -45,7 +45,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see DiscoverySelectors#selectIteration(DiscoverySelector, int...)
  */
 @API(status = MAINTAINED, since = "1.13.3")
-public class IterationSelector implements DiscoverySelector {
+public final class IterationSelector implements DiscoverySelector {
 
 	private final DiscoverySelector parentSelector;
 	private final SortedSet<Integer> iterationIndices;
