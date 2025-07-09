@@ -21,7 +21,6 @@ import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PL
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.text.FieldPosition;
-import java.text.Format;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
@@ -229,15 +227,10 @@ class ParameterizedInvocationNameFormatter {
 
 	private static class MessageFormatPartialFormatter implements PartialFormatter {
 
-		@SuppressWarnings("UnnecessaryUnicodeEscape")
-		private static final char ELLIPSIS = '\u2026';
-
 		private final MessageFormat messageFormat;
-		private final int argumentMaxLength;
 
-		MessageFormatPartialFormatter(String pattern, int argumentMaxLength) {
+		MessageFormatPartialFormatter(String pattern, int ignored) {
 			this.messageFormat = new MessageFormat(pattern);
-			this.argumentMaxLength = argumentMaxLength;
 		}
 
 		// synchronized because MessageFormat is not thread-safe
@@ -247,22 +240,8 @@ class ParameterizedInvocationNameFormatter {
 		}
 
 		private @Nullable Object[] makeReadable(@Nullable Object[] arguments) {
-			Format[] formats = messageFormat.getFormatsByArgumentIndex();
-			@Nullable
-			Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
-			for (int i = 0; i < result.length; i++) {
-				if (formats[i] == null) {
-					result[i] = truncateIfExceedsMaxLength(StringUtils.nullSafeToString(arguments[i]));
-				}
-			}
-			return result;
-		}
-
-		private @Nullable String truncateIfExceedsMaxLength(@Nullable String argument) {
-			if (argument != null && argument.length() > this.argumentMaxLength) {
-				return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
-			}
-			return argument;
+			return Arrays.copyOf(arguments,
+				Math.min(arguments.length, messageFormat.getFormatsByArgumentIndex().length), Object[].class);
 		}
 	}
 
