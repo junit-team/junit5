@@ -247,6 +247,7 @@ class ParameterizedInvocationNameFormatter {
 		}
 
 		private @Nullable Object[] makeReadable(@Nullable Object[] arguments) {
+			@Nullable
 			Format[] formats = messageFormat.getFormatsByArgumentIndex();
 			@Nullable
 			Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
