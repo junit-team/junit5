@@ -25,6 +25,9 @@ dependencies {
 }
 
 tasks {
+	compileJava {
+		options.compilerArgs.add("-Xlint:-module") // due to qualified exports
+	}
 	jar {
 		bundle {
 			val version = project.version

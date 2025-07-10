@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.util.PreemptiveTimeoutUtils.executeWithPreemptiveTimeout;
 
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
@@ -39,7 +39,7 @@ class SeparateThreadTimeoutInvocation<T extends @Nullable Object> implements Inv
 	@Override
 	@SuppressWarnings("NullAway")
 	public T proceed() throws Throwable {
-		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
+		return executeWithPreemptiveTimeout(timeout.toDuration(), delegate::proceed, descriptionSupplier,
 			(__, ___, cause, testThread) -> {
 				TimeoutException exception = TimeoutExceptionFactory.create(descriptionSupplier.get(), timeout, null);
 				if (testThread != null) {

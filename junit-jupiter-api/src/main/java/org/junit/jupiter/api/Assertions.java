@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.Duration;
@@ -3654,36 +3653,6 @@ public class Assertions {
 		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
-	/**
-	 * <em>Assert</em> that execution of the supplied {@code supplier}
-	 * completes before the given {@code timeout} is exceeded.
-	 *
-	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
-	 * class-level Javadoc for further details.
-	 *
-	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
-	 *
-	 * <p>In the case the assertion does not pass, the supplied
-	 * {@link TimeoutFailureFactory} is invoked to create an exception which is
-	 * then thrown.
-	 *
-	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}.
-	 *
-	 * @see #assertTimeoutPreemptively(Duration, Executable)
-	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
-	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
-	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier)
-	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
-	 * @see #assertTimeout(Duration, Executable, Supplier)
-	 */
-	@API(status = INTERNAL, since = "5.9.1")
-	public static <T extends @Nullable Object, E extends Throwable> T assertTimeoutPreemptively(Duration timeout,
-			ThrowingSupplier<T> supplier, Supplier<@Nullable String> messageSupplier,
-			TimeoutFailureFactory<E> failureFactory) throws E {
-		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
-	}
-
 	// --- assertInstanceOf ----------------------------------------------------
 
 	/**
@@ -3735,22 +3704,4 @@ public class Assertions {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
-	/**
-	 * Factory for timeout failures.
-	 *
-	 * @param <T> The type of error or exception created
-	 * @since 5.9.1
-	 * @see Assertions#assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier, TimeoutFailureFactory)
-	 */
-	@API(status = INTERNAL, since = "5.9.1")
-	public interface TimeoutFailureFactory<T extends Throwable> {
-
-		/**
-		 * Create a failure for the given timeout, message, and cause.
-		 *
-		 * @return timeout failure; never {@code null}
-		 */
-		T createTimeoutFailure(Duration timeout, @Nullable Supplier<@Nullable String> messageSupplier,
-				@Nullable Throwable cause, @Nullable Thread testThread);
-	}
 }
