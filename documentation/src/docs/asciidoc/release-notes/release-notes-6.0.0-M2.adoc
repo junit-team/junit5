@@ -65,6 +65,9 @@ repository on GitHub.
   of the `TestTemplateInvocationContextProvider` interface from
   `Stream<TestTemplateInvocationContext>` to
   `Stream<? extends TestTemplateInvocationContext>`.
+* Remove support for `junit.jupiter.params.arguments.conversion.locale.format`
+  configuration parameter. `Locale` conversions are now always performed using the IETF
+  BCP 47 language tag format supported by `Locale.forLanguageTag(String)`.
 
 [[release-notes-6.0.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements

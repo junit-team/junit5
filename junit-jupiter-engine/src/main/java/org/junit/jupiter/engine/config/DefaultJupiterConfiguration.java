@@ -48,7 +48,10 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 @API(status = INTERNAL, since = "5.4")
 public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
-	private static final List<String> UNSUPPORTED_CONFIGURATION_PARAMETERS = List.of("junit.jupiter.tempdir.scope");
+	private static final List<String> UNSUPPORTED_CONFIGURATION_PARAMETERS = List.of( //
+		"junit.jupiter.tempdir.scope", //
+		"junit.jupiter.params.arguments.conversion.locale.format" //
+	);
 
 	private static final EnumConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
 		new EnumConfigurationParameterConverter<>(ExecutionMode.class, "parallel execution mode");

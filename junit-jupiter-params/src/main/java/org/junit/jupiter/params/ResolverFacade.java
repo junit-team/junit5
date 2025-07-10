@@ -435,7 +435,7 @@ class ResolverFacade {
 					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
 					.map(converter -> AnnotationConsumerInitializer.initialize(declaration.getAnnotatedElement(), converter))
 					.map(Converter::new)
-					.orElseGet(() -> Converter.createDefault(extensionContext));
+					.orElse(Converter.DEFAULT);
 		} // @formatter:on
 		catch (Exception ex) {
 			throw parameterResolutionException("Error creating ArgumentConverter", ex, declaration.getParameterIndex());
@@ -479,9 +479,7 @@ class ResolverFacade {
 
 	private record Converter(ArgumentConverter argumentConverter) implements Resolver {
 
-		private static Converter createDefault(ExtensionContext context) {
-			return new Converter(new DefaultArgumentConverter(context));
-		}
+		static final Converter DEFAULT = new Converter(new DefaultArgumentConverter());
 
 		@Override
 		public @Nullable Object resolve(ParameterContext parameterContext, int parameterIndex,
