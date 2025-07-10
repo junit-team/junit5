@@ -22,6 +22,7 @@ import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicate
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameContaining;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameStartingWith;
+import static com.tngtech.archunit.lang.conditions.ArchConditions.onlyBeAccessedByClassesThat;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
@@ -50,6 +51,8 @@ import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.NullMarked;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 
 @AnalyzeClasses(packages = { "org.junit.platform", "org.junit.jupiter", "org.junit.vintage" })
 class ArchUnitTests {
@@ -79,6 +82,14 @@ class ArchUnitTests {
 			.and().areAnnotatedWith(Repeatable.class) //
 			.should(haveContainerAnnotationWithSameRetentionPolicy()) //
 			.andShould(haveContainerAnnotationWithSameTargetTypes());
+
+	private final DescribedPredicate<? super JavaClass> jupiterAssertions = name(Assertions.class.getName()) //
+			.or(name(Assumptions.class.getName())).or(name("org.junit.jupiter.api.AssertionsKt"));
+
+	@SuppressWarnings("unused")
+	@ArchTest // https://github.com/junit-team/junit-framework/issues/4604
+	private final ArchRule jupiterAssertionsShouldBeSelfContained = classes().that(jupiterAssertions) //
+			.should(onlyBeAccessedByClassesThat(jupiterAssertions));
 
 	@ArchTest
 	void packagesShouldBeNullMarked(JavaClasses classes) {
