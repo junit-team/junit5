@@ -35,6 +35,7 @@
 			<property name="ignoreComments" value="true"/>
 		</module>
 		<module name="HideUtilityClassConstructor"/>
+		<module name="ModifierOrder"/>
 	</module>
 
 	<module name="JavadocPackage" />
