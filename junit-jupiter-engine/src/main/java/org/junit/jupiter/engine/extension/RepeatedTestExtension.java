@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -38,7 +37,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+	public Stream<RepeatedTestInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		Method testMethod = context.getRequiredTestMethod();
 		String displayName = context.getDisplayName();
 		RepeatedTest repeatedTest = findAnnotation(testMethod, RepeatedTest.class).get();

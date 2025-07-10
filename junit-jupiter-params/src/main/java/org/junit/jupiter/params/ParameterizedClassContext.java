@@ -28,13 +28,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-class ParameterizedClassContext implements ParameterizedDeclarationContext<ClassTemplateInvocationContext> {
+class ParameterizedClassContext implements ParameterizedDeclarationContext<ParameterizedClassInvocationContext> {
 
 	private final Class<?> testClass;
 	private final ParameterizedClass annotation;
@@ -124,7 +123,7 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 	}
 
 	@Override
-	public ClassTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
+	public ParameterizedClassInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			Arguments arguments, int invocationIndex) {
 		return new ParameterizedClassInvocationContext(this, formatter, arguments, invocationIndex);
 	}
