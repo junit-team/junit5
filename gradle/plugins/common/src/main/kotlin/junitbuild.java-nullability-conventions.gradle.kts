@@ -31,6 +31,7 @@ tasks.withType<JavaCompile>().configureEach {
 				"ImmutableEnumChecker",
 				"MissingSummary"
 			)
+			error("PackageLocation")
 		} else {
 			disableAllChecks = true
 		}
