@@ -519,6 +519,32 @@ include::{testDir}/example/HamcrestAssertionsDemo.java[tags=user_guide]
 Naturally, legacy tests based on the JUnit 4 programming model can continue using
 `org.junit.Assert#assertThat`.
 
+[TIP]
+.Excluding Jupiter’s Assertions From a Project’s Classpath
+====
+If you would like to enforce that all your tests use a certain third-party assertion
+library instead of Jupiter's, you can set up a rule using {Checkstyle} or another static
+analysis tool that fails the build if Jupiter's `Assertions` class is used.
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+	<property name="severity" value="error" />
+	<module name="TreeWalker">
+    <module name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
+			<property name="id" value="jupiterAssertions"/>
+			<property name="maximum" value="0"/>
+			<property name="format" value="org\.junit\.jupiter\.api\.(Assertions|Assumptions)\."/>
+			<property name="message" value="Jupiter Assertions/Assumptions should not be used in this project. Please use ... instead."/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+	</module>
+</module>
+----
+====
+
 [[writing-tests-assumptions]]
 === Assumptions
 
