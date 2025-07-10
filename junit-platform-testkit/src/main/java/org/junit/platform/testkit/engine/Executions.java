@@ -205,6 +205,7 @@ public final class Executions {
 	 * @param out the {@code OutputStream} to print to; never {@code null}
 	 * @return this {@code Executions} object for method chaining; never {@code null}
 	 */
+	@SuppressWarnings("DefaultCharset")
 	public Executions debug(OutputStream out) {
 		Preconditions.notNull(out, "OutputStream must not be null");
 		debug(new PrintWriter(out, true));
@@ -217,6 +218,7 @@ public final class Executions {
 	 * @param writer the {@code Writer} to print to; never {@code null}
 	 * @return this {@code Executions} object for method chaining; never {@code null}
 	 */
+	@SuppressWarnings("DefaultCharset")
 	public Executions debug(Writer writer) {
 		Preconditions.notNull(writer, "Writer must not be null");
 		debug(new PrintWriter(writer, true));

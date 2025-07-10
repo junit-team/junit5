@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.support.scanning;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.scanning.ClasspathFilters.CLASS_FILE_SUFFIX;
@@ -341,19 +340,18 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 	}
 
 	private List<URI> getRootUrisForPackage(String basePackageName) {
+		List<URI> uris = new ArrayList<>();
 		try {
 			Enumeration<URL> resources = getClassLoader().getResources(packagePath(basePackageName));
-			List<URI> uris = new ArrayList<>();
 			while (resources.hasMoreElements()) {
 				URL resource = resources.nextElement();
 				uris.add(resource.toURI());
 			}
-			return uris;
 		}
 		catch (Exception ex) {
 			logger.warn(ex, () -> "Error reading URIs from class loader for base package " + basePackageName);
-			return emptyList();
 		}
+		return uris;
 	}
 
 }

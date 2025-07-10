@@ -53,7 +53,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see #getClasspathResourceName()
  */
 @API(status = STABLE, since = "1.0")
-public class ClasspathResourceSelector implements DiscoverySelector {
+public final class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
 

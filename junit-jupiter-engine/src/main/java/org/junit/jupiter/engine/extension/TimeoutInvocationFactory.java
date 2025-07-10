@@ -80,7 +80,7 @@ class TimeoutInvocationFactory {
 	@SuppressWarnings("try")
 	static class SingleThreadExecutorResource extends ExecutorResource {
 
-		@SuppressWarnings("unused")
+		@SuppressWarnings({ "unused", "ThreadPriorityCheck" })
 		SingleThreadExecutorResource() {
 			super(Executors.newSingleThreadScheduledExecutor(runnable -> {
 				Thread thread = new Thread(runnable, "junit-jupiter-timeout-watcher");

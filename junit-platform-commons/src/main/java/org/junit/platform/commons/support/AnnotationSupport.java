@@ -70,6 +70,7 @@ public final class AnnotationSupport {
 	 * @see #findRepeatableAnnotations(Optional, Class)
 	 */
 	@API(status = MAINTAINED, since = "1.3")
+	@SuppressWarnings("NullableOptional")
 	public static boolean isAnnotated(@Nullable Optional<? extends AnnotatedElement> element,
 			Class<? extends Annotation> annotationType) {
 
@@ -112,6 +113,7 @@ public final class AnnotationSupport {
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
 	@API(status = MAINTAINED, since = "1.1")
+	@SuppressWarnings("NullableOptional")
 	public static <A extends Annotation> Optional<A> findAnnotation(
 			@Nullable Optional<? extends AnnotatedElement> element, Class<A> annotationType) {
 
@@ -253,6 +255,7 @@ public final class AnnotationSupport {
 	 * @see #findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	@API(status = MAINTAINED, since = "1.5")
+	@SuppressWarnings("NullableOptional")
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(
 			@Nullable Optional<? extends AnnotatedElement> element, Class<A> annotationType) {
 

@@ -52,6 +52,7 @@ public final class TestIdentifier implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	@Serial
+	@SuppressWarnings("UnusedVariable")
 	private static final ObjectStreamField[] serialPersistentFields = ObjectStreamClass.lookup(
 		SerializedForm.class).getFields();
 

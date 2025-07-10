@@ -32,6 +32,7 @@ public class ConcurrencyTestingUtils {
 		});
 	}
 
+	@SuppressWarnings("Finally")
 	public static <T extends @Nullable Object> List<T> executeConcurrently(int threads, Callable<T> action)
 			throws Exception {
 		ExecutorService executorService = Executors.newFixedThreadPool(threads);

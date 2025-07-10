@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
@@ -43,7 +44,7 @@ public final class FileEntry {
 		return new FileEntry(path, mediaType);
 	}
 
-	private final LocalDateTime timestamp = LocalDateTime.now();
+	private final LocalDateTime timestamp = LocalDateTime.now(ZoneId.systemDefault());
 	private final Path path;
 
 	private final @Nullable String mediaType;

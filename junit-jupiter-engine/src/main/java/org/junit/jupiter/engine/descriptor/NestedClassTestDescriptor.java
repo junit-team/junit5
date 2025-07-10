@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingInstanceTypesDependentResourceLocksProviderEvaluator;
@@ -92,9 +91,9 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		if (parent instanceof TestClassAware testClassAwareParent) {
 			List<Class<?>> result = new ArrayList<>(testClassAwareParent.getEnclosingTestClasses());
 			result.add(testClassAwareParent.getTestClass());
-			return result;
+			return List.copyOf(result);
 		}
-		return emptyList();
+		return List.of();
 	}
 
 	// --- ClassBasedTestDescriptor --------------------------------------------

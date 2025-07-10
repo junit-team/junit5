@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
@@ -129,7 +130,7 @@ public enum Theme {
 	 */
 	@Override
 	public final String toString() {
-		return name().toLowerCase();
+		return name().toLowerCase(Locale.ROOT);
 	}
 
 }

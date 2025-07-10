@@ -33,7 +33,7 @@ import org.junit.platform.engine.TestSource;
  * @see org.junit.platform.engine.discovery.ClasspathResourceSelector
  */
 @API(status = STABLE, since = "1.0")
-public class ClasspathResourceSource implements TestSource {
+public final class ClasspathResourceSource implements TestSource {
 
 	@Serial
 	private static final long serialVersionUID = 1L;

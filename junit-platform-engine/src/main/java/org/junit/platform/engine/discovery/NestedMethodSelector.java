@@ -56,7 +56,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see MethodSelector
  */
 @API(status = STABLE, since = "1.6")
-public class NestedMethodSelector implements DiscoverySelector {
+public final class NestedMethodSelector implements DiscoverySelector {
 
 	private final NestedClassSelector nestedClassSelector;
 	private final MethodSelector methodSelector;

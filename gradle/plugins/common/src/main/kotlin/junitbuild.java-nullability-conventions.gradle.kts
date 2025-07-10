@@ -19,9 +19,36 @@ nullaway {
 
 tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
-		disableAllChecks = true
+		val onJ9 = java.toolchain.implementation.orNull == JvmImplementation.J9
+		if (name == "compileJava" && !onJ9) {
+			disable(
+
+				// This check is opinionated wrt. which method names it considers unsuitable for import which includes
+				// a few of our own methods in `ReflectionUtils` etc.
+				"BadImport",
+
+				// The findings of this check are subjective because a named constant can be more readable in many cases
+				"UnnecessaryLambda",
+
+				// Resolving findings for these checks requires ErrorProne's annotations which we don't want to use
+				"AnnotateFormatMethod",
+				"DoNotCallSuggester",
+				"InlineMeSuggester",
+				"ImmutableEnumChecker",
+
+				// Resolving findings for this checks requires using Guava which we don't want to use
+				"StringSplitter",
+
+				// Produces a lot of findings that we consider to be false positives, for example for package-private
+				// classes and methods
+				"MissingSummary",
+			)
+			error("PackageLocation")
+		} else {
+			disableAllChecks = true
+		}
 		nullaway {
-			if (java.toolchain.implementation.orNull == JvmImplementation.J9) {
+			if (onJ9) {
 				disable()
 			} else {
 				enable()

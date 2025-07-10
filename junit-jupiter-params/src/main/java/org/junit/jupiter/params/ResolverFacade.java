@@ -234,8 +234,8 @@ class ResolverFacade {
 		ResolverFacade lifecycleMethodResolverFacade = create(method, annotation);
 
 		Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping = new HashMap<>();
-		List<String> errors = validateLifecycleMethodParameters(method, annotation, originalResolverFacade,
-			lifecycleMethodResolverFacade, parameterDeclarationMapping);
+		List<String> errors = validateLifecycleMethodParameters(originalResolverFacade, lifecycleMethodResolverFacade,
+			parameterDeclarationMapping);
 
 		return Try //
 				.call(() -> configurationErrorOrSuccess(errors,
@@ -336,8 +336,8 @@ class ResolverFacade {
 				.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new)));
 	}
 
-	private static List<String> validateLifecycleMethodParameters(Method method, Annotation annotation,
-			ResolverFacade originalResolverFacade, ResolverFacade lifecycleMethodResolverFacade,
+	private static List<String> validateLifecycleMethodParameters(ResolverFacade originalResolverFacade,
+			ResolverFacade lifecycleMethodResolverFacade,
 			Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
 		List<ParameterDeclaration> actualDeclarations = lifecycleMethodResolverFacade.indexedParameterDeclarations.getAll();
 		List<String> errors = new ArrayList<>();

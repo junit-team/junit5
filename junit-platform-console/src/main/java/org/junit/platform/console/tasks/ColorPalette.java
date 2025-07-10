@@ -13,9 +13,11 @@ package org.junit.platform.console.tasks;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
@@ -89,8 +91,8 @@ class ColorPalette {
 	}
 
 	private static Map<Style, String> toOverrideMap(Properties properties) {
-		Map<String, String> upperCaseProperties = properties.entrySet().stream().collect(
-			Collectors.toMap(entry -> ((String) entry.getKey()).toUpperCase(), entry -> (String) entry.getValue()));
+		Map<String, String> upperCaseProperties = properties.entrySet().stream().collect(Collectors.toMap(
+			entry -> ((String) entry.getKey()).toUpperCase(Locale.ROOT), entry -> (String) entry.getValue()));
 
 		return Arrays.stream(Style.values()).filter(style -> upperCaseProperties.containsKey(style.name())).collect(
 			Collectors.toMap(Function.identity(), style -> upperCaseProperties.get(style.name())));
@@ -108,7 +110,7 @@ class ColorPalette {
 	}
 
 	private static Properties getProperties(Path path) {
-		try (FileReader fileReader = new FileReader(path.toFile())) {
+		try (FileReader fileReader = new FileReader(path.toFile(), StandardCharsets.UTF_8)) {
 			return getProperties(fileReader);
 		}
 		catch (IOException e) {

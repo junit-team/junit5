@@ -249,7 +249,7 @@ public abstract class Try<V extends @Nullable Object> {
 
 	}
 
-	private static class Success<V extends @Nullable Object> extends Try<V> {
+	private static final class Success<V extends @Nullable Object> extends Try<V> {
 
 		private final V value;
 
@@ -327,7 +327,7 @@ public abstract class Try<V extends @Nullable Object> {
 		}
 	}
 
-	private static class Failure<V extends @Nullable Object> extends Try<V> {
+	private static final class Failure<V extends @Nullable Object> extends Try<V> {
 
 		private final Exception cause;
 

@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
@@ -57,13 +55,13 @@ public class ExpectedExceptionSupport implements AfterEachCallback, TestExecutio
 
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-		getStore(context).put(EXCEPTION_WAS_HANDLED, TRUE);
+		getStore(context).put(EXCEPTION_WAS_HANDLED, true);
 		this.support.handleTestExecutionException(context, throwable);
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		Boolean handled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> FALSE, Boolean.class);
+		Boolean handled = getStore(context).getOrComputeIfAbsent(EXCEPTION_WAS_HANDLED, key -> false, Boolean.class);
 		if (handled != null && !handled) {
 			this.support.afterEach(context);
 		}

@@ -35,7 +35,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see ExtensionContext#publishFile(String, MediaType, ThrowingConsumer)
  */
 @API(status = MAINTAINED, since = "5.13.3")
-public class MediaType {
+public final class MediaType {
 
 	private static final Pattern PATTERN;
 	static {

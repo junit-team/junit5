@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Timeout.DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY
 import static org.junit.jupiter.api.Timeout.ThreadMode.SAME_THREAD;
 import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -126,7 +127,7 @@ class TimeoutConfiguration {
 	private Optional<ThreadMode> parseTimeoutThreadModeConfiguration() {
 		return extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME).map(value -> {
 			try {
-				ThreadMode threadMode = ThreadMode.valueOf(value.toUpperCase());
+				ThreadMode threadMode = ThreadMode.valueOf(value.toUpperCase(Locale.ROOT));
 				if (threadMode == ThreadMode.INFERRED) {
 					logger.warn(
 						() -> "Invalid timeout thread mode '%s', only %s and %s can be used as configuration parameter for %s.".formatted(

@@ -217,6 +217,11 @@ public final class ReflectionUtils {
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
+		primitiveToWrapperMap = createPrimitivesToWrapperMap();
+	}
+
+	@SuppressWarnings("IdentityHashMapUsage")
+	private static Map<Class<?>, Class<?>> createPrimitivesToWrapperMap() {
 		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(8);
 
 		primitivesToWrappers.put(boolean.class, Boolean.class);
@@ -228,7 +233,7 @@ public final class ReflectionUtils {
 		primitivesToWrappers.put(float.class, Float.class);
 		primitivesToWrappers.put(double.class, Double.class);
 
-		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
+		return Collections.unmodifiableMap(primitivesToWrappers);
 	}
 
 	public static boolean isPublic(Class<?> clazz) {
@@ -637,13 +642,12 @@ public final class ReflectionUtils {
 	 * @see #tryToReadFieldValue(Class, String, Object)
 	 */
 	@API(status = INTERNAL, since = "1.4")
-	@SuppressWarnings("NullAway")
 	public static Try<@Nullable Object> tryToReadFieldValue(Field field, @Nullable Object instance) {
 		Preconditions.notNull(field, "Field must not be null");
 		Preconditions.condition((instance != null || isStatic(field)),
 			() -> String.format("Cannot read non-static field [%s] on a null instance.", field));
 
-		return Try.call(() -> makeAccessible(field).get(instance));
+		return Try.<@Nullable Object> call(() -> makeAccessible(field).get(instance));
 	}
 
 	/**
@@ -1421,6 +1425,7 @@ public final class ReflectionUtils {
 	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
+	@SuppressWarnings("ReferenceEquality")
 	public static Method getInterfaceMethodIfPossible(Method method, @Nullable Class<?> targetClass) {
 		if (!isPublic(method) || method.getDeclaringClass().isInterface()) {
 			return method;

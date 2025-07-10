@@ -326,7 +326,7 @@ public final class AnnotationUtils {
 		findRepeatableAnnotations(element.getAnnotations(), annotationType, containerType, inherited, found, visited);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "GetClassOnAnnotation" })
 	private static <A extends Annotation> void findRepeatableAnnotations(Annotation[] candidates,
 			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
 			Set<Annotation> visited) {

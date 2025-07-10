@@ -371,15 +371,15 @@ public interface TestDescriptor {
 		CONTAINER_AND_TEST;
 
 		/**
-		 * @return {@code true} if this type represents a descriptor that can
-		 * contain other descriptors
+		 * {@return {@code true} if this type represents a descriptor that can
+		 * contain other descriptors}
 		 */
 		public boolean isContainer() {
 			return this == CONTAINER || this == CONTAINER_AND_TEST;
 		}
 
 		/**
-		 * @return {@code true} if this type represents a descriptor for a test
+		 * {@return {@code true} if this type represents a descriptor for a test}
 		 */
 		public boolean isTest() {
 			return this == TEST || this == CONTAINER_AND_TEST;
