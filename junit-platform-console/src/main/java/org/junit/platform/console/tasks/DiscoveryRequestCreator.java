@@ -156,4 +156,7 @@ class DiscoveryRequestCreator {
 		return includeClassNamePatterns(patternStreams.toArray(String[]::new));
 	}
 
+	private DiscoveryRequestCreator() {
+	}
+
 }

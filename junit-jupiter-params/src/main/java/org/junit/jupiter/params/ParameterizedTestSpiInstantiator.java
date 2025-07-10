@@ -72,4 +72,7 @@ class ParameterizedTestSpiInstantiator {
 		throw new JUnitException(message);
 	}
 
+	private ParameterizedTestSpiInstantiator() {
+	}
+
 }

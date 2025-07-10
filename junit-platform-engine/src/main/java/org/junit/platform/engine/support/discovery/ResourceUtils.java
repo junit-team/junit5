@@ -45,4 +45,7 @@ class ResourceUtils {
 		String resourcePackagePath = classpathResourceName.substring(0, lastIndexOf);
 		return resourcePackagePath.replace(CLASSPATH_RESOURCE_PATH_SEPARATOR, PACKAGE_SEPARATOR_CHAR);
 	}
+
+	private ResourceUtils() {
+	}
 }

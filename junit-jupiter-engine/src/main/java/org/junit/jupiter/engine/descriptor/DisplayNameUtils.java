@@ -155,4 +155,7 @@ final class DisplayNameUtils {
 				});
 	}
 
+	private DisplayNameUtils() {
+	}
+
 }

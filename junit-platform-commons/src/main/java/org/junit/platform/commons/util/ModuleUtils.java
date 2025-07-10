@@ -307,4 +307,7 @@ public class ModuleUtils {
 
 	}
 
+	private ModuleUtils() {
+	}
+
 }

@@ -70,4 +70,7 @@ public class ConcurrencyTestingUtils {
 			}
 		}
 	}
+
+	private ConcurrencyTestingUtils() {
+	}
 }

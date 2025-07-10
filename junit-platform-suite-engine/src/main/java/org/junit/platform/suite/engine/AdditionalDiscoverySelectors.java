@@ -122,4 +122,7 @@ class AdditionalDiscoverySelectors {
 		return Arrays.stream(elements).distinct();
 	}
 
+	private AdditionalDiscoverySelectors() {
+	}
+
 }

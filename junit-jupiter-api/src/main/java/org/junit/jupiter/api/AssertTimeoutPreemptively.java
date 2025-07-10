@@ -166,4 +166,7 @@ class AssertTimeoutPreemptively {
 		}
 	}
 
+	private AssertTimeoutPreemptively() {
+	}
+
 }

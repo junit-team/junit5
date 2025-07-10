@@ -41,4 +41,7 @@ public class ConsoleUtils {
 		return console != null ? console.charset() : Charset.defaultCharset();
 	}
 
+	private ConsoleUtils() {
+	}
+
 }

@@ -167,4 +167,7 @@ public class KotlinReflectionUtils {
 						dependencyNotation));
 	}
 
+	private KotlinReflectionUtils() {
+	}
+
 }

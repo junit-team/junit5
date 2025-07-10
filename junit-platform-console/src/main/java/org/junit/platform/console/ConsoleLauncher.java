@@ -47,4 +47,7 @@ public class ConsoleLauncher {
 			outputOptions, classLoaderCleanupStrategy));
 	}
 
+	private ConsoleLauncher() {
+	}
+
 }
