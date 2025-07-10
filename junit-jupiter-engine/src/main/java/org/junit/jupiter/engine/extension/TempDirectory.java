@@ -439,9 +439,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				private void warnAboutLinkWithTargetOutsideTempDir(String linkType, Path file) throws IOException {
 					Path realPath = file.toRealPath();
-					LOGGER.warn(() -> String.format(
-						"Deleting %s from location inside of temp dir (%s) "
-								+ "to location outside of temp dir (%s) but not the target file/directory",
+					LOGGER.warn(() -> """
+							Deleting %s from location inside of temp dir (%s) \
+							to location outside of temp dir (%s) but not the target file/directory""".formatted(
 						linkType, file, realPath));
 				}
 

@@ -65,9 +65,9 @@ class ParameterizedTestSpiInstantiator {
 			}
 		}
 		// Otherwise...
-		String message = String.format(
-			"Failed to find constructor for %s [%s]. "
-					+ "Please ensure that a no-argument or a single constructor exists.",
+		String message = """
+				Failed to find constructor for %s [%s]. \
+				Please ensure that a no-argument or a single constructor exists.""".formatted(
 			spiInterface.getSimpleName(), implementationClass.getName());
 		throw new JUnitException(message);
 	}

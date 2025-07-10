@@ -125,12 +125,12 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			// is cleared for reuse of the thread in subsequent task executions.
 			// See https://github.com/junit-team/junit-framework/issues/1688
 			if (Thread.interrupted()) {
-				logger.debug(() -> String.format(
-					"Execution of TestDescriptor with display name [%s] "
-							+ "and unique ID [%s] failed to clear the 'interrupted status' flag for the "
-							+ "current thread. JUnit has cleared the flag, but you may wish to investigate "
-							+ "why the flag was not cleared by user code.",
-					this.testDescriptor.getDisplayName(), this.testDescriptor.getUniqueId()));
+				logger.debug(() -> """
+						Execution of TestDescriptor with display name [%s] \
+						and unique ID [%s] failed to clear the 'interrupted status' flag for the \
+						current thread. JUnit has cleared the flag, but you may wish to investigate \
+						why the flag was not cleared by user code.""".formatted(this.testDescriptor.getDisplayName(),
+					this.testDescriptor.getUniqueId()));
 			}
 			finalizer.run();
 		}

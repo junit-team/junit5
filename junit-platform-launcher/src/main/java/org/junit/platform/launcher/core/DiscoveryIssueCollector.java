@@ -137,10 +137,10 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 						return Severity.valueOf(value.toUpperCase(Locale.ROOT));
 					}
 					catch (Exception e) {
-						logger.warn(() -> String.format(
-							"Invalid DiscoveryIssue.Severity '%s' set via the '%s' configuration parameter. "
-									+ "Falling back to the %s default value.",
-							value, LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, defaultValue));
+						logger.warn(() -> """
+								Invalid DiscoveryIssue.Severity '%s' set via the '%s' configuration parameter. \
+								Falling back to the %s default value.""".formatted(value,
+							LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, defaultValue));
 						return defaultValue;
 					}
 				}) //

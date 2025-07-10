@@ -202,9 +202,9 @@ class ParameterizedTestExtensionTests {
 
 		String className = AmbiguousConstructorArgumentsProvider.class.getName();
 		assertThat(exception) //
-				.hasMessage(String.format("Failed to find constructor for ArgumentsProvider [%s]. "
-						+ "Please ensure that a no-argument or a single constructor exists.",
-					className));
+				.hasMessage("""
+						Failed to find constructor for ArgumentsProvider [%s]. \
+						Please ensure that a no-argument or a single constructor exists.""", className);
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {

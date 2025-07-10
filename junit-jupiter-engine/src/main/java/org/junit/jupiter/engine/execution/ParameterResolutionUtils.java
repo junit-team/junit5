@@ -188,16 +188,16 @@ public class ParameterResolutionUtils {
 		if (!isAssignableTo(value, type)) {
 			String message;
 			if (value == null && type.isPrimitive()) {
-				message = String.format(
-					"ParameterResolver [%s] resolved a null value for parameter [%s] "
-							+ "in %s [%s], but a primitive of type [%s] is required.",
+				message = """
+						ParameterResolver [%s] resolved a null value for parameter [%s] \
+						in %s [%s], but a primitive of type [%s] is required.""".formatted(
 					resolver.getClass().getName(), parameter, asLabel(executable), executable.toGenericString(),
 					type.getName());
 			}
 			else {
-				message = String.format(
-					"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
-							+ "in %s [%s], but a value assignment compatible with [%s] is required.",
+				message = """
+						ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] \
+						in %s [%s], but a value assignment compatible with [%s] is required.""".formatted(
 					resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
 					asLabel(executable), executable.toGenericString(), type.getName());
 			}

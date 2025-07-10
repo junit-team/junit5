@@ -87,9 +87,8 @@ public interface ArgumentConverter {
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
 	default @Nullable Object convert(@Nullable Object source, FieldContext context) throws ArgumentConversionException {
-		throw new JUnitException(
-			String.format("ArgumentConverter does not override the convert(Object, FieldContext) method. "
-					+ "Please report this issue to the maintainers of %s.",
-				getClass().getName()));
+		throw new JUnitException("""
+				ArgumentConverter does not override the convert(Object, FieldContext) method. \
+				Please report this issue to the maintainers of %s.""".formatted(getClass().getName()));
 	}
 }

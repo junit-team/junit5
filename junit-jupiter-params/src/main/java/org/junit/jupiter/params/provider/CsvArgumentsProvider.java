@@ -80,8 +80,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		List<String> headers = useHeadersInDisplayName ? getHeaders(record) : List.of();
 
 		Preconditions.condition(!useHeadersInDisplayName || fields.size() <= headers.size(), //
-			() -> String.format( //
-				"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
+			() -> "The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s".formatted( //
 				fields.size(), headers.size(), fields)); //
 
 		@Nullable

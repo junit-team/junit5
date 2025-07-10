@@ -60,10 +60,9 @@ class InstantiatingConfigurationParameterConverter<T> {
 	}
 
 	private void logFailureMessage(String className, String key, Exception cause) {
-		logger.warn(cause,
-			() -> String.format("Failed to load default %s class '%s' set via the '%s' configuration parameter."
-					+ " Falling back to default behavior.",
-				this.name, className, key));
+		logger.warn(cause, () -> """
+				Failed to load default %s class '%s' set via the '%s' configuration parameter. \
+				Falling back to default behavior.""".formatted(this.name, className, key));
 	}
 
 	private void logSuccessMessage(String className, String key) {

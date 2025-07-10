@@ -86,10 +86,9 @@ class ArgumentCountValidator {
 					return enumValue.get();
 				}
 				else {
-					logger.warn(() -> String.format(
-						"Invalid ArgumentCountValidationMode '%s' set via the '%s' configuration parameter. "
-								+ "Falling back to the %s default value.",
-						configValue, key, fallback.name()));
+					logger.warn(() -> """
+							Invalid ArgumentCountValidationMode '%s' set via the '%s' configuration parameter. \
+							Falling back to the %s default value.""".formatted(configValue, key, fallback.name()));
 					return fallback;
 				}
 			}

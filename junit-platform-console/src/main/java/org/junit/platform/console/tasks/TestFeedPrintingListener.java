@@ -55,7 +55,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 			String msg = formatTestIdentifier(testIdentifier);
 			String indentedReason = indented("Reason: %s".formatted(reason));
 			println(Style.SKIPPED,
-				String.format("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "%s", msg, indentedReason));
+				("%s" + STATUS_SEPARATOR + "SKIPPED%n" + INDENTATION + "%s").formatted(msg, indentedReason));
 		}
 	}
 
@@ -63,7 +63,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 	public void executionStarted(TestIdentifier testIdentifier) {
 		if (shouldPrint(testIdentifier)) {
 			String msg = formatTestIdentifier(testIdentifier);
-			println(Style.NONE, String.format("%s" + STATUS_SEPARATOR + "STARTED", msg));
+			println(Style.NONE, ("%s" + STATUS_SEPARATOR + "STARTED").formatted(msg));
 		}
 	}
 
@@ -75,13 +75,12 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 			String msg = formatTestIdentifier(testIdentifier);
 			Throwable throwable = testExecutionResult.getThrowable().get();
 			String stacktrace = indented(ExceptionUtils.readStackTrace(throwable));
-			println(style,
-				String.format("%s" + STATUS_SEPARATOR + "%s%n" + INDENTATION + "%s", msg, status, stacktrace));
+			println(style, ("%s" + STATUS_SEPARATOR + "%s%n" + INDENTATION + "%s").formatted(msg, status, stacktrace));
 		}
 		else if (shouldPrint(testIdentifier) || testExecutionResult.getStatus() != SUCCESSFUL) {
 			Style style = Style.valueOf(testExecutionResult);
 			String msg = formatTestIdentifier(testIdentifier);
-			println(style, String.format("%s" + STATUS_SEPARATOR + "%s", msg, status));
+			println(style, ("%s" + STATUS_SEPARATOR + "%s").formatted(msg, status));
 		}
 	}
 

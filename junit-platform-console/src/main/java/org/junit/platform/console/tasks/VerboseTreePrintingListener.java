@@ -174,7 +174,7 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 		String detailFormat = "%9s";
 		// omit detail string if it's empty
 		if (!detail.isEmpty()) {
-			printf(NONE, "%s", String.format(detailFormat + ": ", detail));
+			printf(NONE, "%s", (detailFormat + ": ").formatted(detail));
 		}
 		// trivial case: at least one arg is given? Let printf do the entire work
 		if (args.length > 0) {
@@ -185,7 +185,7 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 		String[] lines = format.split("\\R");
 		printf(style, "%s", lines[0]);
 		if (lines.length > 1) {
-			String delimiter = System.lineSeparator() + verticals + String.format(detailFormat + "    ", "");
+			String delimiter = System.lineSeparator() + verticals + (detailFormat + "    ").formatted("");
 			for (int i = 1; i < lines.length; i++) {
 				printf(NONE, "%s", delimiter);
 				printf(style, "%s", lines[i]);

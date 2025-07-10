@@ -72,10 +72,10 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.13")
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
-		throw new JUnitException(String.format(
-			"AnnotationBasedArgumentsProvider does not override the provideArguments(ParameterDeclarations, ExtensionContext, Annotation) method. "
-					+ "Please report this issue to the maintainers of %s.",
-			getClass().getName()));
+		throw new JUnitException("""
+				AnnotationBasedArgumentsProvider does not override the \
+				provideArguments(ParameterDeclarations, ExtensionContext, Annotation) method. \
+				Please report this issue to the maintainers of %s.""".formatted(getClass().getName()));
 	}
 
 	/**
