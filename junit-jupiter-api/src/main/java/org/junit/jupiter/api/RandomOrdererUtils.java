@@ -49,4 +49,7 @@ class RandomOrdererUtils {
 			}
 		});
 	}
+
+	private RandomOrdererUtils() {
+	}
 }

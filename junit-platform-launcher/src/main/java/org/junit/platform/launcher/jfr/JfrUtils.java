@@ -35,4 +35,7 @@ public class JfrUtils {
 		return System.getProperty("org.graalvm.nativeimage.imagecode") == null //
 				&& ReflectionSupport.tryToLoadClass("jdk.jfr.FlightRecorder").toOptional().isPresent();
 	}
+
+	private JfrUtils() {
+	}
 }

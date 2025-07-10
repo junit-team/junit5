@@ -110,4 +110,7 @@ class KotlinSuspendingFunctionUtils {
 		return Preconditions.notNull(ReflectJvmMapping.getKotlinFunction(method),
 			() -> "Failed to get Kotlin function for method: " + method);
 	}
+
+	private KotlinSuspendingFunctionUtils() {
+	}
 }

@@ -210,4 +210,7 @@ public class ParameterResolutionUtils {
 		return executable instanceof Constructor ? "constructor" : "method";
 	}
 
+	private ParameterResolutionUtils() {
+	}
+
 }

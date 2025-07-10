@@ -174,4 +174,7 @@ class CsvReaderFactory {
 
 	}
 
+	private CsvReaderFactory() {
+	}
+
 }

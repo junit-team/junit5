@@ -77,4 +77,7 @@ public class Helper {
 		var value = System.getProperty("java.home." + version + ".nativeImage");
 		return Optional.ofNullable(value).map(Path::of);
 	}
+
+	private Helper() {
+	}
 }

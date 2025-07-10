@@ -42,4 +42,7 @@ class ClasspathFilters {
 		return file.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
+	private ClasspathFilters() {
+	}
+
 }

@@ -85,4 +85,7 @@ class ClasspathAlignmentChecker {
 		return Optional.empty();
 	}
 
+	private ClasspathAlignmentChecker() {
+	}
+
 }

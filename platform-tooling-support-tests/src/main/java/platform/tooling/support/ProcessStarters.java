@@ -73,4 +73,7 @@ public class ProcessStarters {
 	public static int getGradleJavaVersion() {
 		return Integer.parseInt(System.getProperty("gradle.java.version"));
 	}
+
+	private ProcessStarters() {
+	}
 }

@@ -34,6 +34,7 @@
 			<property name="message" value="Please use String.formatted() (non-static) rather than String.format() (static)."/>
 			<property name="ignoreComments" value="true"/>
 		</module>
+		<module name="HideUtilityClassConstructor"/>
 	</module>
 
 	<module name="JavadocPackage" />

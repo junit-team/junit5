@@ -26,4 +26,7 @@ public class OutputDirectoryProviders {
 	public static OutputDirectoryProvider hierarchicalOutputDirectoryProvider(Path rootDir) {
 		return new HierarchicalOutputDirectoryProvider(() -> rootDir);
 	}
+
+	private OutputDirectoryProviders() {
+	}
 }

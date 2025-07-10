@@ -24,4 +24,7 @@ public class IdeUtils {
 			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
 	}
 
+	private IdeUtils() {
+	}
+
 }

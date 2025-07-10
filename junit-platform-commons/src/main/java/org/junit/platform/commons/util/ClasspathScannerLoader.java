@@ -43,4 +43,7 @@ class ClasspathScannerLoader {
 		return new DefaultClasspathScanner(ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
 	}
 
+	private ClasspathScannerLoader() {
+	}
+
 }
