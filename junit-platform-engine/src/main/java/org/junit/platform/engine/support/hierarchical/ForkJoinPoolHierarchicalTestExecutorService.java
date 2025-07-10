@@ -16,6 +16,7 @@ import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.G
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
+import java.io.Serial;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
 import java.util.ArrayDeque;
@@ -222,6 +223,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	// this class cannot not be serialized because TestTask is not Serializable
 	@SuppressWarnings({ "serial", "RedundantSuppression" })
 	class ExclusiveTask extends ForkJoinTask<Void> {
+
+		@Serial
+		private static final long serialVersionUID = 1;
 
 		private final TestTask testTask;
 
