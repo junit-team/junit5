@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.lang.String.format;
 import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
@@ -645,7 +644,7 @@ public final class ReflectionUtils {
 	public static Try<@Nullable Object> tryToReadFieldValue(Field field, @Nullable Object instance) {
 		Preconditions.notNull(field, "Field must not be null");
 		Preconditions.condition((instance != null || isStatic(field)),
-			() -> String.format("Cannot read non-static field [%s] on a null instance.", field));
+			() -> "Cannot read non-static field [%s] on a null instance.".formatted(field));
 
 		return Try.<@Nullable Object> call(() -> makeAccessible(field).get(instance));
 	}
@@ -697,7 +696,7 @@ public final class ReflectionUtils {
 	public static @Nullable Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
 		Preconditions.notNull(method, "Method must not be null");
 		Preconditions.condition((target != null || isStatic(method)),
-			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
+			() -> "Cannot invoke non-static method [%s] on a null target.".formatted(method.toGenericString()));
 
 		try {
 			return makeAccessible(method).invoke(target, args);
@@ -732,7 +731,7 @@ public final class ReflectionUtils {
 	@API(status = INTERNAL, since = "1.11")
 	public static Class<?> loadRequiredClass(String name, ClassLoader classLoader) throws JUnitException {
 		return tryToLoadClass(name, classLoader).getNonNullOrThrow(
-			cause -> new JUnitException(format("Could not load class [%s]", name), cause));
+			cause -> new JUnitException("Could not load class [%s]".formatted(name), cause));
 	}
 
 	/**
@@ -891,7 +890,7 @@ public final class ReflectionUtils {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
 
-		return String.format("%s#%s(%s)", className, methodName, parameterTypeNames);
+		return "%s#%s(%s)".formatted(className, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -1276,7 +1275,7 @@ public final class ReflectionUtils {
 					.toArray(Constructor[]::new);
 
 			Preconditions.condition(constructors.length == 1,
-				() -> String.format("Class [%s] must declare a single constructor", clazz.getName()));
+				() -> "Class [%s] must declare a single constructor".formatted(clazz.getName()));
 
 			return (Constructor<T>) constructors[0];
 		}
@@ -1492,7 +1491,7 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return tryToLoadClass(typeName, classLoader)
 				.getNonNullOrThrow(cause -> new JUnitException(
-						String.format("Failed to load parameter type [%s] for method [%s] in class [%s].",
+						"Failed to load parameter type [%s] for method [%s] in class [%s].".formatted(
 								typeName, methodName, clazz.getName()), cause));
 		// @formatter:on
 	}
@@ -1558,8 +1557,8 @@ public final class ReflectionUtils {
 	 */
 	@API(status = STABLE, since = "1.7")
 	public static Method getRequiredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
-			() -> new JUnitException(format("Could not find method [%s] in class [%s]", methodName, clazz.getName())));
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(() -> new JUnitException(
+			"Could not find method [%s] in class [%s]".formatted(methodName, clazz.getName())));
 	}
 
 	/**
@@ -1964,7 +1963,7 @@ public final class ReflectionUtils {
 		THROW_EXCEPTION {
 			@Override
 			void handle(Class<?> clazz, Class<?> enclosing) {
-				throw new JUnitException(String.format("Detected cycle in inner class hierarchy between %s and %s",
+				throw new JUnitException("Detected cycle in inner class hierarchy between %s and %s".formatted(
 					clazz.getName(), enclosing.getName()));
 			}
 		},

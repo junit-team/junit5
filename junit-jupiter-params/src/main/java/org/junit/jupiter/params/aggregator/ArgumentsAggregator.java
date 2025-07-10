@@ -87,10 +87,9 @@ public interface ArgumentsAggregator {
 	@API(status = EXPERIMENTAL, since = "6.0")
 	default @Nullable Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {
-		throw new JUnitException(
-			String.format("ArgumentsAggregator does not override the convert(ArgumentsAccessor, FieldContext) method. "
-					+ "Please report this issue to the maintainers of %s.",
-				getClass().getName()));
+		throw new JUnitException("""
+				ArgumentsAggregator does not override the convert(ArgumentsAccessor, FieldContext) method. \
+				Please report this issue to the maintainers of %s.""".formatted(getClass().getName()));
 	}
 
 }

@@ -10,7 +10,6 @@
 
 package org.junit.api.tools;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
@@ -84,8 +83,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 		out.println(h2("@API(%s)".formatted(status)));
 		out.println();
-		out.println(
-			paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", declarations.size(), status)));
+		out.println(paragraph(
+			"Discovered %d %s declarations.".formatted(declarations.size(), code("@API(%s)".formatted(status)))));
 		out.println();
 	}
 

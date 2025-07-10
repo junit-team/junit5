@@ -60,10 +60,10 @@ public class EnumConfigurationParameterConverter<E extends Enum<E>> {
 			catch (Exception ex) {
 				// local copy necessary for use in lambda expression
 				String constant = constantName;
-				logger.warn(() -> String.format(
-					"Invalid %s '%s' set via the '%s' configuration parameter. "
-							+ "Falling back to the %s default value.",
-					enumDisplayName, constant, key, defaultValue.name()));
+				logger.warn(() -> """
+						Invalid %s '%s' set via the '%s' configuration parameter. \
+						Falling back to the %s default value.""".formatted(enumDisplayName, constant, key,
+					defaultValue.name()));
 			}
 		}
 

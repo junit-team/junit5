@@ -155,7 +155,7 @@ class CsvReaderFactory {
 		 * <p>
 		 * The marker is generated with a unique ID to ensure it cannot conflict with actual CSV content.
 		 */
-		static final String NULL_MARKER = String.format("<null marker with unique id: %s>", UUID.randomUUID());
+		static final String NULL_MARKER = "<null marker with unique id: %s>".formatted(UUID.randomUUID());
 
 		@Override
 		public String modify(long unusedStartingLineNumber, int unusedFieldIdx, boolean quoted, String field) {

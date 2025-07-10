@@ -143,10 +143,10 @@ class ResolverFacade {
 				Preconditions.condition(
 					aggregatorParameters.isEmpty()
 							|| aggregatorParameters.lastKey() == declaration.getParameterIndex() - 1,
-					() -> String.format(
-						"@%s %s declares formal parameters in an invalid order: "
-								+ "argument aggregators must be declared after any indexed arguments "
-								+ "and before any arguments resolved by another ParameterResolver.",
+					() -> """
+							@%s %s declares formal parameters in an invalid order: \
+							argument aggregators must be declared after any indexed arguments \
+							and before any arguments resolved by another ParameterResolver.""".formatted(
 						annotation.annotationType().getSimpleName(),
 						DefaultParameterDeclarations.describe(executable)));
 				aggregatorParameters.put(declaration.getParameterIndex(), declaration);
