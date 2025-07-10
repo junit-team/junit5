@@ -16,7 +16,6 @@ dependencies {
 	implementation(libs.plugins.foojayResolver.markerCoordinates)
 	implementation(libs.plugins.jmh.markerCoordinates)
 	implementation(libs.plugins.nullaway.markerCoordinates)
-	implementation(libs.plugins.openrewrite.markerCoordinates)
 	implementation(libs.plugins.shadow.markerCoordinates)
 	implementation(libs.plugins.spotless.markerCoordinates)
 }

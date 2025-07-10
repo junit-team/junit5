@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import junitbuild.extensions.dependencyFromLibs
 import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
@@ -14,16 +13,6 @@ plugins {
 	id("junitbuild.build-parameters")
 	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
-	id("org.openrewrite.rewrite")
-}
-
-rewrite {
-	activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
-}
-
-dependencies {
-	rewrite(platform(dependencyFromLibs("openrewrite-recipe-bom")))
-	rewrite("org.openrewrite.recipe:rewrite-migrate-java")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
