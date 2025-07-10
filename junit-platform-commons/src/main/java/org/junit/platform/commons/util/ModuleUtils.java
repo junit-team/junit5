@@ -223,7 +223,7 @@ public class ModuleUtils {
 					// @formatter:off
 					return names.filter(name -> name.endsWith(".class"))
 							.map(this::className)
-							.filter(name -> !name.equals("module-info"))
+							.filter(name -> !"module-info".equals(name))
 							.filter(classFilter::match)
 							.<Class<?>> map(this::loadClassUnchecked)
 							.filter(classFilter::match)
