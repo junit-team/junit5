@@ -67,7 +67,6 @@ public class ExecutionRequest {
 		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.requestLevelStore = requestLevelStore;
 		this.cancellationToken = Preconditions.notNull(cancellationToken, "cancellationToken must not be null");
-		;
 	}
 
 	/**

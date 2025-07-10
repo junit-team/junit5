@@ -37,6 +37,7 @@
 		<module name="HideUtilityClassConstructor"/>
 		<module name="ModifierOrder"/>
 		<module name="EqualsAvoidNull"/>
+		<module name="EmptyStatement"/>
 	</module>
 
 	<module name="JavadocPackage" />
