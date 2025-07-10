@@ -381,7 +381,7 @@ public final class AnnotationUtils {
 		return repeatableAnnotationContainerCache.computeIfAbsent(candidateContainerType, candidate -> {
 			// @formatter:off
 			Repeatable repeatable = Arrays.stream(candidate.getMethods())
-					.filter(attribute -> attribute.getName().equals("value") && attribute.getReturnType().isArray())
+					.filter(attribute -> "value".equals(attribute.getName()) && attribute.getReturnType().isArray())
 					.findFirst()
 					.map(attribute -> attribute.getReturnType().getComponentType().getAnnotation(Repeatable.class))
 					.orElse(null);

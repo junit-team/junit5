@@ -57,7 +57,7 @@ class ParameterizedInvocationNameFormatter {
 			ParameterizedDeclarationContext<?> declarationContext) {
 
 		String name = declarationContext.getDisplayNamePattern();
-		String pattern = name.equals(DEFAULT_DISPLAY_NAME)
+		String pattern = DEFAULT_DISPLAY_NAME.equals(name)
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
 						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
 				: name;

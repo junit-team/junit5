@@ -89,6 +89,19 @@ Eclipse settings.
 It is forbidden to use _wildcard imports_ (e.g., `import static org.junit.jupiter.api.Assertions.*;`)
 in Java code.
 
+### 🚀 Code Transformation & Automated Rewriting
+*(Advanced Refactoring, Modernization, and Bulk Code Changes)*
+
+#### 🔧 Automated rewriting of source code to
+- **Refactor** safely (e.g., rename methods, migrate APIs)
+- **Modernize** (e.g., Java 8 → Java 17 features)
+- **Fix anti-patterns** (e.g., replace `Vector` with `ArrayList`)
+- **Enforce conventions** (e.g., JUnit's naming rules)
+
+The build system incorporates [Moderne](https://moderne.io/) rewrite capabilities for automated code transformations. These modifications are environment-driven enlisted in the [junitbuild.java-library-conventions.gradle.kts](gradle/plugins/common/src/main/kotlin/junitbuild.java-library-conventions.gradle.kts)
+
+You can use `gradle rewriteRun` to apply these changes.
+
 #### Documentation
 
 Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically

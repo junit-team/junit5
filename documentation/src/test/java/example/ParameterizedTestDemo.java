@@ -357,9 +357,9 @@ class ParameterizedTestDemo {
 	}
 
 	// end::ArgumentsSource_example[]
-	static
+	public
 	// tag::ArgumentsProvider_example[]
-	public class MyArgumentsProvider implements ArgumentsProvider {
+	static class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
@@ -375,9 +375,9 @@ class ParameterizedTestDemo {
 		assertNotNull(argument);
 	}
 
-	static
+	public
 	// tag::ArgumentsProviderWithConstructorInjection_example[]
-	public class MyArgumentsProviderWithConstructorInjection implements ArgumentsProvider {
+	static class MyArgumentsProviderWithConstructorInjection implements ArgumentsProvider {
 
 		private final TestInfo testInfo;
 
@@ -427,9 +427,9 @@ class ParameterizedTestDemo {
 	}
 
 	// end::implicit_fallback_conversion_example[]
-	static
+	public
 	// tag::implicit_fallback_conversion_example_Book[]
-	public class Book {
+	static class Book {
 
 		private final String title;
 
@@ -458,10 +458,10 @@ class ParameterizedTestDemo {
 	}
 
 	// end::explicit_conversion_example[]
-	static
+	public
 	@SuppressWarnings({ "NullableProblems", "NullAway" })
 	// tag::explicit_conversion_example_ToStringArgumentConverter[]
-	public class ToStringArgumentConverter extends SimpleArgumentConverter {
+	static class ToStringArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
@@ -474,10 +474,10 @@ class ParameterizedTestDemo {
 	}
 	// end::explicit_conversion_example_ToStringArgumentConverter[]
 
-	static
+	public
 	@SuppressWarnings({ "NullableProblems", "NullAway", "ConstantValue" })
 	// tag::explicit_conversion_example_TypedArgumentConverter[]
-	public class ToLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
+	static class ToLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
 
 		protected ToLengthArgumentConverter() {
 			super(String.class, Integer.class);
@@ -516,7 +516,7 @@ class ParameterizedTestDemo {
 									arguments.get(2, Gender.class),
 									arguments.get(3, LocalDate.class));
 
-		if (person.getFirstName().equals("Jane")) {
+		if ("Jane".equals(person.getFirstName())) {
 			assertEquals(Gender.F, person.getGender());
 		}
 		else {
@@ -540,9 +540,9 @@ class ParameterizedTestDemo {
 	}
 
 	// end::ArgumentsAggregator_example[]
-	static
+	public
 	// tag::ArgumentsAggregator_example_PersonAggregator[]
-	public class PersonAggregator extends SimpleArgumentsAggregator {
+	static class PersonAggregator extends SimpleArgumentsAggregator {
 		@Override
 		protected Person aggregateArguments(ArgumentsAccessor arguments, Class<?> targetType,
 				AnnotatedElementContext context, int parameterIndex) {

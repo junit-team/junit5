@@ -203,13 +203,13 @@ public class AggregatorIntegrationTests {
 	}
 
 	private void testPersonAggregator(Person person) {
-		if (person.firstName.equals("Jane")) {
+		if ("Jane".equals(person.firstName)) {
 			assertEquals("Jane Doe", person.getFullName());
 			assertEquals(1980, person.dateOfBirth.getYear());
 			assertEquals(Gender.F, person.gender);
 		}
 
-		if (person.firstName.equals("Jack")) {
+		if ("Jack".equals(person.firstName)) {
 			assertEquals("Jack Smith", person.getFullName());
 			assertEquals(2000, person.dateOfBirth.getYear());
 			assertEquals(Gender.M, person.gender);

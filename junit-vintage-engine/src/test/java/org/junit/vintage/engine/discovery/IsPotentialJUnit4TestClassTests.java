@@ -40,7 +40,7 @@ class IsPotentialJUnit4TestClassTests {
 		assertFalse(isPotentialJUnit4TestClass.test(Baz.class));
 	}
 
-	public static abstract class Baz {
+	public abstract static class Baz {
 	}
 
 	@Test
