@@ -38,10 +38,10 @@ class TestTemplateDemo {
 	}
 
 	// end::user_guide[]
-	static
+	public
 	// @formatter:off
 	// tag::user_guide[]
-	public class MyTestTemplateInvocationContextProvider
+	static class MyTestTemplateInvocationContextProvider
 			implements TestTemplateInvocationContextProvider {
 
 		@Override

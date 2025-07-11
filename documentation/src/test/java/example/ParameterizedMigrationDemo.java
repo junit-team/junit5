@@ -25,9 +25,9 @@ public class ParameterizedMigrationDemo {
 	// tag::before[]
 	@RunWith(Parameterized.class)
 	// end::before[]
-	static
+	public
 	// tag::before[]
-	public class JUnit4ParameterizedClassTests {
+	static class JUnit4ParameterizedClassTests {
 
 		@Parameterized.Parameters
 		public static Iterable<Object[]> data() {

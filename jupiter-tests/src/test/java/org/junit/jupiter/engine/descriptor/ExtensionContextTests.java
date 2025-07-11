@@ -529,7 +529,7 @@ public class ExtensionContextTests {
 		}
 	}
 
-	static abstract class BaseNestedTestCase {
+	abstract static class BaseNestedTestCase {
 		@Test
 		void nestedMethod() {
 		}

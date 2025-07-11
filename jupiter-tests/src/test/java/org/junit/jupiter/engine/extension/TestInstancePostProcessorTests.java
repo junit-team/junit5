@@ -180,7 +180,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static abstract class AbstractInstancePostProcessor implements TestInstancePostProcessor {
+	abstract static class AbstractInstancePostProcessor implements TestInstancePostProcessor {
 		private final String name;
 
 		AbstractInstancePostProcessor(String name) {

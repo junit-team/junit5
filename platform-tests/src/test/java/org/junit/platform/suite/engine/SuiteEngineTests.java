@@ -726,7 +726,7 @@ class SuiteEngineTests {
 
 	@Suite
 	@SelectClasses(SingleTestTestCase.class)
-	abstract private static class AbstractPrivateSuite {
+	private abstract static class AbstractPrivateSuite {
 	}
 
 	@Suite
