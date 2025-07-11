@@ -8,6 +8,7 @@ plugins {
 dependencies {
 	implementation("junitbuild.base:dsl-extensions")
 	implementation(projects.buildParameters)
+	implementation(projects.roseau)
 	implementation(libs.plugins.kotlin.markerCoordinates)
 	implementation(libs.plugins.bnd.markerCoordinates)
 	implementation(libs.plugins.commonCustomUserData.markerCoordinates)

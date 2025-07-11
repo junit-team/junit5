@@ -67,6 +67,7 @@ if (project in mavenizedProjects) {
 
 	apply(plugin = "junitbuild.publishing-conventions")
 	apply(plugin = "junitbuild.osgi-conventions")
+	apply(plugin = "junitbuild.roseau")
 
 	java {
 		withJavadocJar()

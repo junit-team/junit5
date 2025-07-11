@@ -23,5 +23,6 @@ include("build-parameters")
 include("common")
 include("code-generator")
 include("publishing")
+include("roseau")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
