@@ -91,9 +91,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private void validateConfigurationParameters(DiscoveryIssueReporter issueReporter) {
 		UNSUPPORTED_CONFIGURATION_PARAMETERS.forEach(key -> configurationParameters.get(key) //
 				.ifPresent(value -> {
-					var warning = DiscoveryIssue.create(Severity.WARNING,
-						"The '%s' configuration parameter is no longer supported: %s. Please remove it from your configuration.".formatted(
-							key, value));
+					var warning = DiscoveryIssue.create(Severity.WARNING, """
+							The '%s' configuration parameter is no longer supported. \
+							Please remove it from your configuration.""".formatted(key));
 					issueReporter.reportIssue(warning);
 				}));
 	}

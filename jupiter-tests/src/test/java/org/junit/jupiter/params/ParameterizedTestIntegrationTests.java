@@ -116,6 +116,7 @@ import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -496,8 +497,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				.selectors(selectMethod(LocaleConversionTestCase.class, "testWithBcp47", Locale.class)));
 
 		assertThat(results.getDiscoveryIssues()) //
-				.contains(DiscoveryIssue.create(DiscoveryIssue.Severity.WARNING,
-					"The 'junit.jupiter.params.arguments.conversion.locale.format' configuration parameter is no longer supported: iso_639. Please remove it from your configuration."));
+				.contains(DiscoveryIssue.create(Severity.WARNING, """
+						The 'junit.jupiter.params.arguments.conversion.locale.format' configuration parameter \
+						is no longer supported. Please remove it from your configuration."""));
 	}
 
 	@Test
