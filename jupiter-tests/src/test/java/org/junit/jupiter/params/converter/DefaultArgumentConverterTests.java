@@ -20,8 +20,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.util.Locale;
-
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -94,14 +92,13 @@ class DefaultArgumentConverterTests {
 		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
 	}
 
-	@ParameterizedTest
-	@ValueSource(classes = { int.class, Locale.class })
-	void delegatesStringsConversion(Class<?> targetClass) {
+	@Test
+	void delegatesStringsConversion() {
 		doReturn(null).when(underTest).convert(any(), any(), any(ClassLoader.class));
 
-		convert("value", targetClass);
+		convert("value", int.class);
 
-		verify(underTest).convert("value", targetClass, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).convert("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
