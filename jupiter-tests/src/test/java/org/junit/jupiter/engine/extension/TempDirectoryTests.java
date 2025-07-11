@@ -269,8 +269,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter("junit.jupiter.tempdir.scope", "per_context"));
 
 		assertThat(results.getDiscoveryIssues()) //
-				.contains(DiscoveryIssue.create(Severity.WARNING,
-					"The 'junit.jupiter.tempdir.scope' configuration parameter is no longer supported: per_context. Please remove it from your configuration."));
+				.contains(DiscoveryIssue.create(Severity.WARNING, """
+						The 'junit.jupiter.tempdir.scope' configuration parameter is no longer supported. \
+						Please remove it from your configuration."""));
 	}
 
 	@Nested

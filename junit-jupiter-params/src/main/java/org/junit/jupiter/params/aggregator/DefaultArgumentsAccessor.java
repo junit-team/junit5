@@ -19,7 +19,6 @@ import java.util.function.BiFunction;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -41,13 +40,12 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	private final @Nullable Object[] arguments;
 	private final BiFunction<@Nullable Object, Class<?>, @Nullable Object> converter;
 
-	public static DefaultArgumentsAccessor create(ExtensionContext context, int invocationIndex,
-			ClassLoader classLoader, @Nullable Object[] arguments) {
+	public static DefaultArgumentsAccessor create(int invocationIndex, ClassLoader classLoader,
+			@Nullable Object[] arguments) {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
 		BiFunction<@Nullable Object, Class<?>, @Nullable Object> converter = (source,
-				targetType) -> new DefaultArgumentConverter(context) //
-						.convert(source, targetType, classLoader);
+				targetType) -> DefaultArgumentConverter.INSTANCE.convert(source, targetType, classLoader);
 		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
 	}
 

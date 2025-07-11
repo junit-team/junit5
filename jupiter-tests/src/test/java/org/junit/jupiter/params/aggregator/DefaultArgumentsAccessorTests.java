@@ -171,7 +171,7 @@ class DefaultArgumentsAccessorTests {
 			@Nullable Object... arguments) {
 		var context = mock(ExtensionContext.class);
 		var classLoader = DefaultArgumentsAccessorTests.class.getClassLoader();
-		return DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
+		return DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
 	}
 
 	@SuppressWarnings("unused")

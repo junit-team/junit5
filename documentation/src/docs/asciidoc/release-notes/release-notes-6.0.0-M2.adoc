@@ -26,6 +26,9 @@ repository on GitHub.
 * Deprecate `Launcher.execute(TestPlan, TestExecutionListener[])` and
   `Launcher.execute(LauncherDiscoveryRequest, TestExecutionListener[])` in favor of
   `Launcher.execute(LauncherExecutionRequest)`
+* `ConversionSupport` now converts `String` to `Locale` using the IETF BCP 47 language tag
+  format supported by the `Locale.forLanguageTag(String)` factory method instead of the
+  format used by the deprecated `Locale(String)` constructor.
 
 [[release-notes-6.0.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -65,6 +68,10 @@ repository on GitHub.
   of the `TestTemplateInvocationContextProvider` interface from
   `Stream<TestTemplateInvocationContext>` to
   `Stream<? extends TestTemplateInvocationContext>`.
+* Remove support for `junit.jupiter.params.arguments.conversion.locale.format`
+  configuration parameter. `Locale` conversions are now always performed using the IETF
+  BCP 47 language tag format supported by the `Locale.forLanguageTag(String)` factory
+  method.
 
 [[release-notes-6.0.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements

@@ -74,7 +74,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		ClassLoader classLoader = getClassLoader(this.declarationContext.getTestClass());
 		@Nullable
 		Object[] arguments = this.arguments.getConsumedPayloads();
-		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
+		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
 		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
