@@ -36,7 +36,7 @@ tasks.withType<JavaCompile>().configureEach {
 				"InlineMeSuggester",
 				"ImmutableEnumChecker",
 
-				// Resolving findings for this checks requires using Guava which we don't want to use
+				// Resolving findings for this check requires using Guava which we don't want to use
 				"StringSplitter",
 
 				// Produces a lot of findings that we consider to be false positives, for example for package-private
