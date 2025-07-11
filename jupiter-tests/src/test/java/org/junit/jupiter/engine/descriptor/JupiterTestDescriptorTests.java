@@ -289,7 +289,7 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Tag("inherited-class-level-tag")
-	private static abstract class AbstractTestCase {
+	private abstract static class AbstractTestCase {
 	}
 
 	@Tag("classTag1")

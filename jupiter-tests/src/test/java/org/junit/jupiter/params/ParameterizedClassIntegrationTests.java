@@ -1178,7 +1178,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1195,7 +1195,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1217,7 +1217,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1232,7 +1232,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1251,7 +1251,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record ArgumentsSourceConstructorInjectionTestCase(String value) {
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1264,7 +1264,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test() {
-			assertTrue(value.equals("foo") || value.equals("bar"));
+			assertTrue("foo".equals(value) || "bar".equals(value));
 		}
 	}
 
@@ -1851,7 +1851,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		}
 	}
 
-	static abstract class AbstractBaseLifecycleTestCase {
+	abstract static class AbstractBaseLifecycleTestCase {
 
 		@BeforeParameterizedClassInvocation
 		static void zzz_before(TestReporter reporter) {
@@ -1884,7 +1884,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		}
 	}
 
-	static abstract class AbstractBaseLifecycleWithErrorsTestCase {
+	abstract static class AbstractBaseLifecycleWithErrorsTestCase {
 
 		@BeforeParameterizedClassInvocation
 		static void zzz_before(TestReporter reporter) {

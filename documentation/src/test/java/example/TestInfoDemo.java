@@ -31,13 +31,13 @@ class TestInfoDemo {
 
 	TestInfoDemo(TestInfo testInfo) {
 		String displayName = testInfo.getDisplayName();
-		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
+		assertTrue("TEST 1".equals(displayName) || "test2()".equals(displayName));
 	}
 
 	@BeforeEach
 	void init(TestInfo testInfo) {
 		String displayName = testInfo.getDisplayName();
-		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
+		assertTrue("TEST 1".equals(displayName) || "test2()".equals(displayName));
 	}
 
 	@Test

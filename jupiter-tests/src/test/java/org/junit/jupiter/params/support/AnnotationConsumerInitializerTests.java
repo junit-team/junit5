@@ -124,7 +124,7 @@ class AnnotationConsumerInitializerTests {
 		Named.of("deprecated", new DeprecatedAnnotationBasedArgumentsProvider()) //
 	);
 
-	private static abstract class AbstractAnnotationBasedArgumentsProvider
+	private abstract static class AbstractAnnotationBasedArgumentsProvider
 			extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 		List<CsvSource> annotations = new ArrayList<>();

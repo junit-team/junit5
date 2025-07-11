@@ -202,7 +202,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	private static abstract class AbstractTestCase {
+	private abstract static class AbstractTestCase {
 
 		@Test
 		public void successfulTest() {
@@ -322,7 +322,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@TestMethodOrder(OrderAnnotation.class)
-	private static abstract class AbstractDisabledMethodsTestCase {
+	private abstract static class AbstractDisabledMethodsTestCase {
 
 		@Disabled
 		@Test

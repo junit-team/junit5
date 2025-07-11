@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import junitbuild.extensions.dependencyFromLibs
 import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
@@ -13,6 +14,46 @@ plugins {
 	id("junitbuild.build-parameters")
 	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
+	id("org.openrewrite.rewrite")
+}
+
+rewrite {
+	activeRecipe("org.openrewrite.java.RemoveUnusedImports")
+	activeRecipe("org.openrewrite.java.testing.cleanup.AssertTrueNullToAssertNull")
+	activeRecipe("org.openrewrite.staticanalysis.EqualsAvoidsNull")
+	activeRecipe("org.openrewrite.staticanalysis.MissingOverrideAnnotation")
+	activeRecipe("org.openrewrite.staticanalysis.ModifierOrder")
+	activeRecipe("org.openrewrite.staticanalysis.RedundantFileCreation")
+	activeRecipe("org.openrewrite.staticanalysis.RemoveUnusedPrivateMethods")
+	activeRecipe("org.openrewrite.text.EndOfLineAtEndOfFile")
+	configFile = file("config/rewrite.yml")
+	failOnDryRunResults = true
+//	activeRecipe("org.junit.openrewrite.recipe.AddLicenseHeader")
+//	activeRecipe("org.junit.openrewrite.recipe.Java21ForTests")
+//	activeRecipe("org.openrewrite.java.format.AutoFormat")
+//	activeRecipe("org.openrewrite.java.format.BlankLines")
+//	activeRecipe("org.openrewrite.java.format.NormalizeFormat")
+//	activeRecipe("org.openrewrite.java.format.NormalizeLineBreaks")
+//	activeRecipe("org.openrewrite.java.format.RemoveTrailingWhitespace")
+//	activeRecipe("org.openrewrite.java.format.Spaces")
+//	activeRecipe("org.openrewrite.java.format.TabsAndIndents")
+//	activeRecipe("org.openrewrite.java.format.WrappingAndBraces")
+//	activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
+//	activeRecipe("org.openrewrite.java.testing.assertj.Assertj")
+//	activeRecipe("org.openrewrite.java.testing.cleanup.TestsShouldNotBePublic")
+//	activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
+//	activeRecipe("org.openrewrite.staticanalysis.CodeCleanup")
+//	activeRecipe("org.openrewrite.staticanalysis.CommonStaticAnalysis")
+//	activeRecipe("org.openrewrite.staticanalysis.FinalizeLocalVariables")
+//	activeRecipe("org.openrewrite.staticanalysis.RemoveUnusedLocalVariables")
+//	activeRecipe("org.openrewrite.staticanalysis.RemoveUnusedPrivateFields")
+//	activeRecipe("org.openrewrite.staticanalysis.StringLiteralEquality")
+}
+
+dependencies {
+	rewrite(platform(dependencyFromLibs("openrewrite-recipe-bom")))
+	rewrite("org.openrewrite.recipe:rewrite-migrate-java")
+	rewrite("org.openrewrite.recipe:rewrite-testing-frameworks")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -269,6 +310,9 @@ tasks {
 	}
 	checkstyleTest {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
+	}
+	check {
+		dependsOn(rewriteDryRun)
 	}
 }
 

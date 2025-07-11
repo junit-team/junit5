@@ -154,7 +154,7 @@ class IsTestMethodTests {
 	}
 
 	@SuppressWarnings({ "JUnitMalformedDeclaration", "unused" })
-	private static abstract class AbstractClassWithAbstractTestMethod {
+	private abstract static class AbstractClassWithAbstractTestMethod {
 
 		@Test
 		abstract void bogusAbstractTestMethod();

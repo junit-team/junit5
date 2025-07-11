@@ -735,7 +735,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	private static abstract class AbstractTestInstanceFactory implements TestInstanceFactory {
+	private abstract static class AbstractTestInstanceFactory implements TestInstanceFactory {
 
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {

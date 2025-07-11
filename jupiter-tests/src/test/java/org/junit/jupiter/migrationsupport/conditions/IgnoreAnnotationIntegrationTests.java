@@ -50,7 +50,7 @@ class IgnoreAnnotationIntegrationTests {
 	}
 
 	@TestInstance(PER_CLASS)
-	private static abstract class BaseNestedTestCase {
+	private abstract static class BaseNestedTestCase {
 
 		private static List<String> tests = new ArrayList<>();
 
