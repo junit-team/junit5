@@ -86,10 +86,6 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String string) {
-			if (targetType == Locale.class) {
-				return Locale.forLanguageTag(string);
-			}
-
 			try {
 				return convert(string, targetType, classLoader);
 			}

@@ -94,19 +94,14 @@ class DefaultArgumentConverterTests {
 		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
 	}
 
-	@Test
-	void delegatesStringsConversion() {
+	@ParameterizedTest
+	@ValueSource(classes = { int.class, Locale.class })
+	void delegatesStringsConversion(Class<?> targetClass) {
 		doReturn(null).when(underTest).convert(any(), any(), any(ClassLoader.class));
 
-		convert("value", int.class);
+		convert("value", targetClass);
 
-		verify(underTest).convert("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
-	}
-
-	@Test
-	void convertsLocaleWithBcp47Format() {
-		assertConverts("en", Locale.class, Locale.ENGLISH);
-		assertConverts("en-US", Locale.class, Locale.US);
+		verify(underTest).convert("value", targetClass, getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
