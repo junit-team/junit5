@@ -51,7 +51,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
-	public DefaultArgumentConverter() {
+	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
+
+	private DefaultArgumentConverter() {
 	}
 
 	@Override

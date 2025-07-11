@@ -479,7 +479,7 @@ class ResolverFacade {
 
 	private record Converter(ArgumentConverter argumentConverter) implements Resolver {
 
-		static final Converter DEFAULT = new Converter(new DefaultArgumentConverter());
+		static final Converter DEFAULT = new Converter(DefaultArgumentConverter.INSTANCE);
 
 		@Override
 		public @Nullable Object resolve(ParameterContext parameterContext, int parameterIndex,

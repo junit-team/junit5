@@ -38,7 +38,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  */
 class DefaultArgumentConverterTests {
 
-	private final DefaultArgumentConverter underTest = spy(new DefaultArgumentConverter());
+	private final DefaultArgumentConverter underTest = spy(DefaultArgumentConverter.INSTANCE);
 
 	@Test
 	void isAwareOfNull() {

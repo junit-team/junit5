@@ -44,9 +44,8 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 			@Nullable Object[] arguments) {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
-		var argumentConverter = new DefaultArgumentConverter();
 		BiFunction<@Nullable Object, Class<?>, @Nullable Object> converter = (source,
-				targetType) -> argumentConverter.convert(source, targetType, classLoader);
+				targetType) -> DefaultArgumentConverter.INSTANCE.convert(source, targetType, classLoader);
 		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
 	}
 
