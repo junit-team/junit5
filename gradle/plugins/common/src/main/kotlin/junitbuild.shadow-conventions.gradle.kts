@@ -1,7 +1,3 @@
-import gradle.kotlin.dsl.accessors._081daccbbc3bc6bb53248544394ccd4e.shadowJar
-import gradle.kotlin.dsl.accessors._081daccbbc3bc6bb53248544394ccd4e.shadowRuntimeElements
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("com.gradleup.shadow")
