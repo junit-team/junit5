@@ -72,22 +72,18 @@ Whenever an acronym is included as part of a field name or parameter name:
 - Otherwise, keep the first letter of the acronym uppercase and use lowercase for the
   rest of the acronym -- for example, `String defaultUrl;`.
 
-### Formatting
+### 🚀 Code Transformation & Automated Rewriting
+*(Advanced Refactoring, Modernization, and Bulk Code Changes)*
 
-#### Code
+#### 🔧 Automated rewriting of source code to
+- **Refactor** safely (e.g., rename methods, migrate APIs)
+- **Modernize** (e.g., Java 8 → Java 17 features)
+- **Fix anti-patterns** (e.g., replace `Vector` with `ArrayList`)
+- **Enforce conventions** (e.g., JUnit's naming rules)
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless)
-Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing
-license headers to source files. Formatter and import order settings for Eclipse are
-available in the repository under
-[junit-eclipse-formatter-settings.xml](gradle/config/eclipse/junit-eclipse-formatter-settings.xml)
-and [junit-eclipse.importorder](gradle/config/eclipse/junit-eclipse.importorder),
-respectively. For IntelliJ IDEA there's a
-[plugin](https://plugins.jetbrains.com/plugin/6546) you can use in conjunction with the
-Eclipse settings.
+The build system incorporates [Moderne](https://moderne.io/) rewrite capabilities for automated code transformations. These modifications are environment-driven enlisted in the [junitbuild.java-library-conventions.gradle.kts](gradle/plugins/common/src/main/kotlin/junitbuild.java-library-conventions.gradle.kts)
 
-It is forbidden to use _wildcard imports_ (e.g., `import static org.junit.jupiter.api.Assertions.*;`)
-in Java code.
+You can use `gradle rewriteRun` to apply these changes.
 
 #### Documentation
 
