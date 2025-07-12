@@ -294,10 +294,9 @@ class ConversionSupportTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void convertsStringToLocale() {
 		assertConverts("en", Locale.class, Locale.ENGLISH);
-		assertConverts("en_us", Locale.class, new Locale(Locale.US.toString()));
+		assertConverts("en-US", Locale.class, Locale.US);
 	}
 
 	@Test

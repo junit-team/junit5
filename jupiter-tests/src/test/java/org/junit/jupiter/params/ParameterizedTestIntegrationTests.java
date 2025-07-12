@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,6 @@ import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
-import static org.junit.jupiter.params.converter.DefaultArgumentConverter.DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -99,6 +99,7 @@ import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -114,6 +115,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -488,17 +491,20 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executesWithBcp47LocaleConversionFormat() {
-		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "bcp_47"),
-			LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+	void emitsWarningForNoLongerSupportedConfigurationParameter() {
+		var results = discoverTests(request -> request //
+				.configurationParameter("junit.jupiter.params.arguments.conversion.locale.format", "iso_639") //
+				.selectors(selectMethod(LocaleConversionTestCase.class, "testWithBcp47", Locale.class)));
 
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		assertThat(results.getDiscoveryIssues()) //
+				.contains(DiscoveryIssue.create(Severity.WARNING, """
+						The 'junit.jupiter.params.arguments.conversion.locale.format' configuration parameter \
+						is no longer supported. Please remove it from your configuration."""));
 	}
 
 	@Test
-	void executesWithIso639LocaleConversionFormat() {
-		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "iso_639"),
-			LocaleConversionTestCase.class, "testWithIso639", Locale.class);
+	void executesWithCustomLocalConverterUsingIso639Format() {
+		var results = execute(LocaleConversionTestCase.class, "testWithIso639", Locale.class);
 
 		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
@@ -2566,9 +2572,22 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 		@ParameterizedTest
 		@ValueSource(strings = "en-US")
-		void testWithIso639(Locale locale) {
+		void testWithIso639(@ConvertWith(Iso639Converter.class) Locale locale) {
 			assertEquals("en-us", locale.getLanguage());
 			assertEquals("", locale.getCountry());
+		}
+
+		static class Iso639Converter extends TypedArgumentConverter<String, Locale> {
+
+			Iso639Converter() {
+				super(String.class, Locale.class);
+			}
+
+			@SuppressWarnings("deprecation")
+			@Override
+			protected Locale convert(@Nullable String source) throws ArgumentConversionException {
+				return new Locale(requireNonNull(source));
+			}
 		}
 
 	}
