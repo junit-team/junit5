@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.junit.platform.commons.util.UnrecoverableExceptions.rethrowIfUnrecoverable;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLVED;
 
@@ -78,7 +79,7 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		}
 	}
 
-	static @Nullable TestSource toSource(DiscoverySelector selector) {
+	private static @Nullable TestSource toSource(DiscoverySelector selector) {
 		if (selector instanceof ClassSelector classSelector) {
 			return ClassSource.from(classSelector.getClassName());
 		}
@@ -96,17 +97,26 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		if (selector instanceof PackageSelector packageSelector) {
 			return PackageSource.from(packageSelector.getPackageName());
 		}
-		if (selector instanceof FileSelector fileSelector) {
-			return fileSelector.getPosition() //
-					.map(DiscoveryIssueCollector::convert) //
-					.map(position -> FileSource.from(fileSelector.getFile(), position)) //
-					.orElseGet(() -> FileSource.from(fileSelector.getFile()));
+		try {
+			// Both FileSource and DirectorySource call File.getCanonicalFile() to normalize the reported file which
+			// can throw an exception for certain file names on certain file systems. UriSource.from(...) is affected
+			// as well because it may return a FileSource or DirectorySource
+			if (selector instanceof FileSelector fileSelector) {
+				return fileSelector.getPosition() //
+						.map(DiscoveryIssueCollector::convert) //
+						.map(position -> FileSource.from(fileSelector.getFile(), position)) //
+						.orElseGet(() -> FileSource.from(fileSelector.getFile()));
+			}
+			if (selector instanceof DirectorySelector directorySelector) {
+				return DirectorySource.from(directorySelector.getDirectory());
+			}
+			if (selector instanceof UriSelector uriSelector) {
+				return UriSource.from(uriSelector.getUri());
+			}
 		}
-		if (selector instanceof DirectorySelector directorySelector) {
-			return DirectorySource.from(directorySelector.getDirectory());
-		}
-		if (selector instanceof UriSelector uriSelector) {
-			return UriSource.from(uriSelector.getUri());
+		catch (Exception ex) {
+			rethrowIfUnrecoverable(ex);
+			logger.warn(ex, () -> "Failed to convert DiscoverySelector [%s] into TestSource".formatted(selector));
 		}
 		return null;
 	}
