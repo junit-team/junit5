@@ -72,7 +72,7 @@ Whenever an acronym is included as part of a field name or parameter name:
 - Otherwise, keep the first letter of the acronym uppercase and use lowercase for the
   rest of the acronym -- for example, `String defaultUrl;`.
 
-### 🚀 Code Transformation & Automated Rewriting
+### 🚀 Code Convention & Transformation
 *(Advanced Refactoring, Modernization, and Bulk Code Changes)*
 
 #### 🔧 Automated rewriting of source code to
