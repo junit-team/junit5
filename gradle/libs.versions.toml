@@ -43,7 +43,7 @@ hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 jfrunit = { module = "org.moditect.jfrunit:jfrunit-core", version = "1.0.0.Alpha2" }
-jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
+jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.1" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.1" }
