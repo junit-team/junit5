@@ -201,7 +201,6 @@ jobs:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
             --no-build-cache \
-            --no-configuration-cache \
             clean \
             gitPublishCopy \
             -Pdocumentation.replaceCurrentDocs=${{ contains(inputs.releaseVersion, '-') && 'false' || 'true' }}
@@ -215,7 +214,6 @@ jobs:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
             --no-build-cache \
-            --no-configuration-cache \
             gitPublishPush \
             -Pdocumentation.replaceCurrentDocs=${{ contains(inputs.releaseVersion, '-') && 'false' || 'true' }}
       - name: Wait for deployment to GitHub Pages
