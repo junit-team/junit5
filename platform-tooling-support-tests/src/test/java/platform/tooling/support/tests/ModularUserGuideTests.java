@@ -94,6 +94,7 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
 		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
+		ThirdPartyJars.copy(lib, "com.google.guava", "failureaccess");
 		loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());
@@ -136,6 +137,7 @@ class ModularUserGuideTests {
 				)) //
 				.addArguments("--add-modules", "documentation") //
 				.addArguments("--patch-module", "documentation=" + projectDir.resolve("src/test/resources")) //
+				.addArguments("--add-modules", "com.google.common") //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("execute") //
 				.addArguments("--scan-modules") //
@@ -170,6 +172,7 @@ class ModularUserGuideTests {
 			"lib/apiguardian-api-.+\\.jar", //
 			"lib/assertj-core-.+\\.jar", //
 			"lib/byte-buddy-.+", //
+			"lib/failureaccess-.+\\.jar", //
 			"lib/guava-.+\\.jar", //
 			"lib/hamcrest-.+\\.jar", //
 			"lib/jimfs-.+\\.jar", //
