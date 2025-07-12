@@ -210,10 +210,6 @@ tasks {
 		options.release.set(21)
 	}
 
-	named<Checkstyle>("checkstyleTools") {
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
-	}
-
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
