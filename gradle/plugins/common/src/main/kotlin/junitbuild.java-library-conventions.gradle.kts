@@ -12,7 +12,6 @@ plugins {
 	idea
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-parameters")
-	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
 	id("org.openrewrite.rewrite")
 }
@@ -305,21 +304,12 @@ afterEvaluate {
 }
 
 tasks {
-	checkstyleMain {
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
-	}
-	checkstyleTest {
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
-	}
 	check {
 		dependsOn(rewriteDryRun)
 	}
 }
 
 pluginManager.withPlugin("java-test-fixtures") {
-	tasks.named<Checkstyle>("checkstyleTestFixtures") {
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
-	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
 		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
 	}
