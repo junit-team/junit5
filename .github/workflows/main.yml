@@ -37,8 +37,7 @@ jobs:
         arguments: |
           :platform-tooling-support-tests:test \
           build \
-          jacocoRootReport \
-          --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
+          jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
       with:

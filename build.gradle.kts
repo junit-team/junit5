@@ -15,7 +15,7 @@ group = "org.junit"
 val license by extra(License(
 	name = "Eclipse Public License v2.0",
 	url = uri("https://www.eclipse.org/legal/epl-v20.html"),
-	headerFile = layout.projectDirectory.file("gradle/config/spotless/eclipse-public-license-2.0.java")
+	headerFile = layout.projectDirectory.file("gradle/config/license/eclipse-public-license-2.0.java")
 ))
 
 val platformProjects by extra(listOf(
