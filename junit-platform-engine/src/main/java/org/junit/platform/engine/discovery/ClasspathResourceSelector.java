@@ -24,6 +24,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -61,6 +62,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);
+		Preconditions.notBlank(this.classpathResourceName,
+			"classpath resource name must not be blank after removing leading slash");
 		this.position = position;
 	}
 
