@@ -144,10 +144,6 @@ tasks.compileJava {
 	}
 }
 
-tasks.named<Checkstyle>("checkstyle${archUnit.name.capitalized()}").configure {
-	config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
-}
-
 tasks.check {
 	dependsOn(archUnit)
 }
