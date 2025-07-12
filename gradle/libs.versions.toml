@@ -5,7 +5,6 @@ asciidoctorj-pdf = "2.3.19"
 asciidoctor-plugins = "4.0.4" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.27.3"
 bnd = "7.1.0"
-checkstyle = "10.26.1"
 eclipse = "4.36.0"
 jackson = "2.19.1"
 jacoco = "0.8.13"
@@ -32,7 +31,6 @@ archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.4.1" 
 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
-checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.180" }
 commons-io = { module = "commons-io:commons-io", version = "2.19.0" }
 errorProne-core = { module = "com.google.errorprone:error_prone_core", version = "2.40.0" }
@@ -59,7 +57,6 @@ memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version =
 mockito-bom = { module = "org.mockito:mockito-bom", version = "5.18.0" }
 mockito-core = { module = "org.mockito:mockito-core" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter" }
-nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 nullaway = { module = "com.uber.nullaway:nullaway", version = "0.12.7" }
 openrewrite-recipe-bom = { module = "org.openrewrite.recipe:rewrite-recipe-bom", version = "3.11.1" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
