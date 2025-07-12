@@ -58,7 +58,9 @@ dependencies {
 		because("it uses the OS enum to support Windows")
 	}
 
-	thirdPartyJars(libs.junit4)
+	thirdPartyJars(libs.junit4) {
+		exclude(group = "org.hamcrest")
+	}
 	thirdPartyJars(libs.assertj)
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
