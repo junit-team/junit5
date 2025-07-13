@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.util.Objects;
 
@@ -58,7 +59,10 @@ public class PackageSource implements TestSource {
 	}
 
 	private PackageSource(String packageName) {
-		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
+		Preconditions.notNull(packageName, "package name must not be null");
+		Preconditions.condition(packageName.isEmpty() || isNotBlank(packageName),
+			"package name must not contain only whitespace");
+		this.packageName = packageName;
 	}
 
 	/**

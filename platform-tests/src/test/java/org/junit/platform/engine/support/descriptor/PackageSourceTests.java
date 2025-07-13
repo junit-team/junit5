@@ -18,6 +18,8 @@ import java.io.Serializable;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -47,9 +49,11 @@ class PackageSourceTests extends AbstractTestSourceTests {
 		assertThrows(PreconditionViolationException.class, () -> PackageSource.from((Package) null));
 	}
 
-	@Test
-	void packageSourceFromPackageName() {
-		var testPackage = getClass().getPackage().getName();
+	@ParameterizedTest
+	@ValueSource(classes = PackageSourceTests.class)
+	@ValueSource(strings = "DefaultPackageTestCase")
+	void packageSourceFromPackageName(Class<?> testClass) {
+		var testPackage = testClass.getPackage().getName();
 		var source = PackageSource.from(testPackage);
 
 		assertThat(source.getPackageName()).isEqualTo(testPackage);
