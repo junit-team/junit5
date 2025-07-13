@@ -209,7 +209,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 	static class TestCaseWithThreeInterceptors {
 
-		public TestCaseWithThreeInterceptors(TestReporter reporter) {
+		TestCaseWithThreeInterceptors(TestReporter reporter) {
 			publish(reporter, InvocationType.CONSTRUCTOR);
 		}
 

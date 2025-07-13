@@ -590,6 +590,7 @@ class VintageTestEngineExecutionTests {
 
 		private final Class<?> testClass;
 
+		@SuppressWarnings("RedundantModifier")
 		public DynamicSuiteRunner(Class<?> testClass) {
 			this.testClass = testClass;
 		}
@@ -630,6 +631,7 @@ class VintageTestEngineExecutionTests {
 
 		private final Class<?> testClass;
 
+		@SuppressWarnings("RedundantModifier")
 		public DynamicAndStaticChildrenRunner(Class<?> testClass) {
 			this.testClass = testClass;
 		}
@@ -685,6 +687,7 @@ class VintageTestEngineExecutionTests {
 
 		private final Class<?> testClass;
 
+		@SuppressWarnings("RedundantModifier")
 		public MisbehavingChildlessRunner(Class<?> testClass) {
 			this.testClass = testClass;
 		}

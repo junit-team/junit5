@@ -163,7 +163,7 @@ public final class ClassSource implements TestSource {
 	 * @see #getJavaClass()
 	 * @see #getPosition()
 	 */
-	public final String getClassName() {
+	public String getClassName() {
 		return this.className;
 	}
 
@@ -177,7 +177,7 @@ public final class ClassSource implements TestSource {
 	 * @see #getClassName()
 	 * @see #getPosition()
 	 */
-	public final Class<?> getJavaClass() {
+	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {
 			// @formatter:off
 			this.javaClass = ReflectionSupport.tryToLoadClass(this.className).getNonNullOrThrow(
@@ -194,7 +194,7 @@ public final class ClassSource implements TestSource {
 	 * @see #getClassName()
 	 * @see #getJavaClass()
 	 */
-	public final Optional<FilePosition> getPosition() {
+	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

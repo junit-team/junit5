@@ -381,6 +381,9 @@ class ParameterizedTestDemo {
 
 		private final TestInfo testInfo;
 
+		// end::ArgumentsProviderWithConstructorInjection_example[]
+		@SuppressWarnings("RedundantModifier")
+		// tag::ArgumentsProviderWithConstructorInjection_example[]
 		public MyArgumentsProviderWithConstructorInjection(TestInfo testInfo) {
 			this.testInfo = testInfo;
 		}

@@ -155,14 +155,14 @@ public final class MethodSource implements TestSource {
 	/**
 	 * Get the method name of this source.
 	 */
-	public final String getMethodName() {
+	public String getMethodName() {
 		return this.methodName;
 	}
 
 	/**
 	 * Get the method parameter types of this source.
 	 */
-	public final @Nullable String getMethodParameterTypes() {
+	public @Nullable String getMethodParameterTypes() {
 		return this.methodParameterTypes;
 	}
 
@@ -177,7 +177,7 @@ public final class MethodSource implements TestSource {
 	 * @see #getClassName()
 	 */
 	@API(status = STABLE, since = "1.7")
-	public final Class<?> getJavaClass() {
+	public Class<?> getJavaClass() {
 		return lazyLoadJavaClass();
 	}
 
@@ -192,7 +192,7 @@ public final class MethodSource implements TestSource {
 	 * @see #getMethodName()
 	 */
 	@API(status = STABLE, since = "1.7")
-	public final Method getJavaMethod() {
+	public Method getJavaMethod() {
 		return lazyLoadJavaMethod();
 	}
 

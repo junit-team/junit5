@@ -128,7 +128,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		}
 
 		// Can be injected into test class constructors if the test class only has @RepeatedTest methods
-		public LifecycleMethodTests(RepetitionInfo repetitionInfo) {
+		LifecycleMethodTests(RepetitionInfo repetitionInfo) {
 			assertNotNull(repetitionInfo);
 		}
 

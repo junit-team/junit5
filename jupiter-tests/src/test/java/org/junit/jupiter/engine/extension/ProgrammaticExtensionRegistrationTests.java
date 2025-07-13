@@ -431,7 +431,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	interface ClassLevelExtensionRegistrationInterface {
 
 		@RegisterExtension
-		static CrystalBall crystalBall = new CrystalBall("Outlook good");
+		CrystalBall crystalBall = new CrystalBall("Outlook good");
 
 		@BeforeAll
 		static void beforeAll(String wisdom) {

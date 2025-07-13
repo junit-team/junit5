@@ -83,7 +83,7 @@ public final class FileSource implements FileSystemSource {
 	 * @return the source {@code URI}; never {@code null}
 	 */
 	@Override
-	public final URI getUri() {
+	public URI getUri() {
 		return getFile().toURI();
 	}
 
@@ -93,14 +93,14 @@ public final class FileSource implements FileSystemSource {
 	 * @return the source file; never {@code null}
 	 */
 	@Override
-	public final File getFile() {
+	public File getFile() {
 		return this.file;
 	}
 
 	/**
 	 * Get the {@link FilePosition}, if available.
 	 */
-	public final Optional<FilePosition> getPosition() {
+	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

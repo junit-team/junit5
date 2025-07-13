@@ -24,7 +24,7 @@ class StandardStreamsHandler implements AutoCloseable {
 
 	private @Nullable PrintStream stderr;
 
-	public StandardStreamsHandler() {
+	StandardStreamsHandler() {
 	}
 
 	/**

@@ -829,7 +829,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		private int value;
 		private final TestInfo testInfo;
 
-		public ConstructorInjectionTestCase(int value, TestInfo testInfo) {
+		ConstructorInjectionTestCase(int value, TestInfo testInfo) {
 			this.value = value;
 			this.testInfo = testInfo;
 		}

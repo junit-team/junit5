@@ -530,7 +530,7 @@ class ReflectionUtilsTests {
 
 		final class FinalClass {
 
-			@SuppressWarnings("unused")
+			@SuppressWarnings({ "unused", "FinalMethodInFinalClass", "RedundantModifier" })
 			final void finalMethod() {
 			}
 		}

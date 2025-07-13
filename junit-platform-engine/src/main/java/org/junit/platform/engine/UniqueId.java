@@ -109,7 +109,7 @@ public final class UniqueId implements Cloneable, Serializable {
 		this.segments = List.copyOf(segments);
 	}
 
-	final Optional<Segment> getRoot() {
+	Optional<Segment> getRoot() {
 		return this.segments.isEmpty() ? Optional.empty() : Optional.of(this.segments.get(0));
 	}
 
@@ -118,7 +118,7 @@ public final class UniqueId implements Cloneable, Serializable {
 	 *
 	 * @see #forEngine(String)
 	 */
-	public final Optional<String> getEngineId() {
+	public Optional<String> getEngineId() {
 		return getRoot().filter(segment -> ENGINE_SEGMENT_TYPE.equals(segment.getType())).map(Segment::getValue);
 	}
 
@@ -126,7 +126,7 @@ public final class UniqueId implements Cloneable, Serializable {
 	 * Get the immutable list of {@linkplain Segment segments} that make up this
 	 * {@code UniqueId}.
 	 */
-	public final List<Segment> getSegments() {
+	public List<Segment> getSegments() {
 		return this.segments;
 	}
 
@@ -144,7 +144,7 @@ public final class UniqueId implements Cloneable, Serializable {
 	 * @param segmentType the type of the segment; never {@code null} or blank
 	 * @param value the value of the segment; never {@code null} or blank
 	 */
-	public final UniqueId append(String segmentType, String value) {
+	public UniqueId append(String segmentType, String value) {
 		return append(new Segment(segmentType, value));
 	}
 
@@ -159,7 +159,7 @@ public final class UniqueId implements Cloneable, Serializable {
 	 * @since 1.1
 	 */
 	@API(status = STABLE, since = "1.1")
-	public final UniqueId append(Segment segment) {
+	public UniqueId append(Segment segment) {
 		Preconditions.notNull(segment, "segment must not be null");
 		List<Segment> baseSegments = new ArrayList<>(this.segments.size() + 1);
 		baseSegments.addAll(this.segments);

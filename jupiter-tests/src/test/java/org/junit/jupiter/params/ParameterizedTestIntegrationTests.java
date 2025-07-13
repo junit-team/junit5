@@ -2235,7 +2235,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		private static final List<String> lifecycleEvents = new ArrayList<>();
 		private static final Set<String> testMethods = new LinkedHashSet<>();
 
-		public LifecycleTestCase(TestInfo testInfo) {
+		LifecycleTestCase(TestInfo testInfo) {
 			lifecycleEvents.add("constructor:" + testInfo.getDisplayName());
 		}
 
@@ -2524,7 +2524,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 			private final String value;
 
-			public ArgumentsAggregatorWithConstructorParameter(String value) {
+			ArgumentsAggregatorWithConstructorParameter(String value) {
 				this.value = value;
 			}
 

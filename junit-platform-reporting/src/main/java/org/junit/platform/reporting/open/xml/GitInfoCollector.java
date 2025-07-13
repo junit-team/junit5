@@ -54,7 +54,7 @@ interface GitInfoCollector {
 
 		private final ProcessExecutor executor;
 
-		public CliGitInfoCollector(ProcessExecutor executor) {
+		CliGitInfoCollector(ProcessExecutor executor) {
 			this.executor = executor;
 		}
 

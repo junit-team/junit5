@@ -64,7 +64,7 @@ public final class CompositeTestSource implements TestSource {
 	 *
 	 * @return the sources stored in this {@code CompositeTestSource}; never {@code null}
 	 */
-	public final List<TestSource> getSources() {
+	public List<TestSource> getSources() {
 		return this.sources;
 	}
 

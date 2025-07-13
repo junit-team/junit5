@@ -168,7 +168,7 @@ class ArchUnitTests {
 		private final Class<T> annotationType;
 		private final BiPredicate<T, T> predicate;
 
-		public RepeatableAnnotationPredicate(Class<T> annotationType, BiPredicate<T, T> predicate) {
+		RepeatableAnnotationPredicate(Class<T> annotationType, BiPredicate<T, T> predicate) {
 			super("have identical @%s annotation as container annotation", annotationType.getSimpleName());
 			this.annotationType = annotationType;
 			this.predicate = predicate;

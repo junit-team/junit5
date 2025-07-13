@@ -144,7 +144,7 @@ public final class ClasspathResourceSource implements TestSource {
 	/**
 	 * Get the {@link FilePosition}, if available.
 	 */
-	public final Optional<FilePosition> getPosition() {
+	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

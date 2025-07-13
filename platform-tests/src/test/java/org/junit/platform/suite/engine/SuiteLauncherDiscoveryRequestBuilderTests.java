@@ -656,7 +656,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	}
 
 	private static class StubAbstractTestDescriptor extends AbstractTestDescriptor {
-		public StubAbstractTestDescriptor() {
+		StubAbstractTestDescriptor() {
 			super(UniqueId.forEngine("test"), "stub");
 		}
 
@@ -675,7 +675,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 	private static class ParentConfigurationParameters implements ConfigurationParameters {
 		private final Map<String, String> map;
 
-		public ParentConfigurationParameters(String key, String value) {
+		ParentConfigurationParameters(String key, String value) {
 			this.map = Map.of(key, value);
 		}
 

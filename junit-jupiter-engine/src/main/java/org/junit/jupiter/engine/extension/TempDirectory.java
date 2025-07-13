@@ -96,7 +96,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	private final JupiterConfiguration configuration;
 
-	public TempDirectory(JupiterConfiguration configuration) {
+	TempDirectory(JupiterConfiguration configuration) {
 		this.configuration = configuration;
 	}
 

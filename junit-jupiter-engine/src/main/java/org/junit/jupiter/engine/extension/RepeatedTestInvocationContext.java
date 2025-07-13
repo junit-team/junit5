@@ -27,8 +27,7 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 	private final DefaultRepetitionInfo repetitionInfo;
 	private final RepeatedTestDisplayNameFormatter formatter;
 
-	public RepeatedTestInvocationContext(DefaultRepetitionInfo repetitionInfo,
-			RepeatedTestDisplayNameFormatter formatter) {
+	RepeatedTestInvocationContext(DefaultRepetitionInfo repetitionInfo, RepeatedTestDisplayNameFormatter formatter) {
 
 		this.repetitionInfo = repetitionInfo;
 		this.formatter = formatter;

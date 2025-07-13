@@ -62,7 +62,7 @@ public final class DirectorySource implements FileSystemSource {
 	 * @return the source {@code URI}; never {@code null}
 	 */
 	@Override
-	public final URI getUri() {
+	public URI getUri() {
 		return getFile().toURI();
 	}
 
@@ -72,7 +72,7 @@ public final class DirectorySource implements FileSystemSource {
 	 * @return the source directory; never {@code null}
 	 */
 	@Override
-	public final File getFile() {
+	public File getFile() {
 		return this.directory;
 	}
 

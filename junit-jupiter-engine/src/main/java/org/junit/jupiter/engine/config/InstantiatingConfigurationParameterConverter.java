@@ -29,7 +29,7 @@ class InstantiatingConfigurationParameterConverter<T> {
 	private final Class<T> clazz;
 	private final String name;
 
-	public InstantiatingConfigurationParameterConverter(Class<T> clazz, String name) {
+	InstantiatingConfigurationParameterConverter(Class<T> clazz, String name) {
 		this.clazz = clazz;
 		this.name = name;
 	}

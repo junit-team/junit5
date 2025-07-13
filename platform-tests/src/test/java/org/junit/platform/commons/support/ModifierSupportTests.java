@@ -239,6 +239,7 @@ class ModifierSupportTests {
 
 	final class FinalClass {
 
+		@SuppressWarnings({ "FinalMethodInFinalClass", "RedundantModifier" })
 		final void finalMethod() {
 		}
 	}

@@ -64,7 +64,7 @@ class ColorPalette {
 		return colorsToAnsiSequences;
 	}
 
-	public ColorPalette(Map<Style, String> overrides) {
+	ColorPalette(Map<Style, String> overrides) {
 		this(defaultPalette(), false);
 
 		if (overrides.containsKey(Style.NONE)) {
@@ -73,15 +73,15 @@ class ColorPalette {
 		this.colorsToAnsiSequences.putAll(overrides);
 	}
 
-	public ColorPalette(Properties properties) {
+	ColorPalette(Properties properties) {
 		this(toOverrideMap(properties));
 	}
 
-	public ColorPalette(Reader reader) {
+	ColorPalette(Reader reader) {
 		this(getProperties(reader));
 	}
 
-	public ColorPalette(Path path) {
+	ColorPalette(Path path) {
 		this(getProperties(path));
 	}
 

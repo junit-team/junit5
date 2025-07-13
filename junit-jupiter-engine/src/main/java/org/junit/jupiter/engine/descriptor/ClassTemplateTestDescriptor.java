@@ -209,7 +209,7 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	class ClassTemplateExecutor
 			extends TemplateExecutor<ClassTemplateInvocationContextProvider, ClassTemplateInvocationContext> {
 
-		public ClassTemplateExecutor() {
+		ClassTemplateExecutor() {
 			super(ClassTemplateTestDescriptor.this, ClassTemplateInvocationContextProvider.class);
 		}
 

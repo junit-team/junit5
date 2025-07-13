@@ -86,7 +86,7 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MyReportingTestCase {
 
-		public MyReportingTestCase(TestReporter reporter) {
+		MyReportingTestCase(TestReporter reporter) {
 			// Reported on class-level for PER_CLASS lifecycle and on method-level for PER_METHOD lifecycle
 			reporter.publishEntry("Constructor");
 			reporter.publishFile("constructor", MediaType.TEXT_PLAIN_UTF_8,

@@ -39,7 +39,7 @@ class JarContainsManifestFirstTests {
 		}
 
 		// JarInputStream expects the META-INF/MANIFEST.MF to be at the start of the JAR archive
-		try (final JarInputStream jarInputStream = new JarInputStream(new FileInputStream(modulePath.toFile()))) {
+		try (var jarInputStream = new JarInputStream(new FileInputStream(modulePath.toFile()))) {
 			assertNotNull(jarInputStream.getManifest(), "MANIFEST.MF should be available via JarInputStream");
 		}
 	}

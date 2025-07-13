@@ -66,7 +66,7 @@ public final class PackageSource implements TestSource {
 	/**
 	 * Get the package name of this test source.
 	 */
-	public final String getPackageName() {
+	public String getPackageName() {
 		return this.packageName;
 	}
 

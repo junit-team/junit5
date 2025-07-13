@@ -37,7 +37,7 @@ class LockManager {
 	private final SingleLock globalReadLock;
 	private final SingleLock globalReadWriteLock;
 
-	public LockManager() {
+	LockManager() {
 		globalReadLock = new SingleLock(GLOBAL_READ, toLock(GLOBAL_READ));
 		globalReadWriteLock = new SingleLock(GLOBAL_READ_WRITE, toLock(GLOBAL_READ_WRITE));
 	}
