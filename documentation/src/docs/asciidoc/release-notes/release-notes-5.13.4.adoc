@@ -28,6 +28,8 @@ repository on GitHub.
 
 * `ClasspathResourceSelector` no longer allows to be constructed with a resource name that
   is blank after removing the leading slash.
+* `PackageSource.from(String)` now allows to be constructed with an empty string to
+  indicate the default package.
 
 [[release-notes-5.13.4-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

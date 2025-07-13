@@ -60,7 +60,10 @@ public final class PackageSource implements TestSource {
 	}
 
 	private PackageSource(String packageName) {
-		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
+		Preconditions.notNull(packageName, "package name must not be null");
+		Preconditions.condition(packageName.isEmpty() || !packageName.isBlank(),
+			"package name must not contain only whitespace");
+		this.packageName = packageName;
 	}
 
 	/**
