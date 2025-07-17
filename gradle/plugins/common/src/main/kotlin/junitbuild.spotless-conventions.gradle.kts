@@ -58,16 +58,6 @@ spotless {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
-		configurations.named { it.startsWith("spotless") }.configureEach {
-			// Workaround for CVE-2024-12798 and CVE-2024-12801
-			resolutionStrategy {
-				eachDependency {
-					if (requested.group == "ch.qos.logback") {
-						useVersion(requiredVersionFromLibs("logback"))
-					}
-				}
-			}
-		}
 	}
 
 	pluginManager.withPlugin("groovy") {
