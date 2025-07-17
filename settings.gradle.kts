@@ -1,4 +1,5 @@
 import buildparameters.BuildParametersExtension
+import org.gradle.api.initialization.resolve.RepositoriesMode.FAIL_ON_PROJECT_REPOS
 
 pluginManagement {
 	includeBuild("gradle/plugins")
@@ -16,6 +17,7 @@ dependencyResolutionManagement {
 	repositories {
 		mavenCentral()
 	}
+	repositoriesMode = FAIL_ON_PROJECT_REPOS
 }
 
 val buildParameters = the<BuildParametersExtension>()
