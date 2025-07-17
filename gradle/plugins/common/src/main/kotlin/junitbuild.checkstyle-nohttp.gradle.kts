@@ -7,19 +7,17 @@ plugins {
 
 dependencies {
 	checkstyle(dependencyFromLibs("nohttp-checkstyle"))
-}
-
-configurations.checkstyle {
-	resolutionStrategy {
-		eachDependency {
-			// Workaround for CVE-2024-12798 and CVE-2024-12801
-			if (requested.group == "ch.qos.logback") {
-				useVersion(requiredVersionFromLibs("logback"))
+	constraints {
+		checkstyle("com.puppycrawl.tools:checkstyle") {
+			version {
+				require(requiredVersionFromLibs("checkstyle"))
 			}
-			// Workaround for CVE-2025-48734
-			if (requested.group == "commons-beanutils") {
-				useVersion("1.11.0")
+		}
+		checkstyle("ch.qos.logback:logback-classic") {
+			version {
+				require("1.5.18")
 			}
+			because("Workaround for CVE-2024-12798 and CVE-2024-12801")
 		}
 	}
 }
