@@ -84,8 +84,8 @@ class LauncherSessionTests {
 		inOrder.verify(firstSessionListener).launcherSessionClosed(launcherSession.getValue());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings({ "deprecation", "resource" })
 	void callsRegisteredListenersWhenLauncherIsUsedViaSession() {
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
@@ -112,8 +112,8 @@ class LauncherSessionTests {
 		verifyNoMoreInteractions(firstSessionListener, secondSessionListener);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings({ "deprecation", "resource" })
 	void closedSessionCannotBeUsed() {
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
