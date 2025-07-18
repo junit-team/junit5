@@ -29,7 +29,7 @@ tasks.register<Checkstyle>("checkstyleNohttp") {
 	config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleNohttp.xml"))
 	source = fileTree(layout.projectDirectory) {
 		exclude(".git/**", "**/.gradle/**")
-		exclude(".idea/**", ".eclipse/**")
+		exclude(".idea/**", "**/.settings/**", "**/.classpath", "**/.project")
 		exclude("**/*.class")
 		exclude("**/*.hprof")
 		exclude("**/*.jar")
