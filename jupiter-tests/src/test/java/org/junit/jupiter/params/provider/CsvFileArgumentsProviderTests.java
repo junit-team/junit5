@@ -33,6 +33,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileArgumentsProvider.InputStreamProvider;
+import org.junit.jupiter.params.support.ParameterNameAndArgument;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -301,7 +302,19 @@ class CsvFileArgumentsProviderTests {
 				.build();
 
 		var arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
-		Stream<String[]> argumentsAsStrings = arguments.map(array -> new String[] { String.valueOf(array[0]) });
+
+		Stream<String[]> argumentsAsStrings = arguments.map(array -> {
+			String[] strings = new String[array.length];
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] instanceof ParameterNameAndArgument parameterNameAndArgument) {
+					strings[i] = parameterNameAndArgument.getName() + " = " + parameterNameAndArgument.getPayload();
+				}
+				else {
+					throw new IllegalStateException("Unexpected argument type: " + array[i].getClass().getName());
+				}
+			}
+			return strings;
+		});
 
 		assertThat(argumentsAsStrings).containsExactly(array("foo = bar"), array("foo = baz"), array("foo = qux"),
 			array("foo = "));

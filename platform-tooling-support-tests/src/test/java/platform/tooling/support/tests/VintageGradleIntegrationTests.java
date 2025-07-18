@@ -42,7 +42,7 @@ class VintageGradleIntegrationTests {
 				.contains("Unsupported version of junit:junit: 4.11");
 	}
 
-	@ParameterizedTest(name = "{0}")
+	@ParameterizedTest(name = "{0}", quoteTextArguments = false)
 	@ValueSource(strings = { "4.12", "4.13.2" })
 	void supportedVersions(String version, @FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 		var result = run(outputFiles, version);

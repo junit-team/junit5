@@ -43,7 +43,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 	}
 
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments);
+		return this.formatter.format(invocationIndex, this.arguments, this.declarationContext.quoteTextArguments());
 	}
 
 	public void prepareInvocation(ExtensionContext context) {

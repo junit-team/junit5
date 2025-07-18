@@ -31,10 +31,14 @@ object DisplayNameTests {
     @ParameterizedTest
     @MethodSource("data")
     fun test(
-        char: String?,
+        str: String?,
         number: Int,
         info: TestInfo
     ) {
-        assertEquals("[$number] char = $char, number = $number", info.displayName)
+        if (str == null) {
+            assertEquals("[$number] str = null, number = $number", info.displayName)
+        } else {
+            assertEquals("[$number] str = \"$str\", number = $number", info.displayName)
+        }
     }
 }

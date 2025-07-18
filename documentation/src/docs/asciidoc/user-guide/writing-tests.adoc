@@ -1242,26 +1242,26 @@ Executing the above test class yields the following output:
 
 ....
 FruitTests ✔
-├─ [1] fruit = apple ✔
+├─ [1] fruit = "apple" ✔
 │  └─ QuantityTests ✔
 │     ├─ [1] quantity = 23 ✔
 │     │  └─ test(Duration) ✔
-│     │     ├─ [1] duration = PT1H ✔
-│     │     └─ [2] duration = PT2H ✔
+│     │     ├─ [1] duration = "PT1H" ✔
+│     │     └─ [2] duration = "PT2H" ✔
 │     └─ [2] quantity = 42 ✔
 │        └─ test(Duration) ✔
-│           ├─ [1] duration = PT1H ✔
-│           └─ [2] duration = PT2H ✔
-└─ [2] fruit = banana ✔
+│           ├─ [1] duration = "PT1H" ✔
+│           └─ [2] duration = "PT2H" ✔
+└─ [2] fruit = "banana" ✔
    └─ QuantityTests ✔
       ├─ [1] quantity = 23 ✔
       │  └─ test(Duration) ✔
-      │     ├─ [1] duration = PT1H ✔
-      │     └─ [2] duration = PT2H ✔
+      │     ├─ [1] duration = "PT1H" ✔
+      │     └─ [2] duration = "PT2H" ✔
       └─ [2] quantity = 42 ✔
          └─ test(Duration) ✔
-            ├─ [1] duration = PT1H ✔
-            └─ [2] duration = PT2H ✔
+            ├─ [1] duration = "PT1H" ✔
+            └─ [2] duration = "PT2H" ✔
 ....
 
 [[writing-tests-dependency-injection]]
@@ -1649,9 +1649,9 @@ following.
 
 ....
 palindromes(String) ✔
-├─ [1] candidate = racecar ✔
-├─ [2] candidate = radar ✔
-└─ [3] candidate = able was I ere I saw elba ✔
+├─ [1] candidate = "racecar" ✔
+├─ [2] candidate = "radar" ✔
+└─ [3] candidate = "able was I ere I saw elba" ✔
 ....
 
 The same `@ValueSource` annotation can be used to specify the source of arguments for a
@@ -1668,13 +1668,13 @@ following.
 
 ....
 PalindromeTests ✔
-├─ [1] candidate = racecar ✔
+├─ [1] candidate = "racecar" ✔
 │  ├─ palindrome() ✔
 │  └─ reversePalindrome() ✔
-├─ [2] candidate = radar ✔
+├─ [2] candidate = "radar" ✔
 │  ├─ palindrome() ✔
 │  └─ reversePalindrome() ✔
-└─ [3] candidate = able was I ere I saw elba ✔
+└─ [3] candidate = "able was I ere I saw elba" ✔
    ├─ palindrome() ✔
    └─ reversePalindrome() ✔
 ....
@@ -2139,7 +2139,7 @@ It is also possible to provide a `Stream`, `DoubleStream`, `IntStream`, `LongStr
 iterator is wrapped in a `java.util.function.Supplier`. The following example demonstrates
 how to provide a `Supplier` of a `Stream` of named arguments. This parameterized test
 method will be invoked twice: with the values `"apple"` and `"banana"` and with display
-names `Apple` and `Banana`, respectively.
+names `"Apple"` and `"Banana"`, respectively.
 
 [source,java,indent=0]
 ----
@@ -2252,10 +2252,10 @@ void testWithCsvSource(String fruit, int rank) {
 The generated display names for the previous example include the CSV header names.
 
 ----
-[1] FRUIT = apple, RANK = 1
-[2] FRUIT = banana, RANK = 2
-[3] FRUIT = lemon, lime, RANK = 0xF1
-[4] FRUIT = strawberry, RANK = 700_000
+[1] FRUIT = "apple", RANK = "1"
+[2] FRUIT = "banana", RANK = "2"
+[3] FRUIT = "lemon, lime", RANK = "0xF1"
+[4] FRUIT = "strawberry", RANK = "700_000"
 ----
 
 In contrast to CSV records supplied via the `value` attribute, a text block can contain
@@ -2332,20 +2332,20 @@ The following listing shows the generated display names for the first two parame
 test methods above.
 
 ----
-[1] country = Sweden, reference = 1
-[2] country = Poland, reference = 2
-[3] country = United States of America, reference = 3
-[4] country = France, reference = 700_000
+[1] country = "Sweden", reference = "1"
+[2] country = "Poland", reference = "2"
+[3] country = "United States of America", reference = "3"
+[4] country = "France", reference = "700_000"
 ----
 
 The following listing shows the generated display names for the last parameterized test
 method above that uses CSV header names.
 
 ----
-[1] COUNTRY = Sweden, REFERENCE = 1
-[2] COUNTRY = Poland, REFERENCE = 2
-[3] COUNTRY = United States of America, REFERENCE = 3
-[4] COUNTRY = France, REFERENCE = 700_000
+[1] COUNTRY = "Sweden", REFERENCE = "1"
+[2] COUNTRY = "Poland", REFERENCE = "2"
+[3] COUNTRY = "United States of America", REFERENCE = "3"
+[4] COUNTRY = "France", REFERENCE = "700_000"
 ----
 
 In contrast to the default syntax used in `@CsvSource`, `@CsvFileSource` uses a double
@@ -2668,11 +2668,18 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_w
 ==== Customizing Display Names
 
 By default, the display name of a parameterized class or test invocation contains the
-invocation index and the `String` representation of all arguments for that specific
-invocation. Each argument is preceded by its parameter name (unless the argument is only
-available via an `ArgumentsAccessor` or `ArgumentAggregator`), if the parameter name is
-present in the bytecode (for Java, test code must be compiled with the `-parameters`
-compiler flag; for Kotlin, with `-java-parameters`).
+invocation index and a comma-separated list of the `String` representations of all
+arguments for that specific invocation. If parameter names are present in the bytecode,
+each argument will be preceded by its parameter name and an equals sign (unless the
+argument is only available via an `ArgumentsAccessor` or `ArgumentAggregator`) – for
+example, `firstName = "Jane"`.
+
+[TIP]
+====
+To ensure that parameter names are present in the bytecode, test code must be compiled
+with the `-parameters` compiler flag for Java or with the `-java-parameters` compiler flag
+for Kotlin.
+====
 
 However, you can customize invocation display names via the `name` attribute of the
 `@ParameterizedClass` or `@ParameterizedTest` annotation as in the following example.
@@ -2688,9 +2695,9 @@ the following.
 
 ....
 Display name of container ✔
-├─ 1 ==> the rank of 'apple' is 1 ✔
-├─ 2 ==> the rank of 'banana' is 2 ✔
-└─ 3 ==> the rank of 'lemon, lime' is 3 ✔
+├─ 1 ==> the rank of "apple" is "1" ✔
+├─ 2 ==> the rank of "banana" is "2" ✔
+└─ 3 ==> the rank of "lemon, lime" is "3" ✔
 ....
 ======
 
@@ -2777,6 +2784,70 @@ Note that `argumentSet(String, Object...)` is a static factory method defined in
 `org.junit.jupiter.params.provider.Arguments` interface.
 ====
 
+[[writing-tests-parameterized-tests-display-names-quoted-text]]
+===== Quoted Text-based Arguments
+
+As of JUnit Jupiter 6.0, text-based arguments in display names for parameterized tests are
+quoted by default. In this context, any `CharSequence` (such as a `String`) or `Character`
+is considered text. A `CharSequence` is wrapped in double quotes (`"`), and a `Character`
+is wrapped in single quotes (`'`).
+
+Special characters will be escaped in the quoted text. For example, carriage returns and
+line feeds will be escaped as `\\r` and `\\n`, respectively. In addition, any ISO control
+character will be represented as a question mark (`?`) in the quoted text.
+
+[TIP]
+====
+This feature can be disabled by setting the `quoteTextArguments` attributes in
+`@ParameterizedClass` and `@ParameterizedTest` to `false`.
+====
+
+For example, given a string argument `"line 1\nline 2"`, the physical representation in
+the display name will be `"\"line 1\\nline 2\""` which is printed as `"line 1\nline 2"`.
+Similarly, given a string argument `"\t"`, the physical representation in the display name
+will be `"\"\\t\""` which is printed as `"\t"` instead of a blank string or invisible tab
+character. The same applies for a character argument `'\t'`, whose physical representation
+in the display name would be `"'\\t'"` which is printed as `'\t'`.
+
+For a concrete example, if you run the first `nullEmptyAndBlankStrings(String text)`
+parameterized test method from the
+<<writing-tests-parameterized-tests-sources-null-and-empty>> section above, the following
+display names are generated.
+
+----
+[1] text = null
+[2] text = ""
+[3] text = " "
+[4] text = "   "
+[5] text = "\t"
+[6] text = "\n"
+----
+
+If you run the first `testWithCsvSource(String fruit, int rank)` parameterized test method
+from the <<writing-tests-parameterized-tests-sources-CsvSource>> section above, the
+following display names are generated.
+
+----
+[1] fruit = "apple", rank = "1"
+[2] fruit = "banana", rank = "2"
+[3] fruit = "lemon, lime", rank = "0xF1"
+[4] fruit = "strawberry", rank = "700_000"
+----
+
+[NOTE]
+====
+The original source arguments are quoted when generating a display name, and this occurs
+before any implicit or explicit argument conversion is performed.
+
+For example, if a parameterized test accepts `3.14` as a `float` argument that was
+converted from `"3.14"` as an input string, `"3.14"` will be present in the display name
+instead of `3.14`. You can see the effect of this with the `rank` values in the above
+example.
+====
+
+[[writing-tests-parameterized-tests-display-names-default-pattern]]
+===== Default Display Name Pattern
+
 If you'd like to set a default name pattern for all parameterized classes and tests in
 your project, you can declare the `junit.jupiter.params.displayname.default` configuration
 parameter in the `junit-platform.properties` file as demonstrated in the following example (see
@@ -2786,6 +2857,9 @@ parameter in the `junit-platform.properties` file as demonstrated in the followi
 ----
 junit.jupiter.params.displayname.default = {index}
 ----
+
+[[writing-tests-parameterized-tests-display-names-precedence-rules]]
+===== Precedence Rules
 
 The display name for a parameterized class or test is determined according to the
 following precedence rules:

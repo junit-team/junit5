@@ -42,7 +42,7 @@ class UnalignedClasspathTests {
 	@ManagedResource
 	MavenRepoProxy mavenRepoProxy;
 
-	@ParameterizedTest
+	@ParameterizedTest(quoteTextArguments = false)
 	@MethodSource("javaVersions")
 	@Execution(SAME_THREAD)
 	void verifyErrorMessageForUnalignedClasspath(JRE jre, Path javaHome, @TempDir Path workspace,

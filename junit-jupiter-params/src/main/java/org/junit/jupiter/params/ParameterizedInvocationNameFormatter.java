@@ -38,6 +38,7 @@ import java.util.stream.IntStream;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterNameAndArgument;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -87,9 +88,9 @@ class ParameterizedInvocationNameFormatter {
 		}
 	}
 
-	String format(int invocationIndex, EvaluatedArgumentSet arguments) {
+	String format(int invocationIndex, EvaluatedArgumentSet arguments, boolean quoteTextArguments) {
 		try {
-			return formatSafely(invocationIndex, arguments);
+			return formatSafely(invocationIndex, arguments, quoteTextArguments);
 		}
 		catch (Exception ex) {
 			String message = "Failed to format display name for parameterized test. "
@@ -99,9 +100,9 @@ class ParameterizedInvocationNameFormatter {
 	}
 
 	@SuppressWarnings("JdkObsolete")
-	private String formatSafely(int invocationIndex, EvaluatedArgumentSet arguments) {
-		ArgumentsContext context = new ArgumentsContext(invocationIndex, arguments.getConsumedNames(),
-			arguments.getName());
+	private String formatSafely(int invocationIndex, EvaluatedArgumentSet arguments, boolean quoteTextArguments) {
+		ArgumentsContext context = new ArgumentsContext(invocationIndex, arguments.getConsumedArguments(),
+			arguments.getName(), quoteTextArguments);
 		StringBuffer result = new StringBuffer(); // used instead of StringBuilder so MessageFormat can append directly
 		for (PartialFormatter partialFormatter : this.partialFormatters) {
 			partialFormatter.append(context, result);
@@ -204,7 +205,7 @@ class ParameterizedInvocationNameFormatter {
 
 	@SuppressWarnings("ArrayRecordComponent")
 	private record ArgumentsContext(int invocationIndex, @Nullable Object[] consumedArguments,
-			Optional<String> argumentSetName) {
+			Optional<String> argumentSetName, boolean quoteTextArguments) {
 	}
 
 	@FunctionalInterface
@@ -246,24 +247,42 @@ class ParameterizedInvocationNameFormatter {
 		// synchronized because MessageFormat is not thread-safe
 		@Override
 		public synchronized void append(ArgumentsContext context, StringBuffer result) {
-			this.messageFormat.format(makeReadable(context.consumedArguments), result, new FieldPosition(0));
+			this.messageFormat.format(makeReadable(context.consumedArguments, context.quoteTextArguments), result,
+				new FieldPosition(0));
 		}
 
-		private @Nullable Object[] makeReadable(@Nullable Object[] arguments) {
+		private @Nullable Object[] makeReadable(@Nullable Object[] arguments, boolean quoteTextArguments) {
 			@Nullable
 			Format[] formats = messageFormat.getFormatsByArgumentIndex();
 			@Nullable
 			Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
 			for (int i = 0; i < result.length; i++) {
 				if (formats[i] == null) {
-					result[i] = truncateIfExceedsMaxLength(StringUtils.nullSafeToString(arguments[i]));
+					Object argument = arguments[i];
+					String prefix = "";
+
+					if (argument instanceof ParameterNameAndArgument parameterNameAndArgument) {
+						prefix = parameterNameAndArgument.getName() + " = ";
+						argument = parameterNameAndArgument.getPayload();
+					}
+
+					if (argument instanceof Character ch) {
+						result[i] = prefix + (quoteTextArguments ? QuoteUtils.quote(ch) : ch);
+					}
+					else {
+						String argumentText = (argument == null ? "null"
+								: truncateIfExceedsMaxLength(StringUtils.nullSafeToString(argument)));
+						result[i] = prefix + (quoteTextArguments && argument instanceof CharSequence//
+								? QuoteUtils.quote(argumentText)
+								: argumentText);
+					}
 				}
 			}
 			return result;
 		}
 
-		private @Nullable String truncateIfExceedsMaxLength(@Nullable String argument) {
-			if (argument != null && argument.length() > this.argumentMaxLength) {
+		private String truncateIfExceedsMaxLength(String argument) {
+			if (argument.length() > this.argumentMaxLength) {
 				return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
 			}
 			return argument;

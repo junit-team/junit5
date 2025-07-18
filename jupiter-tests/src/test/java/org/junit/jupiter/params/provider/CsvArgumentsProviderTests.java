@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.support.ParameterNameAndArgument;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -392,7 +393,12 @@ class CsvArgumentsProviderTests {
 		return arguments.map(array -> {
 			String[] strings = new String[array.length];
 			for (int i = 0; i < array.length; i++) {
-				strings[i] = String.valueOf(array[i]);
+				if (array[i] instanceof ParameterNameAndArgument parameterNameAndArgument) {
+					strings[i] = parameterNameAndArgument.getName() + " = " + parameterNameAndArgument.getPayload();
+				}
+				else {
+					throw new IllegalStateException("Unexpected argument type: " + array[i].getClass().getName());
+				}
 			}
 			return strings;
 		});

@@ -56,6 +56,11 @@ class ParameterizedTestContext implements ParameterizedDeclarationContext<Parame
 	}
 
 	@Override
+	public boolean quoteTextArguments() {
+		return this.annotation.quoteTextArguments();
+	}
+
+	@Override
 	public boolean isAutoClosingArguments() {
 		return this.annotation.autoCloseArguments();
 	}

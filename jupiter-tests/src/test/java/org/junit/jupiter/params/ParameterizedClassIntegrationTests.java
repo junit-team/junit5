@@ -176,7 +176,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("[1] value = null", "[2] value = ");
+					.containsExactly("[1] value = null", "[2] value = \"\"");
 		}
 
 		@ParameterizedTest
@@ -188,8 +188,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("[1] name = foo, value = 1", "[2] name = bar, value = 2",
-						"[3] name = baz, value = 3", "[4] name = qux, value = 4");
+					.containsExactly("[1] name = \"foo\", value = \"1\"", "[2] name = \"bar\", value = \"2\"",
+						"[3] name = \"baz\", value = \"3\"", "[4] name = \"qux\", value = \"4\"");
 		}
 
 		@ParameterizedTest
@@ -225,7 +225,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("[1] value = foo", "[2] value = bar");
+					.containsExactly("[1] value = \"foo\"", "[2] value = \"bar\"");
 		}
 
 		@Test
@@ -247,7 +247,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("[1] value = foo", "[2] value = bar");
+					.containsExactly("[1] value = \"foo\"", "[2] value = \"bar\"");
 		}
 
 		@Test
@@ -269,7 +269,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("[1] value = foo", "[2] value = bar");
+					.containsExactly("[1] value = \"foo\"", "[2] value = \"bar\"");
 		}
 
 		@Test
@@ -305,7 +305,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
-					.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number = 2, name = bar");
+					.containsExactly("1 | TesT | 1, \"foo\" | set",
+						"2 | TesT | 2, \"bar\" | number = 2, name = \"bar\"");
 		}
 
 		@Test
@@ -398,8 +399,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 			assertThat(invocationDisplayNames(results)) //
 					.containsExactly( //
-						"[1] number = 1", "[1] text = foo", "[2] text = bar", //
-						"[2] number = 2", "[1] text = foo", "[2] text = bar" //
+						"[1] number = 1", "[1] text = \"foo\"", "[2] text = \"bar\"", //
+						"[2] number = 2", "[1] text = \"foo\"", "[2] text = \"bar\"" //
 					);
 			assertThat(allReportEntries(results)).map(it -> it.get("value")).containsExactly(
 			// @formatter:off
@@ -903,7 +904,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedClass
+	@ParameterizedClass(quoteTextArguments = false)
 	@CsvSource({ "-1", "1" })
 	record RecordWithBuiltInConverterTestCase(int value) {
 
@@ -1047,7 +1048,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
-	@ParameterizedClass
+	@ParameterizedClass(quoteTextArguments = false)
 	@ValueSource(ints = { -1, 1 })
 	@interface ParameterizedClassWithNegativeAndPositiveValue {
 	}

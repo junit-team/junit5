@@ -198,8 +198,49 @@ public @interface ParameterizedClass {
 	 * a flag rather than a placeholder.
 	 *
 	 * @see java.text.MessageFormat
+	 * @see #quoteTextArguments()
 	 */
 	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
+
+	/**
+	 * Configure whether to enclose text-based argument values in quotes within
+	 * display names.
+	 *
+	 * <p>Defaults to {@code true}.
+	 *
+	 * <p>In this context, any {@link CharSequence} (such as a {@link String})
+	 * or {@link Character} is considered text. A {@code CharSequence} is wrapped
+	 * in double quotes ("), and a {@code Character} is wrapped in single quotes
+	 * (').
+	 *
+	 * <p>Special characters in Java strings and characters will be escaped in the
+	 * quoted text &mdash; for example, carriage returns and line feeds will be
+	 * escaped as {@code \\r} and {@code \\n}, respectively. In addition, any
+	 * {@linkplain Character#isISOControl(char) ISO control character} will be
+	 * represented as a question mark (?) in the quoted text.
+	 *
+	 * <p>For example, given a string argument {@code "line 1\nline 2"}, the
+	 * representation in the display name would be {@code "\"line 1\\nline 2\""}
+	 * (printed as {@code "line 1\nline 2"}) with the newline character escaped as
+	 * {@code "\\n"}. Similarly, given a string argument {@code "\t"}, the
+	 * representation in the display name would be {@code "\"\\t\""} (printed as
+	 * {@code "\t"}) instead of a blank string or invisible tab
+	 * character. The same applies for a character argument {@code '\t'}, whose
+	 * representation in the display name would be {@code "'\\t'"} (printed as
+	 * {@code '\t'}).
+	 *
+	 * <p>Please note that original source arguments are quoted when generating
+	 * a display name, before any implicit or explicit argument conversion is
+	 * performed. For example, if a parameterized class accepts {@code 3.14} as a
+	 * {@code float} argument that was converted from {@code "3.14"} as an input
+	 * string, {@code "3.14"} will be present in the display name instead of
+	 * {@code 3.14}.
+	 *
+	 * @since 6.0
+	 * @see #name()
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	boolean quoteTextArguments() default true;
 
 	/**
 	 * Configure whether all arguments of the parameterized class that implement

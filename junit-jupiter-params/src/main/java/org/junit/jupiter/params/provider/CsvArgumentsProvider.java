@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
+import org.junit.jupiter.params.support.ParameterNameAndArgument;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -90,7 +91,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 			Object argument = resolveNullMarker(fields.get(i));
 			if (useHeadersInDisplayName) {
 				String header = resolveNullMarker(headers.get(i));
-				argument = asNamed(header + " = " + argument, argument);
+				argument = new ParameterNameAndArgument(String.valueOf(header), argument);
 			}
 			arguments[i] = argument;
 		}
@@ -105,10 +106,6 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	@SuppressWarnings({ "ReferenceEquality", "StringEquality" })
 	private static @Nullable String resolveNullMarker(String record) {
 		return record == CsvReaderFactory.DefaultFieldModifier.NULL_MARKER ? null : record;
-	}
-
-	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {
-		return Named.<@Nullable Object> of(name, column);
 	}
 
 	/**
