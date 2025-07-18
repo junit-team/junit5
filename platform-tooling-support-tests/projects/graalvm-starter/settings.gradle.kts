@@ -1,7 +1,7 @@
 pluginManagement {
 	plugins {
 		// TODO Remove custom config in build.gradle.kts when upgrading
-		id("org.graalvm.buildtools.native") version "0.11.0-SNAPSHOT"
+		id("org.graalvm.buildtools.native") version "0.11.0"
 	}
 	repositories {
 		mavenCentral()
