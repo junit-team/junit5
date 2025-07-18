@@ -8,7 +8,6 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 plugins {
 	`java-library`
 	eclipse
-	idea
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-parameters")
 	id("junitbuild.checkstyle-conventions")

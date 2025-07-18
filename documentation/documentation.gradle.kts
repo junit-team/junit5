@@ -548,10 +548,3 @@ eclipse {
 		plusConfigurations.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }
-
-idea {
-	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
-		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
-	}
-}

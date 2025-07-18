@@ -153,9 +153,3 @@ eclipse {
 		}
 	}
 }
-
-idea {
-	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
-	}
-}
