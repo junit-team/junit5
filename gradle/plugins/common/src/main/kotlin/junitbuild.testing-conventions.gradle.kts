@@ -200,7 +200,7 @@ dependencies {
 	testImplementation(dependencyFromLibs("testingAnnotations"))
 	testImplementation(project(":junit-jupiter"))
 
-	testRuntimeOnly(project(":junit-platform-engine"))
+	testRuntimeOnly(project(":junit-platform-launcher"))
 	testRuntimeOnly(project(":junit-platform-reporting"))
 
 	testRuntimeOnly(bundleFromLibs("log4j"))
