@@ -2,7 +2,6 @@ import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.GenerateStandaloneConsoleLauncherShadowedArtifactsFile
 import junitbuild.exec.RunConsoleLauncher
-import junitbuild.extensions.dependencyProject
 import junitbuild.extensions.isSnapshot
 import junitbuild.extensions.javaModuleName
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
@@ -539,12 +538,5 @@ tasks {
 		from(attestationClasspath)
 		into(layout.buildDirectory.dir("attestation"))
 		rename("(.*)-SNAPSHOT.jar", "$1-SNAPSHOT+${buildRevision.substring(0, 7)}.jar")
-	}
-}
-
-eclipse {
-	classpath {
-		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
-		plusConfigurations.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }

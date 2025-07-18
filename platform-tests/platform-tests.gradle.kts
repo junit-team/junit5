@@ -1,5 +1,4 @@
 import junitbuild.extensions.capitalized
-import junitbuild.extensions.dependencyProject
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.plugins.ide.eclipse.model.Classpath
@@ -140,9 +139,6 @@ tasks {
 }
 
 eclipse {
-	classpath {
-		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
-	}
 	classpath.file.whenMerged {
 		this as Classpath
 		entries.filterIsInstance<SourceFolder>().forEach {
