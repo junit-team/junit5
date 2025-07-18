@@ -28,27 +28,6 @@ tasks.test {
 }
 
 val initializeAtBuildTime = mapOf(
-	// These will be part of the next version of native-build-tools
-	// see https://github.com/graalvm/native-build-tools/pull/693
-	"5.13" to listOf(
-		"org.junit.jupiter.api.DisplayNameGenerator\$IndicativeSentences",
-		"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$ClassInfo",
-		"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$LifecycleMethods",
-		"org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor",
-		"org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor",
-		"org.junit.jupiter.engine.descriptor.DynamicDescendantFilter\$Mode",
-		"org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector\$1",
-		"org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor\$MethodInfo",
-		"org.junit.jupiter.engine.discovery.ClassSelectorResolver\$DummyClassTemplateInvocationContext",
-		"org.junit.platform.engine.support.store.NamespacedHierarchicalStore\$EvaluatedValue",
-		"org.junit.platform.launcher.core.DiscoveryIssueNotifier",
-		"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
-		"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo",
-		"org.junit.platform.launcher.core.LauncherPhase",
-		"org.junit.platform.suite.engine.DiscoverySelectorResolver",
-		"org.junit.platform.suite.engine.SuiteTestDescriptor\$DiscoveryIssueForwardingListener",
-		"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods",
-	),
 	// These need to be added to native-build-tools
 	"6.0" to listOf(
 		"org.junit.platform.commons.util.KotlinReflectionUtils",
