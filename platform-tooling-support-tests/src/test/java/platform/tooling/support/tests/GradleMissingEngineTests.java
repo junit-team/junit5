@@ -18,6 +18,7 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.reporting.testutil.FileUtils;
 import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
@@ -40,8 +41,11 @@ class GradleMissingEngineTests {
 				.redirectOutput(outputFiles).startAndWait();
 
 		assertEquals(1, result.exitCode());
-		assertThat(result.stdErr()) //
-				.contains("FAILURE: Build failed with an exception.") //
+		assertThat(result.stdErrLines()) //
+				.contains("FAILURE: Build failed with an exception.");
+
+		var htmlFile = FileUtils.findPath(workspace, "glob:**/build/reports/tests/test/classes/*.html");
+		assertThat(htmlFile).content() //
 				.contains("Cannot create Launcher without at least one TestEngine");
 	}
 }
