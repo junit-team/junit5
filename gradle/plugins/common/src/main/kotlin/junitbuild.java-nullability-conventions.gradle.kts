@@ -11,6 +11,14 @@ plugins {
 dependencies {
 	errorprone(dependencyFromLibs("errorProne-core"))
 	errorprone(dependencyFromLibs("nullaway"))
+	constraints {
+		errorprone("com.google.guava:guava") {
+			version {
+				require("33.4.8-jre")
+			}
+			because("Older versions use deprecated methods in sun.misc.Unsafe")
+		}
+	}
 }
 
 nullaway {
