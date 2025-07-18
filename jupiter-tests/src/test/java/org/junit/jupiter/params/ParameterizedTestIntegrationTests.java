@@ -525,14 +525,6 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				.hasNoSuppressedExceptions();
 	}
 
-	private EngineExecutionResults execute(Map<String, String> configurationParameters, Class<?> testClass,
-			String methodName, Class<?>... methodParameterTypes) {
-		return EngineTestKit.engine(new JupiterTestEngine()) //
-				.selectors(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes))) //
-				.configurationParameters(configurationParameters) //
-				.execute();
-	}
-
 	private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 		return execute(TestCase.class, methodName, methodParameterTypes);
 	}
