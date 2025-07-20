@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -71,8 +72,13 @@ class DefaultJupiterConfigurationTests {
 	void getDefaultTestInstanceLifecycleWithConfigParamSet() {
 		assertAll(//
 			() -> assertDefaultConfigParam(null, PER_METHOD), //
-			() -> assertDefaultConfigParam("", PER_METHOD), //
-			() -> assertDefaultConfigParam("bogus", PER_METHOD), //
+			() -> assertThatThrownBy(() -> getDefaultTestInstanceLifecycleConfigParam("")) //
+					.hasMessage("Invalid test instance lifecycle mode '' set via the '%s' configuration parameter.",
+						DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME), //
+			() -> assertThatThrownBy(() -> getDefaultTestInstanceLifecycleConfigParam("bogus")) //
+					.hasMessage(
+						"Invalid test instance lifecycle mode 'BOGUS' set via the '%s' configuration parameter.",
+						DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME), //
 			() -> assertDefaultConfigParam(PER_METHOD.name(), PER_METHOD), //
 			() -> assertDefaultConfigParam(PER_METHOD.name().toLowerCase(), PER_METHOD), //
 			() -> assertDefaultConfigParam("  " + PER_METHOD.name() + "  ", PER_METHOD), //
@@ -156,11 +162,15 @@ class DefaultJupiterConfigurationTests {
 	}
 
 	private void assertDefaultConfigParam(@Nullable String configValue, Lifecycle expected) {
+		var lifecycle = getDefaultTestInstanceLifecycleConfigParam(configValue);
+		assertThat(lifecycle).isEqualTo(expected);
+	}
+
+	private static Lifecycle getDefaultTestInstanceLifecycleConfigParam(@Nullable String configValue) {
 		ConfigurationParameters configParams = mock();
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
-		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams, dummyOutputDirectoryProvider(),
+		return new DefaultJupiterConfiguration(configParams, dummyOutputDirectoryProvider(),
 			mock()).getDefaultTestInstanceLifecycle();
-		assertThat(lifecycle).isEqualTo(expected);
 	}
 
 }

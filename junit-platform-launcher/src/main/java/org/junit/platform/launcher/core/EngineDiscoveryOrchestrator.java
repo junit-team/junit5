@@ -133,8 +133,8 @@ public class EngineDiscoveryOrchestrator {
 	private static boolean shouldReportDiscoveryIssues(LauncherDiscoveryRequest request,
 			Optional<LauncherPhase> phase) {
 		ConfigurationParameters configurationParameters = request.getConfigurationParameters();
-		return getDiscoveryIssueFailurePhase(configurationParameters).orElse(
-			phase.orElse(null)) == LauncherPhase.DISCOVERY;
+		return getDiscoveryIssueFailurePhase(configurationParameters) //
+				.orElse(phase.orElse(null)) == LauncherPhase.DISCOVERY;
 	}
 
 	private static void reportDiscoveryIssues(LauncherDiscoveryResult discoveryResult) {

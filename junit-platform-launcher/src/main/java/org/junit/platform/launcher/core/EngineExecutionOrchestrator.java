@@ -223,8 +223,8 @@ public class EngineExecutionOrchestrator {
 
 	private static boolean shouldReportDiscoveryIssues(LauncherDiscoveryResult discoveryResult) {
 		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
-		return getDiscoveryIssueFailurePhase(configurationParameters).orElse(
-			LauncherPhase.EXECUTION) == LauncherPhase.EXECUTION;
+		return getDiscoveryIssueFailurePhase(configurationParameters) //
+				.orElse(LauncherPhase.EXECUTION) == LauncherPhase.EXECUTION;
 	}
 
 	private ListenerRegistry<TestExecutionListener> buildListenerRegistryForExecution(

@@ -31,6 +31,10 @@ repository on GitHub.
   format used by the deprecated `Locale(String)` constructor.
 * Deprecate `getOrComputeIfAbsent(...)` methods in `NamespacedHierarchicalStore` in favor
   of the new `computeIfAbsent(...)` methods.
+* Setting an invalid value for one of the following enum-based configuration parameters
+  now causes test discovery to fail:
+  - `junit.platform.discovery.issue.failure.phase`
+  - `junit.platform.discovery.issue.severity.critical`
 
 [[release-notes-6.0.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -78,6 +82,15 @@ repository on GitHub.
   method.
 * Deprecate `getOrComputeIfAbsent(...)` methods in `ExtensionContext.Store` in favor of
   the new `computeIfAbsent(...)` methods.
+* Setting an invalid value for one of the following enum-based configuration parameters
+  now causes test discovery or execution to fail:
+  - `junit.jupiter.execution.parallel.mode.default`
+  - `junit.jupiter.execution.parallel.mode.classes.default`
+  - `junit.jupiter.execution.timeout.mode`
+  - `junit.jupiter.execution.timeout.thread.mode.default`
+  - `junit.jupiter.extensions.testinstantiation.extensioncontextscope.default`
+  - `junit.jupiter.tempdir.cleanup.mode.default`
+  - `junit.jupiter.testinstance.lifecycle.default`
 
 [[release-notes-6.0.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
