@@ -406,9 +406,8 @@ class ParameterizedInvocationNameFormatterTests {
 			var name1 = format(formatter, 1, arguments(new ParameterNameAndArgument("FRUIT", "apple"), 42));
 			var name2 = format(formatter, 2, arguments(new ParameterNameAndArgument("FRUCHT", "Banane"), 99));
 
-			// TODO Remove "fruit = " once #4783 has been fixed.
-			assertThat(name1).isEqualTo("[1] fruit = FRUIT = \"apple\", ranking = 42");
-			assertThat(name2).isEqualTo("[2] fruit = FRUCHT = \"Banane\", ranking = 99");
+			assertThat(name1).isEqualTo("[1] FRUIT = \"apple\", ranking = 42");
+			assertThat(name2).isEqualTo("[2] FRUCHT = \"Banane\", ranking = 99");
 		}
 
 	}

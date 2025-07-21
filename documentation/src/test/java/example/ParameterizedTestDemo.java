@@ -341,7 +341,7 @@ class ParameterizedTestDemo {
 		assertNotEquals(0, reference);
 	}
 
-	@ParameterizedTest(name = "[{index}] {arguments}")
+	@ParameterizedTest
 	@CsvFileSource(resources = "/two-column.csv", useHeadersInDisplayName = true)
 	void testWithCsvFileSourceAndHeaders(String country, int reference) {
 		assertNotNull(country);

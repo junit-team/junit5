@@ -35,7 +35,11 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* CSV headers are now properly supported with the default display name pattern and the
+  explicit `{argumentsWithNames}` display name pattern for parameterized tests that
+  utilize the `useHeadersInDisplayName` flag in `@CsvSource` and `@CsvFileSource`.
+  Specifically, the parameter name is no longer duplicated in the display name when a CSV
+  header is desired instead.
 
 [[release-notes-6.0.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

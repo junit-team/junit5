@@ -163,8 +163,8 @@ class ParameterizedInvocationNameFormatter {
 			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 
 		PartialFormatter argumentsWithNamesFormatter = new CachingByArgumentsLengthPartialFormatter(
-			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, declarationContext),
-				argumentMaxLength));
+			length -> new MessageFormatPartialFormatter(argumentsPattern(length), argumentMaxLength, true,
+				declarationContext.getResolverFacade()));
 
 		PartialFormatter argumentSetNameFormatter = new ArgumentSetNameFormatter(
 			declarationContext.getAnnotationName());
@@ -183,15 +183,6 @@ class ParameterizedInvocationNameFormatter {
 			formatterToUse.append(context, result);
 		});
 		return formatters;
-	}
-
-	private static String argumentsWithNamesPattern(int length, ParameterizedDeclarationContext<?> declarationContext) {
-		ResolverFacade resolverFacade = declarationContext.getResolverFacade();
-		return IntStream.range(0, length) //
-				.mapToObj(index -> resolverFacade.getParameterName(index)//
-						.map(name -> name + " = ").orElse("") //
-						+ "{" + index + "}") //
-				.collect(joining(", "));
 	}
 
 	private static String argumentsPattern(int length) {
@@ -238,10 +229,19 @@ class ParameterizedInvocationNameFormatter {
 
 		private final MessageFormat messageFormat;
 		private final int argumentMaxLength;
+		private final boolean generateNameValuePairs;
+		private final @Nullable ResolverFacade resolverFacade;
 
 		MessageFormatPartialFormatter(String pattern, int argumentMaxLength) {
+			this(pattern, argumentMaxLength, false, null);
+		}
+
+		MessageFormatPartialFormatter(String pattern, int argumentMaxLength, boolean generateNameValuePairs,
+				@Nullable ResolverFacade resolverFacade) {
 			this.messageFormat = new MessageFormat(pattern);
 			this.argumentMaxLength = argumentMaxLength;
+			this.generateNameValuePairs = generateNameValuePairs;
+			this.resolverFacade = resolverFacade;
 		}
 
 		// synchronized because MessageFormat is not thread-safe
@@ -262,8 +262,16 @@ class ParameterizedInvocationNameFormatter {
 					String prefix = "";
 
 					if (argument instanceof ParameterNameAndArgument parameterNameAndArgument) {
+						// This supports the useHeadersInDisplayName attributes in @CsvSource and @CsvFileSource.
 						prefix = parameterNameAndArgument.getName() + " = ";
 						argument = parameterNameAndArgument.getPayload();
+					}
+					else if (this.generateNameValuePairs && this.resolverFacade != null) {
+						Optional<String> parameterName = this.resolverFacade.getParameterName(i);
+						if (parameterName.isPresent()) {
+							// This supports the {argumentsWithNames} pattern.
+							prefix = parameterName.get() + " = ";
+						}
 					}
 
 					if (argument instanceof Character ch) {
