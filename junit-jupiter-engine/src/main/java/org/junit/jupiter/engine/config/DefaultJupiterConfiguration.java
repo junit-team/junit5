@@ -149,19 +149,19 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public ExecutionMode getDefaultExecutionMode() {
-		return executionModeConverter.get(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
+		return executionModeConverter.getOrDefault(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			ExecutionMode.SAME_THREAD);
 	}
 
 	@Override
 	public ExecutionMode getDefaultClassesExecutionMode() {
-		return executionModeConverter.get(configurationParameters, DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME,
-			getDefaultExecutionMode());
+		return executionModeConverter.getOrDefault(configurationParameters,
+			DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, getDefaultExecutionMode());
 	}
 
 	@Override
 	public Lifecycle getDefaultTestInstanceLifecycle() {
-		return lifecycleConverter.get(configurationParameters, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
+		return lifecycleConverter.getOrDefault(configurationParameters, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
 			Lifecycle.PER_METHOD);
 	}
 
@@ -189,7 +189,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public CleanupMode getDefaultTempDirCleanupMode() {
-		return cleanupModeConverter.get(configurationParameters, DEFAULT_CLEANUP_MODE_PROPERTY_NAME, ALWAYS);
+		return cleanupModeConverter.getOrDefault(configurationParameters, DEFAULT_CLEANUP_MODE_PROPERTY_NAME, ALWAYS);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@SuppressWarnings("deprecation")
 	@Override
 	public ExtensionContextScope getDefaultTestInstantiationExtensionContextScope() {
-		return extensionContextScopeConverter.get(configurationParameters,
+		return extensionContextScopeConverter.getOrDefault(configurationParameters,
 			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME, ExtensionContextScope.DEFAULT);
 	}
 

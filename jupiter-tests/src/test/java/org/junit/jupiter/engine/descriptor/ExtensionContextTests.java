@@ -34,7 +34,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
@@ -454,10 +453,14 @@ public class ExtensionContextTests {
 	@ParameterizedTest
 	@MethodSource("extensionContextFactories")
 	void configurationParameter(Function<JupiterConfiguration, ? extends ExtensionContext> extensionContextFactory) {
-		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(),
-			dummyOutputDirectoryProvider(), mock());
+
 		var key = "123";
 		var expected = Optional.of(key);
+
+		ConfigurationParameters configurationParameters = mock();
+		when(configurationParameters.get("123")).thenReturn(expected);
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(configurationParameters,
+			dummyOutputDirectoryProvider(), mock());
 
 		var context = extensionContextFactory.apply(echo);
 
@@ -552,25 +555,6 @@ public class ExtensionContextTests {
 
 		@Tag("method-tag")
 		void aMethod() {
-		}
-	}
-
-	private static class EchoParameters implements ConfigurationParameters {
-
-		@Override
-		public Optional<String> get(String key) {
-			return Optional.of(key);
-		}
-
-		@Override
-		public Optional<Boolean> getBoolean(String key) {
-			throw new UnsupportedOperationException("getBoolean(String) should not be called");
-		}
-
-		@Override
-		public Set<String> keySet() {
-			throw new UnsupportedOperationException("keySet() should not be called");
-
 		}
 	}
 

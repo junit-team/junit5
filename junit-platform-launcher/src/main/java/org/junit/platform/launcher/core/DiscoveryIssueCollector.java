@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jspecify.annotations.Nullable;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -52,10 +53,10 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryIssueCollector.class);
 
 	final List<DiscoveryIssue> issues = new ArrayList<>();
-	private final ConfigurationParameters configurationParameters;
+	private final Severity criticalSeverity;
 
 	DiscoveryIssueCollector(ConfigurationParameters configurationParameters) {
-		this.configurationParameters = configurationParameters;
+		this.criticalSeverity = getCriticalSeverity(configurationParameters);
 	}
 
 	@Override
@@ -136,24 +137,21 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		if (this.issues.isEmpty()) {
 			return DiscoveryIssueNotifier.NO_ISSUES;
 		}
-		return DiscoveryIssueNotifier.from(getCriticalSeverity(), this.issues);
+		return DiscoveryIssueNotifier.from(criticalSeverity, this.issues);
 	}
 
-	private Severity getCriticalSeverity() {
-		Severity defaultValue = Severity.ERROR;
-		return this.configurationParameters //
+	private static Severity getCriticalSeverity(ConfigurationParameters configurationParameters) {
+		return configurationParameters //
 				.get(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, value -> {
 					try {
 						return Severity.valueOf(value.toUpperCase(Locale.ROOT));
 					}
 					catch (Exception e) {
-						logger.warn(() -> """
-								Invalid DiscoveryIssue.Severity '%s' set via the '%s' configuration parameter. \
-								Falling back to the %s default value.""".formatted(value,
-							LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, defaultValue));
-						return defaultValue;
+						throw new JUnitException(
+							"Invalid DiscoveryIssue.Severity '%s' set via the '%s' configuration parameter.".formatted(
+								value, LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME));
 					}
 				}) //
-				.orElse(defaultValue);
+				.orElse(Severity.ERROR);
 	}
 }

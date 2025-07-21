@@ -905,8 +905,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void fallsBackToErrorSeverityIfCriticalSeverityIsConfiguredIncorrectly(
-			@TrackLogRecords LogRecordListener listener) {
+	void failsIfCriticalSeverityIsConfiguredIncorrectly() {
 
 		var engine = new TestEngineStub("engine-id") {
 			@Override
@@ -925,18 +924,12 @@ class DefaultLauncherTests {
 			}
 		};
 
-		var result = execute(engine, request -> request //
-				.configurationParameter(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, "wrong"));
+		var exception = assertThrows(JUnitException.class, () -> execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, "wrong")));
 
-		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.SUCCESSFUL);
-
-		var logRecord = listener.stream(DiscoveryIssueCollector.class, Level.WARNING) //
-				.findFirst() //
-				.orElseThrow();
-		assertThat(logRecord.getMessage()) //
-				.isEqualTo(
-					"Invalid DiscoveryIssue.Severity 'wrong' set via the '%s' configuration parameter. "
-							+ "Falling back to the ERROR default value.",
+		assertThat(exception) //
+				.hasRootCauseMessage(
+					"Invalid DiscoveryIssue.Severity 'wrong' set via the '%s' configuration parameter.",
 					LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME);
 	}
 
@@ -987,6 +980,19 @@ class DefaultLauncherTests {
 				.configurationParameter(LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, phase));
 
 		assertThat(listener.stream(DiscoveryIssueNotifier.class, Level.WARNING)).hasSize(1);
+	}
+
+	@Test
+	void failsDuringDiscoveryIfConfigurationParameterValueIsInvalid() {
+
+		var engine = new TestEngineStub("engine-id");
+
+		var exception = assertThrows(JUnitException.class, () -> execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, "wrong")));
+
+		assertThat(exception) //
+				.hasRootCauseMessage("Invalid LauncherPhase 'wrong' set via the '%s' configuration parameter.",
+					LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME);
 	}
 
 	@Test

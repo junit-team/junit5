@@ -17,8 +17,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
@@ -30,18 +29,15 @@ enum LauncherPhase {
 
 	DISCOVERY, EXECUTION;
 
-	private static final Logger logger = LoggerFactory.getLogger(LauncherPhase.class);
-
 	static Optional<LauncherPhase> getDiscoveryIssueFailurePhase(ConfigurationParameters configurationParameters) {
 		Function<String, @Nullable LauncherPhase> stringLauncherPhaseFunction = value -> {
 			try {
 				return LauncherPhase.valueOf(value.toUpperCase(Locale.ROOT));
 			}
 			catch (Exception e) {
-				logger.warn(
-					() -> "Ignoring invalid LauncherPhase '%s' set via the '%s' configuration parameter.".formatted(
-						value, DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME));
-				return null;
+				throw new JUnitException(
+					"Invalid LauncherPhase '%s' set via the '%s' configuration parameter.".formatted(value,
+						DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME));
 			}
 		};
 		return configurationParameters.get(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, stringLauncherPhaseFunction);
