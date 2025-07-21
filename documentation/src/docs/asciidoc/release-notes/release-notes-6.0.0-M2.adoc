@@ -41,7 +41,7 @@ repository on GitHub.
 
 * Introduce new `Launcher.execute({LauncherExecutionRequest})` API with corresponding
   `LauncherExecutionRequestBuilder` to enable the addition of parameters to test
-  executions without additional overloads of `execute`.
+  executions without additional overloads of `execute(...)`.
 * Introduce `LauncherDiscoveryRequestBuilder.forExecution()` method as a convenience
   method for constructing a `{LauncherExecutionRequest}` that contains a
   `{LauncherDiscoveryRequest}`.
@@ -54,7 +54,7 @@ repository on GitHub.
   now causes test execution to be cancelled after the first failed test.
 * Provide cancellation support for implementations of `{HierarchicalTestEngine}` such as
   JUnit Jupiter, Spock, and Cucumber.
-* Provide cancellation support for the Suite and Vintage test engines
+* Provide cancellation support for the `@Suite` test engine.
 * Introduce `TestTask.getTestDescriptor()` method for use in
   `HierarchicalTestExecutorService` implementations.
 * Introduce `computeIfAbsent(...)` methods in `NamespacedHierarchicalStore` to simplify
@@ -72,11 +72,11 @@ repository on GitHub.
 [[release-notes-6.0.0-M2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* Change return type of `provideTestTemplateInvocationContexts(ExtensionContext)` method
-  of the `TestTemplateInvocationContextProvider` interface from
+* Change the return type of the `provideTestTemplateInvocationContexts(ExtensionContext)`
+  method in the `TestTemplateInvocationContextProvider` interface from
   `Stream<TestTemplateInvocationContext>` to
   `Stream<? extends TestTemplateInvocationContext>`.
-* Remove support for `junit.jupiter.params.arguments.conversion.locale.format`
+* Remove support for the `junit.jupiter.params.arguments.conversion.locale.format`
   configuration parameter. `Locale` conversions are now always performed using the IETF
   BCP 47 language tag format supported by the `Locale.forLanguageTag(String)` factory
   method.
@@ -100,7 +100,7 @@ repository on GitHub.
   `fruit&nbsp;=&nbsp;apple` instead of `fruit=apple`.
 * Reason strings supplied to `ConditionEvaluationResult` APIs are now officially declared
   as `@Nullable`.
-* Introduce `computeIfAbsent(...)` methods in `ExtensionContext.Store` to ease simplify
+* Introduce `computeIfAbsent(...)` methods in `ExtensionContext.Store` to simplify working
   with non-nullable types.
 
 
@@ -120,4 +120,4 @@ repository on GitHub.
 [[release-notes-6.0.0-M2-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Provide cancellation support for the Vintage test engine.
