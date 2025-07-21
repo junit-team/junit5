@@ -1,9 +1,9 @@
 [[release-notes-5.13.4]]
 == 5.13.4
 
-*Date of Release:* ❓
+*Date of Release:* July 21, 2025
 
-*Scope:* ❓
+*Scope:* Bug fixes and enhancements since 5.13.3
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/101?closed=1+[5.13.4] milestone page in the JUnit
@@ -31,29 +31,9 @@ repository on GitHub.
 * `PackageSource.from(String)` now allows to be constructed with an empty string to
   indicate the default package.
 
-[[release-notes-5.13.4-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.4-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.13.4-junit-jupiter]]
 === JUnit Jupiter
-
-[[release-notes-5.13.4-junit-jupiter-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.4-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
 
 [[release-notes-5.13.4-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -65,17 +45,4 @@ repository on GitHub.
 [[release-notes-5.13.4-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.13.4-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.4-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.4-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
