@@ -187,8 +187,9 @@ class ParameterizedInvocationNameFormatter {
 	private static String argumentsWithNamesPattern(int length, ParameterizedDeclarationContext<?> declarationContext) {
 		ResolverFacade resolverFacade = declarationContext.getResolverFacade();
 		return IntStream.range(0, length) //
-				.mapToObj(index -> resolverFacade.getParameterName(index).map(name -> name + "=").orElse("") + "{"
-						+ index + "}") //
+				.mapToObj(index -> resolverFacade.getParameterName(index)//
+						.map(name -> name + " = ").orElse("") //
+						+ "{" + index + "}") //
 				.collect(joining(", "));
 	}
 

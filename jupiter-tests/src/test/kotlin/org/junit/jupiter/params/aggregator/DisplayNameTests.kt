@@ -35,6 +35,6 @@ object DisplayNameTests {
         number: Int,
         info: TestInfo
     ) {
-        assertEquals("[$number] char=$char, number=$number", info.displayName)
+        assertEquals("[$number] char = $char, number = $number", info.displayName)
     }
 }

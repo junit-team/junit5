@@ -258,16 +258,16 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		var results = execute("testWithTwoSingleStringArgumentsProvider", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+				.haveExactly(1, event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
 	void executesWithCsvSource() {
 		var results = execute("testWithCsvSource", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+				.haveExactly(1, event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
@@ -295,8 +295,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	void executesWithPrimitiveWideningConversion() {
 		var results = execute("testWithPrimitiveWideningConversion", double.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] num=1"), finishedWithFailure(message("num: 1.0")))) //
-				.haveExactly(1, event(test(), displayName("[2] num=2"), finishedWithFailure(message("num: 2.0"))));
+				.haveExactly(1, event(test(), displayName("[1] num = 1"), finishedWithFailure(message("num: 1.0")))) //
+				.haveExactly(1, event(test(), displayName("[2] num = 2"), finishedWithFailure(message("num: 2.0"))));
 	}
 
 	/**
@@ -306,8 +306,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	void executesWithImplicitGenericConverter() {
 		var results = execute("testWithImplicitGenericConverter", Book.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] book=book 1"), finishedWithFailure(message("book 1")))) //
-				.haveExactly(1, event(test(), displayName("[2] book=book 2"), finishedWithFailure(message("book 2"))));
+				.haveExactly(1, event(test(), displayName("[1] book = book 1"), finishedWithFailure(message("book 1")))) //
+				.haveExactly(1,
+					event(test(), displayName("[2] book = book 2"), finishedWithFailure(message("book 2"))));
 	}
 
 	@Test
@@ -327,9 +328,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	void executesWithExplicitConverter() {
 		var results = execute("testWithExplicitConverter", int.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] length=O"), finishedWithFailure(message("length: 1")))) //
+				.haveExactly(1, event(test(), displayName("[1] length = O"), finishedWithFailure(message("length: 1")))) //
 				.haveExactly(1,
-					event(test(), displayName("[2] length=XXX"), finishedWithFailure(message("length: 3"))));
+					event(test(), displayName("[2] length = XXX"), finishedWithFailure(message("length: 3"))));
 	}
 
 	@Test
@@ -403,9 +404,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		var results = executeTestsForClass(LifecycleTestCase.class);
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1,
-					event(test("test1"), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					event(test("test1"), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1,
-					event(test("test1"), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+					event(test("test1"), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 
 		List<String> testMethods = new ArrayList<>(LifecycleTestCase.testMethods);
 
@@ -413,23 +414,23 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase",
 				"providerMethod",
-				"constructor:[1] argument=foo",
-					"beforeEach:[1] argument=foo",
-						testMethods.get(0) + ":[1] argument=foo",
-					"afterEach:[1] argument=foo",
-					"constructor:[2] argument=bar",
-					"beforeEach:[2] argument=bar",
-						testMethods.get(0) + ":[2] argument=bar",
-					"afterEach:[2] argument=bar",
+				"constructor:[1] argument = foo",
+					"beforeEach:[1] argument = foo",
+						testMethods.get(0) + ":[1] argument = foo",
+					"afterEach:[1] argument = foo",
+					"constructor:[2] argument = bar",
+					"beforeEach:[2] argument = bar",
+						testMethods.get(0) + ":[2] argument = bar",
+					"afterEach:[2] argument = bar",
 				"providerMethod",
-					"constructor:[1] argument=foo",
-					"beforeEach:[1] argument=foo",
-						testMethods.get(1) + ":[1] argument=foo",
-					"afterEach:[1] argument=foo",
-					"constructor:[2] argument=bar",
-					"beforeEach:[2] argument=bar",
-						testMethods.get(1) + ":[2] argument=bar",
-					"afterEach:[2] argument=bar",
+					"constructor:[1] argument = foo",
+					"beforeEach:[1] argument = foo",
+						testMethods.get(1) + ":[1] argument = foo",
+					"afterEach:[1] argument = foo",
+					"constructor:[2] argument = bar",
+					"beforeEach:[2] argument = bar",
+						testMethods.get(1) + ":[2] argument = bar",
+					"afterEach:[2] argument = bar",
 			"afterAll:ParameterizedTestIntegrationTests$LifecycleTestCase");
 		// @formatter:on
 	}
@@ -441,8 +442,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //
-				.haveExactly(1, event(displayName("[1] argument=f…"), started())) //
-				.haveExactly(1, event(displayName("[2] argument=b…"), started()));
+				.haveExactly(1, event(displayName("[1] argument = f…"), started())) //
+				.haveExactly(1, event(displayName("[2] argument = b…"), started()));
 	}
 
 	@Test
@@ -543,21 +544,21 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithNullSourceForString() {
 			var results = execute("testWithNullSourceForString", String.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument = null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForStringAndTestInfo() {
 			var results = execute("testWithNullSourceForStringAndTestInfo", String.class, TestInfo.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument = null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForNumber() {
 			var results = execute("testWithNullSourceForNumber", Number.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument = null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
@@ -574,7 +575,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void failsWithNullSourceForPrimitive() {
 			var results = execute("testWithNullSourceForPrimitive", int.class);
-			results.testEvents().failed().assertEventsMatchExactly(event(test(), displayName("[1] argument=null"),
+			results.testEvents().failed().assertEventsMatchExactly(event(test(), displayName("[1] argument = null"),
 				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
 					"Error converting parameter at index 0: Cannot convert null to primitive value of type int"))));
 		}
@@ -595,13 +596,13 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void executesWithEmptySourceForString() {
 			var results = execute("testWithEmptySourceForString", String.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = ")));
 		}
 
 		@Test
 		void executesWithEmptySourceForStringAndTestInfo() {
 			var results = execute("testWithEmptySourceForStringAndTestInfo", String.class, TestInfo.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = ")));
 		}
 
 		/**
@@ -610,13 +611,13 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void executesWithEmptySourceForCollection() {
 			var results = execute("testWithEmptySourceForCollection", Collection.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForList() {
 			var results = execute("testWithEmptySourceForList", List.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		/**
@@ -629,13 +630,13 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				""")
 		void executesWithEmptySourceForListSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForSet() {
 			var results = execute("testWithEmptySourceForSet", Set.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		/**
@@ -651,13 +652,13 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				""")
 		void executesWithEmptySourceForSetSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForMap() {
 			var results = execute("testWithEmptySourceForMap", Map.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = {}")));
 		}
 
 		/**
@@ -673,31 +674,31 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				""")
 		void executesWithEmptySourceForMapSubtype(String methodName, Class<?> parameterType) {
 			var results = execute(methodName, parameterType);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = {}")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalPrimitiveArray", int[].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalStringArray", String[].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalPrimitiveArray", int[][].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalStringArray", String[][].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument = []")));
 		}
 
 		@Test
@@ -782,15 +783,15 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 		private void assertNullAndEmptyString(EngineExecutionResults results) {
 			results.testEvents().succeeded().assertEventsMatchExactly(//
-				event(test(), displayName("[1] argument=null")), //
-				event(test(), displayName("[2] argument="))//
+				event(test(), displayName("[1] argument = null")), //
+				event(test(), displayName("[2] argument = "))//
 			);
 		}
 
 		private void assertNullAndEmpty(EngineExecutionResults results) {
 			results.testEvents().succeeded().assertEventsMatchExactly(//
-				event(test(), displayName("[1] argument=null")), //
-				event(test(), displayName("[2] argument=[]"))//
+				event(test(), displayName("[1] argument = null")), //
+				event(test(), displayName("[2] argument = []"))//
 			);
 		}
 
@@ -1118,45 +1119,50 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithArgumentsSourceProvidingUnusedArguments() {
 			var results = execute("testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithCsvSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvSourceContainingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithCsvFileSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvFileSourceContainingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithMethodSourceProvidingUnusedArguments() {
 			var results = execute("testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithFieldSourceProvidingUnusedArguments() {
 			var results = execute("testWithFieldSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -1203,7 +1209,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 					.haveExactly(1, event(finishedWithFailure(message(
 						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]".formatted())))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
@@ -1212,7 +1218,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				"testWithNoneArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
-						event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo"))));
 		}
 
 		@Test
@@ -1220,8 +1226,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, RepeatableSourcesTestCase.class,
 				"testWithRepeatableCsvSource", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+					.haveExactly(1, event(test(), displayName("[1] argument = a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument = b"), finishedWithFailure(message("b"))));
 		}
 
 		@Test
@@ -1253,9 +1259,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithRepeatableCsvFileSource(String methodName) {
 			var results = execute(methodName, String.class, String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1,
-						event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
-					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"),
+					.haveExactly(1, event(test(), displayName("[1] column1 = foo, column2 = 1"),
+						finishedWithFailure(message("foo 1")))) //
+					.haveExactly(1, event(test(), displayName("[5] column1 = FRUIT = apple, column2 = RANK = 1"),
 						finishedWithFailure(message("apple 1"))));
 		}
 
@@ -1264,8 +1270,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithRepeatableCsvSource(String methodName) {
 			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+					.haveExactly(1, event(test(), displayName("[1] argument = a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument = b"), finishedWithFailure(message("b"))));
 		}
 
 		@ParameterizedTest
@@ -1274,9 +1280,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
-						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+						event(test(), displayName("[1] argument = some"), finishedWithFailure(message("some")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
+						event(test(), displayName("[2] argument = other"), finishedWithFailure(message("other"))));
 		}
 
 		@ParameterizedTest
@@ -1284,9 +1290,10 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithRepeatableEnumSource(String methodName) {
 			var results = execute(methodName, Action.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=FOO"), finishedWithFailure(message("FOO")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=BAR"), finishedWithFailure(message("BAR"))));
+						event(test(), displayName("[1] argument = FOO"), finishedWithFailure(message("FOO")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = BAR"), finishedWithFailure(message("BAR"))));
 		}
 
 		@ParameterizedTest
@@ -1294,9 +1301,10 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithRepeatableValueSource(String methodName) {
 			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@ParameterizedTest
@@ -1305,9 +1313,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
-						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+						event(test(), displayName("[1] argument = some"), finishedWithFailure(message("some")))) //
 					.haveExactly(1,
-						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
+						event(test(), displayName("[2] argument = other"), finishedWithFailure(message("other"))));
 		}
 
 		@ParameterizedTest
@@ -1316,11 +1324,14 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithRepeatableArgumentsSource(String methodName) {
 			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar")))) //
-					.haveExactly(1, event(test(), displayName("[3] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
-						event(test(), displayName("[4] argument=bar"), finishedWithFailure(message("bar"))));
+						event(test(), displayName("[1] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar")))) //
+					.haveExactly(1,
+						event(test(), displayName("[3] argument = foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[4] argument = bar"), finishedWithFailure(message("bar"))));
 
 		}
 
@@ -1336,10 +1347,10 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void executesWithDifferentRepeatableAnnotations() {
 			var results = execute("testWithDifferentRepeatableAnnotations", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b")))) //
-					.haveExactly(1, event(test(), displayName("[3] argument=c"), finishedWithFailure(message("c")))) //
-					.haveExactly(1, event(test(), displayName("[4] argument=d"), finishedWithFailure(message("d"))));
+					.haveExactly(1, event(test(), displayName("[1] argument = a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument = b"), finishedWithFailure(message("b")))) //
+					.haveExactly(1, event(test(), displayName("[3] argument = c"), finishedWithFailure(message("c")))) //
+					.haveExactly(1, event(test(), displayName("[4] argument = d"), finishedWithFailure(message("d"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -1383,8 +1394,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(2, event(test(), finishedWithFailure())) //
-				.haveExactly(1, event(test(), displayName("[2] argument=3"), finishedWithFailure())) //
-				.haveExactly(1, event(test(), displayName("[3] argument=5"), finishedWithFailure()));
+				.haveExactly(1, event(test(), displayName("[2] argument = 3"), finishedWithFailure())) //
+				.haveExactly(1, event(test(), displayName("[3] argument = 5"), finishedWithFailure()));
 	}
 
 	@Nested

@@ -1242,26 +1242,26 @@ Executing the above test class yields the following output:
 
 ....
 FruitTests ✔
-├─ [1] fruit=apple ✔
+├─ [1] fruit = apple ✔
 │  └─ QuantityTests ✔
-│     ├─ [1] quantity=23 ✔
+│     ├─ [1] quantity = 23 ✔
 │     │  └─ test(Duration) ✔
-│     │     ├─ [1] duration=PT1H ✔
-│     │     └─ [2] duration=PT2H ✔
-│     └─ [2] quantity=42 ✔
+│     │     ├─ [1] duration = PT1H ✔
+│     │     └─ [2] duration = PT2H ✔
+│     └─ [2] quantity = 42 ✔
 │        └─ test(Duration) ✔
-│           ├─ [1] duration=PT1H ✔
-│           └─ [2] duration=PT2H ✔
-└─ [2] fruit=banana ✔
+│           ├─ [1] duration = PT1H ✔
+│           └─ [2] duration = PT2H ✔
+└─ [2] fruit = banana ✔
    └─ QuantityTests ✔
-      ├─ [1] quantity=23 ✔
+      ├─ [1] quantity = 23 ✔
       │  └─ test(Duration) ✔
-      │     ├─ [1] duration=PT1H ✔
-      │     └─ [2] duration=PT2H ✔
-      └─ [2] quantity=42 ✔
+      │     ├─ [1] duration = PT1H ✔
+      │     └─ [2] duration = PT2H ✔
+      └─ [2] quantity = 42 ✔
          └─ test(Duration) ✔
-            ├─ [1] duration=PT1H ✔
-            └─ [2] duration=PT2H ✔
+            ├─ [1] duration = PT1H ✔
+            └─ [2] duration = PT2H ✔
 ....
 
 [[writing-tests-dependency-injection]]
@@ -1649,9 +1649,9 @@ following.
 
 ....
 palindromes(String) ✔
-├─ [1] candidate=racecar ✔
-├─ [2] candidate=radar ✔
-└─ [3] candidate=able was I ere I saw elba ✔
+├─ [1] candidate = racecar ✔
+├─ [2] candidate = radar ✔
+└─ [3] candidate = able was I ere I saw elba ✔
 ....
 
 The same `@ValueSource` annotation can be used to specify the source of arguments for a
@@ -1668,13 +1668,13 @@ following.
 
 ....
 PalindromeTests ✔
-├─ [1] candidate=racecar ✔
+├─ [1] candidate = racecar ✔
 │  ├─ palindrome() ✔
 │  └─ reversePalindrome() ✔
-├─ [2] candidate=radar ✔
+├─ [2] candidate = radar ✔
 │  ├─ palindrome() ✔
 │  └─ reversePalindrome() ✔
-└─ [3] candidate=able was I ere I saw elba ✔
+└─ [3] candidate = able was I ere I saw elba ✔
    ├─ palindrome() ✔
    └─ reversePalindrome() ✔
 ....
@@ -2332,10 +2332,10 @@ The following listing shows the generated display names for the first two parame
 test methods above.
 
 ----
-[1] country=Sweden, reference=1
-[2] country=Poland, reference=2
-[3] country=United States of America, reference=3
-[4] country=France, reference=700_000
+[1] country = Sweden, reference = 1
+[2] country = Poland, reference = 2
+[3] country = United States of America, reference = 3
+[4] country = France, reference = 700_000
 ----
 
 The following listing shows the generated display names for the last parameterized test

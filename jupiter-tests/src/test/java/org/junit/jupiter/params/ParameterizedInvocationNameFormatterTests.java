@@ -140,7 +140,7 @@ class ParameterizedInvocationNameFormatterTests {
 		var formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
 		var formattedName = format(formatter, 1, arguments(42, "enigma", new Object[] { "foo", 1 }));
-		assertEquals("someNumber=42, someString=enigma, someArray=[foo, 1]", formattedName);
+		assertEquals("someNumber = 42, someString = enigma, someArray = [foo, 1]", formattedName);
 	}
 
 	@Test
@@ -149,7 +149,7 @@ class ParameterizedInvocationNameFormatterTests {
 		var formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
 		var formattedName = format(formatter, 1, arguments(42, "foo", "bar"));
-		assertEquals("someNumber=42, foo, bar", formattedName);
+		assertEquals("someNumber = 42, foo, bar", formattedName);
 	}
 
 	@Test
@@ -318,7 +318,7 @@ class ParameterizedInvocationNameFormatterTests {
 			var name2 = format(formatter, 2, arguments("apple", "banana"));
 
 			assertThat(name1).isEqualTo("[1] Mixed Arguments Types :: Fruits");
-			assertThat(name2).isEqualTo("[2] Mixed Arguments Types :: fruit1=apple, fruit2=banana");
+			assertThat(name2).isEqualTo("[2] Mixed Arguments Types :: fruit1 = apple, fruit2 = banana");
 		}
 
 	}
