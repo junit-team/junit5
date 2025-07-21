@@ -66,9 +66,9 @@ class TimeoutConfigurationTests {
 
 	@ParameterizedTest
 	@CsvSource(textBlock = """
-			enabled,           false
-			disabled,          true
-			disabled_on_debug, false
+			Enabled,           false
+			Disabled,          true
+			Disabled_ON_debug, false
 			""")
 	void disabledBasedOnTimeoutMode(String timeoutMode, boolean disabled) {
 		when(extensionContext.getConfigurationParameter(eq(TIMEOUT_MODE_PROPERTY_NAME), any())) //
@@ -77,7 +77,7 @@ class TimeoutConfigurationTests {
 		config = new TimeoutConfiguration(extensionContext);
 
 		assertThat(config.isTimeoutDisabled()) //
-				.isEqualTo("disabled_on_debug".equals(timeoutMode) ? RuntimeUtils.isDebugMode() : disabled);
+				.isEqualTo("disabled_on_debug".equalsIgnoreCase(timeoutMode) ? RuntimeUtils.isDebugMode() : disabled);
 	}
 
 	@Test
@@ -183,7 +183,7 @@ class TimeoutConfigurationTests {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Answer<Object> callConverter(String value) {
+	private static Answer<?> callConverter(String value) {
 		return invocation -> Optional.ofNullable(invocation.getArgument(1, Function.class).apply(value));
 	}
 }
