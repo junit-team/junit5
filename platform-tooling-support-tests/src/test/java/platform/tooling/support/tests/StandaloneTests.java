@@ -430,6 +430,7 @@ class StandaloneTests {
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
+				.addArguments("-Duser.language=en", "-Duser.country=US") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--scan-class-path") //
@@ -463,6 +464,7 @@ class StandaloneTests {
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
+				.addArguments("-Duser.language=en", "-Duser.country=US") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--select-package", Projects.STANDALONE) //
