@@ -22,11 +22,11 @@ class StringToClassConverter implements Converter<String, Class<?>> {
 	}
 
 	@Override
-	public @Nullable Class<?> convert(@Nullable String className, ConversionContext context) {
+	public Class<?> convert(@Nullable String className, ConversionContext context) {
 		Preconditions.notNull(className, "className cannot be null");
 		// @formatter:off
 		return ReflectionSupport.tryToLoadClass(className, context.classLoader())
-				.getOrThrow(cause -> new ConversionException(
+				.getNonNullOrThrow(cause -> new ConversionException(
 						"Failed to convert String \"" + className + "\" to type java.lang.Class", cause));
 		// @formatter:on
 	}
