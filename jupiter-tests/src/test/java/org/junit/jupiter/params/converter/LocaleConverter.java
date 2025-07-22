@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.conversion.TypedConverter;
 
 // FIXME move to ConversionSupportIntegrationTests
-public class LocaleConverter extends TypedConverter<String, Locale> {
+public class LocaleConverter extends TypedConverter<String, @Nullable Locale> {
 
 	public LocaleConverter() {
 		super(String.class, Locale.class);

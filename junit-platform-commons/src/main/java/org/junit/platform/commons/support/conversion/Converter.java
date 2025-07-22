@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  * @see TypedConverter
  */
 @API(status = EXPERIMENTAL, since = "6.0")
-public interface Converter<S, T> {
+public interface Converter<S, T extends @Nullable Object> {
 
 	/**
 	 * Determine if the supplied conversion context is supported.
@@ -59,7 +59,6 @@ public interface Converter<S, T> {
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
-	@Nullable
 	T convert(@Nullable S source, ConversionContext context) throws ConversionException;
 
 }

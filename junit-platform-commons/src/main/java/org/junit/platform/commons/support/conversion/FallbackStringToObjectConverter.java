@@ -52,7 +52,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 1.11
  * @see ConversionSupport
  */
-class FallbackStringToObjectConverter extends StringToTargetTypeConverter<Object> {
+class FallbackStringToObjectConverter extends StringToTargetTypeConverter<@Nullable Object> {
 
 	/**
 	 * Implementation of the NULL Object Pattern.

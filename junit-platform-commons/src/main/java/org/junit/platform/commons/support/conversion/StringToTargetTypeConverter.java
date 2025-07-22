@@ -17,7 +17,7 @@ import org.junit.platform.commons.util.Preconditions;
  * Internal API for converting arguments of type {@link String} to a specified
  * target type.
  */
-abstract class StringToTargetTypeConverter<T> implements Converter<String, T> {
+abstract class StringToTargetTypeConverter<T extends @Nullable Object> implements Converter<String, T> {
 
 	@Override
 	public final boolean canConvert(ConversionContext context) {
@@ -31,7 +31,7 @@ abstract class StringToTargetTypeConverter<T> implements Converter<String, T> {
 	abstract boolean canConvert(Class<?> targetType);
 
 	@Override
-	public final @Nullable T convert(@Nullable String source, ConversionContext context) {
+	public final T convert(@Nullable String source, ConversionContext context) {
 		Preconditions.notNull(source, "source cannot be null");
 		return convert(source, context.targetType().getType());
 	}
@@ -42,6 +42,6 @@ abstract class StringToTargetTypeConverter<T> implements Converter<String, T> {
 	 * <p>This method will only be invoked if {@link #canConvert(Class)}
 	 * returned {@code true} for the same target type.
 	 */
-	abstract @Nullable T convert(String source, Class<?> targetType);
+	abstract T convert(String source, Class<?> targetType);
 
 }

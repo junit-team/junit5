@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 6.0
  */
 @API(status = EXPERIMENTAL, since = "6.0")
-public abstract class TypedConverter<S, T> implements Converter<S, T> {
+public abstract class TypedConverter<S, T extends @Nullable Object> implements Converter<S, T> {
 
 	private final Class<S> sourceType;
 	private final Class<T> targetType;
@@ -45,12 +45,13 @@ public abstract class TypedConverter<S, T> implements Converter<S, T> {
 
 	@Override
 	public final boolean canConvert(ConversionContext context) {
+		// FIXME TypeDescriptor.NONE handling?
 		// FIXME add test cases with subtypes
 		return this.sourceType == context.sourceType().getType() && this.targetType == context.targetType().getType();
 	}
 
 	@Override
-	public final @Nullable T convert(@Nullable S source, ConversionContext context) {
+	public final T convert(@Nullable S source, ConversionContext context) {
 		return convert(source);
 	}
 
@@ -63,6 +64,6 @@ public abstract class TypedConverter<S, T> implements Converter<S, T> {
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
-	protected abstract @Nullable T convert(@Nullable S source) throws ConversionException;
+	protected abstract T convert(@Nullable S source) throws ConversionException;
 
 }

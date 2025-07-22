@@ -44,7 +44,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  * @since 6.0
  */
 @API(status = INTERNAL, since = "6.0")
-public class DefaultConverter implements Converter<String, Object> {
+public class DefaultConverter implements Converter<String, @Nullable Object> {
 
 	static final DefaultConverter INSTANCE = new DefaultConverter();
 
