@@ -104,9 +104,10 @@ public final class ReflectionSupport {
 	 *
 	 * @param classpathResourceName the name of the resource to load; never
 	 * {@code null} or blank
-	 * @return a successful {@code Try} containing the loaded resources or a failed
-	 * {@code Try} containing the exception if no such resources could be loaded;
-	 * never {@code null}
+	 * @return a successful {@code Try} containing the set of loaded resources
+	 * (potentially empty) or a failed {@code Try} containing the exception in
+	 * case a failure occurred while trying to list resources; never
+	 * {@code null}
 	 * @since 1.12
 	 * @see #tryToGetResources(String, ClassLoader)
 	 */
@@ -128,9 +129,10 @@ public final class ReflectionSupport {
 	 * @param classpathResourceName the name of the resource to load; never
 	 * {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @return a successful {@code Try} containing the loaded resources or a failed
-	 * {@code Try} containing the exception if no such resources could be loaded;
-	 * never {@code null}
+	 * @return a successful {@code Try} containing the set of loaded resources
+	 * (potentially empty) or a failed {@code Try} containing the exception in
+	 * case a failure occurred while trying to list resources; never
+	 * {@code null}
 	 * @since 1.12
 	 * @see #tryToGetResources(String)
 	 */
