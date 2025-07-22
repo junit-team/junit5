@@ -184,7 +184,6 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 		implementation(testFixtures(projects.junitPlatformReporting))
 		implementation(libs.snapshotTests.junit5)
 		implementation(libs.snapshotTests.xml)
-
 	}
 
 	targets {
