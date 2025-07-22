@@ -97,7 +97,7 @@ repository on GitHub.
 
 * Display names for `@ParameterizedClass` and `@ParameterizedTest` now consistently style
   name-value pairs for arguments using `name = value` formatting – for example,
-  `fruit&nbsp;=&nbsp;apple` instead of `fruit=apple`.
+  `fruit{nbsp}={nbsp}apple` instead of `fruit=apple`.
 * Reason strings supplied to `ConditionEvaluationResult` APIs are now officially declared
   as `@Nullable`.
 * Introduce `computeIfAbsent(...)` methods in `ExtensionContext.Store` to simplify working
