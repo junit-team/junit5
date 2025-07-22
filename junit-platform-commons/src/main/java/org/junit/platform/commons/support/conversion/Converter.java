@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * instances may potentially be cached and called from different threads, they
  * should be thread-safe.
  *
- * <p>Extend {@link TypedConverter} if your implementation always converts
+ * <p>Extend {@link SimpleConverter} if your implementation always converts
  * from a given source type into a given target type and does not need access to
  * the {@link ClassLoader} to perform the conversion.
  *
@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @since 6.0
  * @see ConversionSupport
- * @see TypedConverter
+ * @see SimpleConverter
  */
 @API(status = EXPERIMENTAL, since = "6.0")
 public interface Converter<S, T extends @Nullable Object> {

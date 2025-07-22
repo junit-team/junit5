@@ -12,19 +12,18 @@ package org.junit.jupiter.params.converter;
 
 import java.util.Locale;
 
-import org.jspecify.annotations.Nullable;
-import org.junit.platform.commons.support.conversion.TypedConverter;
+import org.junit.platform.commons.support.conversion.SimpleConverter;
 
 // FIXME move to ConversionSupportIntegrationTests
-public class LocaleConverter extends TypedConverter<String, @Nullable Locale> {
+public class LocaleConverter extends SimpleConverter<String, Locale> {
 
 	public LocaleConverter() {
 		super(String.class, Locale.class);
 	}
 
 	@Override
-	protected @Nullable Locale convert(@Nullable String source) {
-		return source != null ? Locale.forLanguageTag(source) : null;
+	protected Locale convert(String source) {
+		return Locale.forLanguageTag(source);
 	}
 
 }
