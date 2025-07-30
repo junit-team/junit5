@@ -11,7 +11,6 @@
 package org.junit.jupiter.params;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
@@ -30,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -47,6 +46,12 @@ import org.junit.platform.commons.util.StringUtils;
  * @since 5.0
  */
 class ParameterizedInvocationNameFormatter {
+
+	/**
+	 * Global cache for {arguments} pattern strings, keyed by the number of arguments.
+	 * @since 6.0
+	 */
+	private static final Map<Integer, String> argumentsPatternCache = new ConcurrentHashMap<>(8);
 
 	static final String DEFAULT_DISPLAY_NAME = "{default_display_name}";
 	static final String DEFAULT_DISPLAY_NAME_PATTERN = "[" + INDEX_PLACEHOLDER + "] "
@@ -186,9 +191,14 @@ class ParameterizedInvocationNameFormatter {
 	}
 
 	private static String argumentsPattern(int length) {
-		return IntStream.range(0, length) //
-				.mapToObj(index -> "{" + index + "}") //
-				.collect(joining(", "));
+		return argumentsPatternCache.computeIfAbsent(length, //
+			key -> {
+				StringJoiner sj = new StringJoiner(", ");
+				for (int i = 0; i < length; i++) {
+					sj.add("{" + i + "}");
+				}
+				return sj.toString();
+			});
 	}
 
 	private record PlaceholderPosition(int index, String placeholder) {
