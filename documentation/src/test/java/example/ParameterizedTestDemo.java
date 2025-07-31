@@ -314,10 +314,10 @@ class ParameterizedTestDemo {
 	// tag::CsvSource_example[]
 	@ParameterizedTest
 	@CsvSource({
-		"apple,		 1",
-		"banana,		2",
+		"apple,         1",
+		"banana,        2",
 		"'lemon, lime', 0xF1",
-		"strawberry,	700_000"
+		"strawberry,    700_000"
 	})
 	void testWithCsvSource(String fruit, int rank) {
 		assertNotNull(fruit);
