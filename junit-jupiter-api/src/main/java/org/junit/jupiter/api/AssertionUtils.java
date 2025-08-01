@@ -64,11 +64,11 @@ class AssertionUtils {
 	static String getCanonicalName(Class<?> clazz) {
 		try {
 			String canonicalName = clazz.getCanonicalName();
-			return (canonicalName != null ? canonicalName : clazz.getName());
+			return (canonicalName != null ? canonicalName : clazz.getTypeName());
 		}
 		catch (Throwable t) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-			return clazz.getName();
+			return clazz.getTypeName();
 		}
 	}
 
