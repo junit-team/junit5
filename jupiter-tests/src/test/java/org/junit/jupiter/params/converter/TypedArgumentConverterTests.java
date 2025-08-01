@@ -84,12 +84,52 @@ class TypedArgumentConverterTests {
 		}
 
 		@Test
+		void sourceTypeMismatchForArrayType() {
+			Parameter parameter = findParameterOfMethod("stringToByteArray", Byte[].class);
+			ParameterContext parameterContext = parameterContext(parameter);
+			assertThatExceptionOfType(ArgumentConversionException.class)//
+					.isThrownBy(() -> this.converter.convert(new String[][] {}, parameterContext))//
+					.withMessage("StringLengthArgumentConverter cannot convert objects of type [java.lang.String[][]]. "
+							+ "Only source objects of type [java.lang.String] are supported.");
+		}
+
+		@Test
+		void sourceTypeMismatchForPrimitiveArrayType() {
+			Parameter parameter = findParameterOfMethod("stringToByteArray", Byte[].class);
+			ParameterContext parameterContext = parameterContext(parameter);
+			assertThatExceptionOfType(ArgumentConversionException.class)//
+					.isThrownBy(() -> this.converter.convert(new byte[0], parameterContext))//
+					.withMessage("StringLengthArgumentConverter cannot convert objects of type [byte[]]. "
+							+ "Only source objects of type [java.lang.String] are supported.");
+		}
+
+		@Test
 		void targetTypeMismatch() {
 			Parameter parameter = findParameterOfMethod("stringToBoolean", Boolean.class);
 			ParameterContext parameterContext = parameterContext(parameter);
 			assertThatExceptionOfType(ArgumentConversionException.class)//
 					.isThrownBy(() -> this.converter.convert("enigma", parameterContext))//
 					.withMessage("StringLengthArgumentConverter cannot convert to type [java.lang.Boolean]. "
+							+ "Only target type [java.lang.Integer] is supported.");
+		}
+
+		@Test
+		void targetTypeMismatchForArrayType() {
+			Parameter parameter = findParameterOfMethod("stringToByteArray", Byte[].class);
+			ParameterContext parameterContext = parameterContext(parameter);
+			assertThatExceptionOfType(ArgumentConversionException.class)//
+					.isThrownBy(() -> this.converter.convert("enigma", parameterContext))//
+					.withMessage("StringLengthArgumentConverter cannot convert to type [java.lang.Byte[]]. "
+							+ "Only target type [java.lang.Integer] is supported.");
+		}
+
+		@Test
+		void targetTypeMismatchForPrimitiveArrayType() {
+			Parameter parameter = findParameterOfMethod("stringToPrimitiveByteArray", byte[].class);
+			ParameterContext parameterContext = parameterContext(parameter);
+			assertThatExceptionOfType(ArgumentConversionException.class)//
+					.isThrownBy(() -> this.converter.convert("enigma", parameterContext))//
+					.withMessage("StringLengthArgumentConverter cannot convert to type [byte[]]. "
 							+ "Only target type [java.lang.Integer] is supported.");
 		}
 
@@ -105,6 +145,12 @@ class TypedArgumentConverterTests {
 		}
 
 		void stringToBoolean(Boolean b) {
+		}
+
+		void stringToByteArray(Byte[] array) {
+		}
+
+		void stringToPrimitiveByteArray(byte[] array) {
 		}
 
 	}
