@@ -270,6 +270,30 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 				.haveExactly(1, event(test(), displayName("[2] argument = bar"), finishedWithFailure(message("bar"))));
 	}
 
+	/**
+	 * @since 6.0
+	 */
+	@Test
+	void executesWithCsvSourceAndSpecialCharacters() {
+		// @formatter:off
+		execute("testWithCsvSourceAndSpecialCharacters", String.class)
+				.testEvents()
+				.started()
+				.assertEventsMatchExactly(
+					displayName(quoted("üñåé")),
+					displayName(quoted("\\n")),
+					displayName(quoted("\\r")),
+					displayName(quoted("\uFFFD")),
+					displayName(quoted("😱")),
+					displayName(quoted("Zero\u200BWidth\u200BSpaces"))
+				);
+		// @formatter:on
+	}
+
+	private static String quoted(String text) {
+		return '"' + text + '"';
+	}
+
 	@Test
 	void executesWithCustomName() {
 		var results = execute("testWithCustomName", String.class, int.class);
@@ -1440,6 +1464,11 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		@CsvSource({ "foo", "bar" })
 		void testWithCsvSource(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest(name = "{0}")
+		@CsvSource({ "'üñåé'", "'\n'", "'\r'", "'\u0007'", "😱", "'Zero\u200BWidth\u200BSpaces'" })
+		void testWithCsvSourceAndSpecialCharacters(String argument) {
 		}
 
 		@ParameterizedTest(quoteTextArguments = false, name = "{0} and {1}")
