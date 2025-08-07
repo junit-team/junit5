@@ -330,48 +330,47 @@ class ParameterizedInvocationNameFormatterTests {
 	@Nested
 	class QuotedTextTests {
 
-		@Test
-		void quotedStrings() {
+		@ParameterizedTest
+		@CsvSource(delimiterString = "->", textBlock = """
+				'Jane Smith' -> 'Jane Smith'
+				\\           -> \\\\
+				"            -> \\"
+				# The following represents a single ' enclosed in ''.
+				''''         -> ''''
+				'\n'         -> \\n
+				'\r\n'       -> \\r\\n
+				'   \t   '   -> '   \\t   '
+				'\b'         -> \\b
+				'\f'         -> \\f
+				'\u0007'     -> ?
+				""")
+		void quotedStrings(String argument, String expected) {
 			var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
 
-			var formattedName = format(formatter, 1,
-				arguments("Jane Smith", "\\", "\"", "'", "\n", "\r\n", "   \t   ", "\b", "\f", "\u0007"));
-
-			assertThat(formattedName).isEqualTo("""
-					[1] \
-					"Jane Smith", \
-					"\\\\", \
-					"\\"", \
-					"'", \
-					"\\n", \
-					"\\r\\n", \
-					"   \\t   ", \
-					"\\b", \
-					"\\f", \
-					"?"\
-					""");
+			var formattedName = format(formatter, 1, arguments(argument));
+			assertThat(formattedName).isEqualTo("[1] " + '"' + expected + '"');
 		}
 
-		@Test
-		void quotedCharacters() {
+		@ParameterizedTest
+		@CsvSource(quoteCharacter = '"', delimiterString = "->", textBlock = """
+				X        -> X
+				\\       -> \\\\
+				'        -> \\'
+				# The following represents a single " enclosed in "". The escaping is
+				# necessary, because three " characters in a row close the text block.
+				\"""\"   -> \"""\"
+				"\n"     -> \\n
+				"\r"     -> \\r
+				"\t"     -> \\t
+				"\b"     -> \\b
+				"\f"     -> \\f
+				"\u0007" -> ?
+				""")
+		void quotedCharacters(char argument, String expected) {
 			var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
 
-			var formattedName = format(formatter, 1,
-				arguments('X', '\\', '\'', '"', '\r', '\n', '\t', '\b', '\f', '\u0007'));
-
-			assertThat(formattedName).isEqualTo("""
-					[1] \
-					'X', \
-					'\\\\', \
-					'\\'', \
-					'"', \
-					'\\r', \
-					'\\n', \
-					'\\t', \
-					'\\b', \
-					'\\f', \
-					'?'\
-					""");
+			var formattedName = format(formatter, 1, arguments(argument));
+			assertThat(formattedName).isEqualTo("[1] " + "'" + expected + "'");
 		}
 
 		@Test
