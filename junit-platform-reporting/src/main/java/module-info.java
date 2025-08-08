@@ -22,7 +22,7 @@ module org.junit.platform.reporting {
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;
-	requires org.opentest4j.reporting.events;
+	requires static org.opentest4j.reporting.events;
 	requires org.opentest4j.reporting.tooling.spi;
 
 	// exports org.junit.platform.reporting; empty package
