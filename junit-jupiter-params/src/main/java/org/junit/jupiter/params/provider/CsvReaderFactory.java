@@ -149,13 +149,15 @@ class CsvReaderFactory {
 
 	record DefaultFieldModifier(String emptyValue, Set<String> nullValues, boolean ignoreLeadingAndTrailingWhitespaces)
 			implements FieldModifier {
+
 		/**
-		 * Represents a {@code null} value and serves as a workaround
-		 * since FastCSV does not allow the modified field value to be {@code null}.
-		 * <p>
-		 * The marker is generated with a unique ID to ensure it cannot conflict with actual CSV content.
+		 * Represents a {@code null} value and serves as a workaround since FastCSV
+		 * does not allow the modified field value to be {@code null}.
+		 *
+		 * <p>The marker is generated with a unique ID to ensure it cannot conflict
+		 * with actual CSV content.
 		 */
-		static final String NULL_MARKER = "<null marker with unique id: %s>".formatted(UUID.randomUUID());
+		static final String NULL_MARKER = "<null marker: %s>".formatted(UUID.randomUUID());
 
 		@Override
 		public String modify(long unusedStartingLineNumber, int unusedFieldIdx, boolean quoted, String field) {
