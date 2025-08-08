@@ -131,11 +131,25 @@ class CsvArgumentsProviderTests {
 	void trimsSpacesUsingStringTrim() {
 		// \u0000 (null) removed by trim(), preserved by strip()
 		// \u00A0 (non-breaking space) preserved by trim(), removed by strip()
-		var annotation = csvSource().lines("\u0000foo,\u00A0bar", "\u0000' foo',\u00A0' bar'").build();
+		var annotation = csvSource().lines(
+			// Unquoted
+			"\u0000, \u0000foo\u0000, \u00A0bar\u00A0",
+			// Quoted
+			"'\u0000', '\u0000 foo \u0000', ' \u00A0bar\u0000'",
+			// Mixed
+			"\u0000'\u0000 foo', \u00A0' bar\u0000'"//
+		).build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("foo", "\u00A0bar"), array(" foo", "\u00A0' bar'"));
+		assertThat(arguments).containsExactly(
+			// Unquoted
+			array("", "foo", "\u00A0bar\u00A0"),
+			// Quoted
+			array("\u0000", "\u0000 foo \u0000", " \u00A0bar\u0000"),
+			// Mixed
+			array("\u0000 foo", "\u00A0' bar\u0000'")//
+		);
 	}
 
 	@Test
