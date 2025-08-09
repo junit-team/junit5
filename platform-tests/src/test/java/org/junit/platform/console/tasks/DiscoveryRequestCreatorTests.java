@@ -28,6 +28,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,6 +36,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.UniqueId;
@@ -370,6 +373,27 @@ class DiscoveryRequestCreatorTests {
 		assertThat(configurationParameters.get("foo")).contains("bar");
 		assertThat(configurationParameters.get("com.example.prop.first")).contains("baz");
 		assertThat(configurationParameters.get("com.example.prop.second")).contains("second value");
+	}
+
+	@Test
+	void logs_when_invalid_search_path_present() {
+		LogRecordListener listener = new LogRecordListener();
+		LoggerFactory.addListener(listener);
+		try {
+			var opts = new TestDiscoveryOptions();
+			opts.setScanClasspath(true);
+			opts.setSelectedClasspathEntries(List.of(Paths.get("/does/not/exist")));
+
+			DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
+
+			boolean saw = listener.stream(DiscoveryRequestCreator.class).anyMatch(
+				r -> String.valueOf(r.getMessage()).contains("/does/not/exist"));
+
+			assertThat(saw).as("should log about invalid search path root").isTrue();
+		}
+		finally {
+			LoggerFactory.removeListener(listener);
+		}
 	}
 
 	private LauncherDiscoveryRequest convert() {
