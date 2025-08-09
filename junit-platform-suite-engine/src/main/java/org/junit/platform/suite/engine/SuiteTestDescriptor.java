@@ -87,6 +87,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		this.suiteClass = suiteClass;
 		this.lifecycleMethods = new LifecycleMethods(suiteClass, issueReporter);
 		this.discoveryRequestBuilder.listener(DiscoveryIssueForwardingListener.create(id, discoveryListener));
+		inspectSuiteDisplayName(suiteClass, issueReporter);
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {
@@ -147,6 +148,16 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 				.filter(StringUtils::isNotBlank)
 				.orElse(testClass.getSimpleName());
 		// @formatter:on
+	}
+
+	private static void inspectSuiteDisplayName(Class<?> suiteClass, DiscoveryIssueReporter issueReporter) {
+		findAnnotation(suiteClass, SuiteDisplayName.class).map(SuiteDisplayName::value).filter(
+			StringUtils::isBlank).ifPresent(__ -> {
+				String message = "@SuiteDisplayName on %s must be declared with a non-blank value.".formatted(
+					suiteClass.getName());
+				issueReporter.reportIssue(DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message).source(
+					ClassSource.from(suiteClass)).build());
+			});
 	}
 
 	void execute(EngineExecutionListener executionListener, NamespacedHierarchicalStore<Namespace> requestLevelStore,
