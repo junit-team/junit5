@@ -342,7 +342,7 @@ class ParameterizedInvocationNameFormatterTests {
 				'   \t   '   -> '   \\t   '
 				'\b'         -> \\b
 				'\f'         -> \\f
-				'\u0007'     -> ?
+				'\u0007'     -> '\u0007'
 				""")
 		void quotedStrings(String argument, String expected) {
 			var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
@@ -364,7 +364,7 @@ class ParameterizedInvocationNameFormatterTests {
 				"\t"     -> \\t
 				"\b"     -> \\b
 				"\f"     -> \\f
-				"\u0007" -> ?
+				"\u0007" -> "\u0007"
 				""")
 		void quotedCharacters(char argument, String expected) {
 			var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
