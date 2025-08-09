@@ -24,7 +24,9 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -48,6 +52,8 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
  * @since 1.0
  */
 class DiscoveryRequestCreator {
+
+	private static final Logger logger = LoggerFactory.getLogger(DiscoveryRequestCreator.class);
 
 	static LauncherDiscoveryRequestBuilder toDiscoveryRequestBuilder(TestDiscoveryOptions options) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
@@ -87,9 +93,37 @@ class DiscoveryRequestCreator {
 		if (selectedClasspathEntries.isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
-			return rootDirs;
+			return validateAndLogInvalidRoots(rootDirs);
 		}
-		return new LinkedHashSet<>(selectedClasspathEntries);
+		return validateAndLogInvalidRoots(new LinkedHashSet<>(selectedClasspathEntries));
+	}
+
+	private static Set<Path> validateAndLogInvalidRoots(Set<Path> roots) {
+		LinkedHashSet<Path> valid = new LinkedHashSet<>();
+		HashSet<Path> seen = new HashSet<>();
+
+		for (Path root : roots) {
+			if (!seen.add(root))
+				continue;
+
+			boolean exists = Files.exists(root);
+			boolean readable = Files.isReadable(root);
+			boolean dirOrJar = isDirOrJar(root);
+
+			if (!exists || !readable || !dirOrJar) {
+				logger.info(
+					() -> "Ignoring invalid search path root: %s (exists=%s, readable=%s, dirOrJar=%s)".formatted(root,
+						exists, readable, dirOrJar));
+				continue;
+			}
+			valid.add(root);
+		}
+
+		return valid;
+	}
+
+	private static boolean isDirOrJar(Path root) {
+		return Files.isDirectory(root) || root.toString().endsWith(".jar");
 	}
 
 	private static void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
