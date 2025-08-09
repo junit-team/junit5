@@ -111,7 +111,7 @@ class DiscoveryRequestCreator {
 			boolean dirOrJar = isDirOrJar(root);
 
 			if (!exists || !readable || !dirOrJar) {
-				logger.info(
+				logger.warn(
 					() -> "Ignoring invalid search path root: %s (exists=%s, readable=%s, dirOrJar=%s)".formatted(root,
 						exists, readable, dirOrJar));
 				continue;
