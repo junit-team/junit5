@@ -43,34 +43,37 @@ class ModularCompilationTests {
 			"org.junit.platform.suite", "org.junit.platform.suite.api", "org.junit.platform.suite.engine",
 			// jupiter
 			"org.junit.jupiter", "org.junit.jupiter.api", "org.junit.jupiter.engine", "org.junit.jupiter.params");
-		Command.line("javac").add("-d", temp.resolve("classes")).add("-Xlint:all")
+		Command.line("javac") //
+				.add("-d", temp.resolve("classes")) //
+				.add("-Xlint:all")
 				// external modules
 				.add("--module-path", lib)
 				// source locations in module-specific form
-				.add("--module-source-path", moduleSourcePath("jupiter")).add("--module-source-path",
-					moduleSourcePath("jupiter-api")).add("--module-source-path",
-						moduleSourcePath("jupiter-engine")).add("--module-source-path",
-							moduleSourcePath("jupiter-migrationsupport")).add("--module-source-path",
-								moduleSourcePath("jupiter-params")).add("--module-source-path",
-									moduleSourcePath("platform-commons")).add("--module-source-path",
-										moduleSourcePath("platform-console")).add("--module-source-path",
-											moduleSourcePath("platform-engine")).add("--module-source-path",
-												moduleSourcePath("platform-launcher")).add("--module-source-path",
-													moduleSourcePath("platform-reporting")).add("--module-source-path",
-														moduleSourcePath("platform-suite")).add("--module-source-path",
-															moduleSourcePath("platform-suite-api")).add(
-																"--module-source-path",
-																moduleSourcePath("platform-suite-engine")).add(
-																	"--module-source-path",
-																	moduleSourcePath("platform-testkit")).add(
-																		"--module-source-path",
-																		moduleSourcePath("vintage-engine"))
+				.add("--module-source-path", moduleSourcePath("jupiter")) //
+				.add("--module-source-path", moduleSourcePath("jupiter-api")) //
+				.add("--module-source-path", moduleSourcePath("jupiter-engine")) //
+				.add("--module-source-path", moduleSourcePath("jupiter-migrationsupport")) //
+				.add("--module-source-path", moduleSourcePath("jupiter-params")) //
+				.add("--module-source-path", moduleSourcePath("platform-commons")) //
+				.add("--module-source-path", moduleSourcePath("platform-console")) //
+				.add("--module-source-path", moduleSourcePath("platform-engine")) //
+				.add("--module-source-path", moduleSourcePath("platform-launcher")) //
+				.add("--module-source-path", moduleSourcePath("platform-reporting")) //
+				.add("--module-source-path", moduleSourcePath("platform-suite")) //
+				.add("--module-source-path", moduleSourcePath("platform-suite-api")) //
+				.add("--module-source-path", moduleSourcePath("platform-suite-engine")) //
+				.add("--module-source-path", moduleSourcePath("platform-testkit")) //
+				.add("--module-source-path", moduleSourcePath("vintage-engine"))
 				// un-shadow
-				.add("--add-modules", "info.picocli").add("--add-reads", "org.junit.platform.console=info.picocli").add(
-					"--add-modules", "de.siegmar.fastcsv").add("--add-reads",
-						"org.junit.jupiter.params=de.siegmar.fastcsv")
+				.add("--add-modules", "info.picocli") //
+				.add("--add-reads", "org.junit.platform.console=info.picocli") //
+				.add("--add-modules", "org.opentest4j.reporting.events") //
+				.add("--add-reads", "org.junit.platform.reporting=org.opentest4j.reporting.events") //
+				.add("--add-modules", "de.siegmar.fastcsv") //
+				.add("--add-reads", "org.junit.jupiter.params=de.siegmar.fastcsv")
 				// modules to compile
-				.add("--module", String.join(",", modules)).run();
+				.add("--module", String.join(",", modules)) //
+				.run();
 	}
 
 	static String moduleSourcePath(String tag) {
