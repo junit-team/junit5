@@ -156,7 +156,6 @@ class ModularUserGuideTests {
 		assertLinesMatch(List.of( //
 			"destination", //
 			">> CLASSES AND JARS >>", //
-			"lib/opentest4j-.+\\.jar", //
 			"src", //
 			"src/documentation", //
 			"src/documentation/module-info.java" //
