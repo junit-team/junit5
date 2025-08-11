@@ -83,7 +83,10 @@ tasks {
 			""")
 		}
 
+		duplicatesStrategy = DuplicatesStrategy.INCLUDE
 		mergeServiceFiles()
+		failOnDuplicateEntries = true
+
 		manifest.apply {
 			inheritFrom(jar.get().manifest)
 			attributes(mapOf(
