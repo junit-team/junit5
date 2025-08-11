@@ -3,7 +3,6 @@ import junitbuild.extensions.capitalized
 import junitbuild.extensions.dependencyProject
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.gradle.jvm.toolchain.JvmVendorSpec.GRAAL_VM
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
 
