@@ -11,6 +11,7 @@
 package platform.tooling.support.tests;
 
 import static java.util.Objects.requireNonNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Files;
@@ -61,6 +62,7 @@ class ModularCompilationTests {
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
+		assertThat(outputDir).isNotEmptyDirectory();
 	}
 
 	static String moduleSourcePath(String moduleName) {
