@@ -269,11 +269,11 @@ class TestRun {
 			// @formatter:on
 		}
 
-		public void incrementSkippedOrStarted() {
+		private void incrementSkippedOrStarted() {
 			skippedOrStartedCount++;
 		}
 
-		public Optional<VintageTestDescriptor> getNextUnstarted() {
+		private Optional<VintageTestDescriptor> getNextUnstarted() {
 			if (skippedOrStartedCount < descriptors.size()) {
 				return Optional.of(descriptors.get(skippedOrStartedCount));
 			}

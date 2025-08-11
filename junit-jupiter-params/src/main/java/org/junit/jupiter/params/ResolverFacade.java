@@ -601,7 +601,7 @@ class ResolverFacade {
 					|| isAnnotated(getAnnotatedElement(), AggregateWith.class);
 		}
 
-		protected abstract @Nullable Object resolve(Resolver resolver, ExtensionContext extensionContext,
+		abstract @Nullable Object resolve(Resolver resolver, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex,
 				Optional<ParameterContext> originalParameterContext);
 	}
