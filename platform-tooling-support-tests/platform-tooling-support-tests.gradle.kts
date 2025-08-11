@@ -1,6 +1,7 @@
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import junitbuild.extensions.capitalized
 import junitbuild.extensions.dependencyProject
+import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.kotlin.dsl.support.listFilesOrdered
@@ -43,6 +44,8 @@ val mavenDistribution = configurations.dependencyScope("mavenDistribution")
 val mavenDistributionClasspath = configurations.resolvable("mavenDistributionClasspath") {
 	extendsFrom(mavenDistribution.get())
 }
+
+val modularProjects: List<Project> by rootProject
 
 dependencies {
 	implementation(libs.commons.io) {
@@ -135,7 +138,6 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 		}
 		implementation(libs.assertj)
 		runtimeOnly.bundle(libs.bundles.log4j)
-		val modularProjects: List<Project> by rootProject
 		modularProjects.forEach {
 			runtimeOnly(project(it.path))
 		}
@@ -211,6 +213,12 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 				jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
 				jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
 				jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution, mavenDistributionDir)
+
+				systemProperty("junit.modules", modularProjects.map { it.javaModuleName }.joinToString(","))
+
+				jvmArgumentProviders += CommandLineArgumentProvider {
+					modularProjects.map { "-Djunit.moduleSourcePath.${it.javaModuleName}=${it.sourceSets["main"].allJava.sourceDirectories.filter { it.exists() }.asPath}" }
+				}
 
 				inputs.apply {
 					dir("projects").withPathSensitivity(RELATIVE)
