@@ -258,7 +258,7 @@ class ParameterResolutionUtilsTests {
 
 		assertThatExceptionOfType(ParameterResolutionException.class)//
 				.isThrownBy(this::resolveMethodParameters)//
-				.withMessageContaining(//
+				.withMessageContainingAll(//
 					"resolved a value of type [int[][]] for parameter [java.lang.String[]", //
 					"in method", //
 					"but a value assignment compatible with [java.lang.String[]] is required." //

@@ -854,7 +854,7 @@ class DefaultLauncherTests {
 				.isInstanceOf(DiscoveryIssueException.class) //
 				.hasMessageStartingWith(
 					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
-				.hasMessageContaining("(1) [ERROR] %s could not be resolved", selector);
+				.hasMessageContaining("(1) [ERROR] %s could not be resolved".formatted(selector));
 	}
 
 	@Test
@@ -877,7 +877,7 @@ class DefaultLauncherTests {
 				.isInstanceOf(DiscoveryIssueException.class) //
 				.hasMessageStartingWith(
 					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
-				.hasMessageContaining("(1) [ERROR] %s resolution failed", selector) //
+				.hasMessageContaining("(1) [ERROR] %s resolution failed".formatted(selector)) //
 				.hasMessageContaining("Cause: java.lang.RuntimeException: boom");
 	}
 

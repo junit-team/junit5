@@ -140,8 +140,7 @@ val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/${JavaVersion.cu
 val elementListsDir = layout.buildDirectory.dir("elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
-		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
-		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
+		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/1.3.0/api/",
 )
 require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 	"all base URLs must end with a trailing slash: $externalModulesWithoutModularJavadoc"
@@ -419,6 +418,10 @@ tasks {
 
 			links(jdkJavadocBaseUrl)
 			links("https://junit.org/junit4/javadoc/${libs.versions.junit4.get()}/")
+			val assertJVersion = libs.versions.assertj.get()
+			if (!assertJVersion.endsWith("-SNAPSHOT")) {
+				links("https://javadoc.io/doc/org.assertj/assertj-core/$assertJVersion/")
+			}
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
 				linksOffline(baseUrl, elementListsDir.get().asFile.resolve(moduleName).absolutePath)
 			}
