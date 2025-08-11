@@ -44,7 +44,7 @@ class ModularCompilationTests {
 		var result = ProcessStarters.javaCommand("javac") //
 				.workingDir(workspace) //
 				.addArguments("-d", workspace.resolve("classes").toAbsolutePath().toString()) //
-				.addArguments("-Xlint:all")
+				.addArguments("-Xlint:all", "-Werror")
 				// external modules
 				.addArguments("--module-path", lib.toAbsolutePath().toString())
 				// source locations in module-specific form
