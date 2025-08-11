@@ -1,9 +1,9 @@
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import junitbuild.extensions.capitalized
 import junitbuild.extensions.dependencyProject
+import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.gradle.jvm.toolchain.JvmVendorSpec.GRAAL_VM
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
 
@@ -45,6 +45,8 @@ val mavenDistributionClasspath = configurations.resolvable("mavenDistributionCla
 	extendsFrom(mavenDistribution.get())
 }
 
+val modularProjects: List<Project> by rootProject
+
 dependencies {
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
@@ -63,11 +65,17 @@ dependencies {
 	}
 	thirdPartyJars(libs.assertj)
 	thirdPartyJars(libs.apiguardian)
+	thirdPartyJars(libs.fastcsv)
 	thirdPartyJars(libs.hamcrest)
-	thirdPartyJars(libs.jspecify)
-	thirdPartyJars(libs.opentest4j)
-	thirdPartyJars(libs.openTestReporting.tooling.spi)
 	thirdPartyJars(libs.jimfs)
+	thirdPartyJars(libs.jspecify)
+	thirdPartyJars(kotlin("stdlib"))
+	thirdPartyJars(kotlin("reflect"))
+	thirdPartyJars(libs.kotlinx.coroutines)
+	thirdPartyJars(libs.opentest4j)
+	thirdPartyJars(libs.openTestReporting.events)
+	thirdPartyJars(libs.openTestReporting.tooling.spi)
+	thirdPartyJars(libs.picocli)
 
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
@@ -130,7 +138,6 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 		}
 		implementation(libs.assertj)
 		runtimeOnly.bundle(libs.bundles.log4j)
-		val modularProjects: List<Project> by rootProject
 		modularProjects.forEach {
 			runtimeOnly(project(it.path))
 		}
@@ -206,6 +213,12 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 				jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
 				jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
 				jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution, mavenDistributionDir)
+
+				systemProperty("junit.modules", modularProjects.map { it.javaModuleName }.joinToString(","))
+
+				jvmArgumentProviders += CommandLineArgumentProvider {
+					modularProjects.map { "-Djunit.moduleSourcePath.${it.javaModuleName}=${it.sourceSets["main"].allJava.sourceDirectories.filter { it.exists() }.asPath}" }
+				}
 
 				inputs.apply {
 					dir("projects").withPathSensitivity(RELATIVE)
