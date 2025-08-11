@@ -493,7 +493,7 @@ public final class EngineTestKit {
 
 		private static class DisabledOutputDirectoryProvider implements OutputDirectoryProvider {
 
-			public static final OutputDirectoryProvider INSTANCE = new DisabledOutputDirectoryProvider();
+			private static final OutputDirectoryProvider INSTANCE = new DisabledOutputDirectoryProvider();
 
 			private static final String FAILURE_MESSAGE = "Writing outputs is disabled by default when using EngineTestKit. "
 					+ "To enable, configure a custom OutputDirectoryProvider via EngineTestKit#outputDirectoryProvider.";
