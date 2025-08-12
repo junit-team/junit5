@@ -140,20 +140,20 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		return Type.CONTAINER;
 	}
 
-	private static String getSuiteDisplayName(Class<?> suitClass, DiscoveryIssueReporter issueReporter) {
+	private static String getSuiteDisplayName(Class<?> suiteClass, DiscoveryIssueReporter issueReporter) {
 		// @formatter:off
 		var nonBlank = issueReporter.createReportingCondition(StringUtils::isNotBlank, __ -> {
 			String message = "@SuiteDisplayName on %s must be declared with a non-blank value.".formatted(
-					suitClass.getName());
+					suiteClass.getName());
 			return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message)
-					.source(ClassSource.from(suitClass))
+					.source(ClassSource.from(suiteClass))
 					.build();
 		}).toPredicate();
 
-		return findAnnotation(suitClass, SuiteDisplayName.class)
+		return findAnnotation(suiteClass, SuiteDisplayName.class)
 				.map(SuiteDisplayName::value)
 				.filter(nonBlank)
-				.orElse(suitClass.getSimpleName());
+				.orElse(suiteClass.getSimpleName());
 		// @formatter:on
 	}
 
