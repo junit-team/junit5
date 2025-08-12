@@ -735,8 +735,8 @@ class SuiteEngineTests {
 	void validSuiteDisplayNameGeneratesNoWarning() {
 		var testKit = EngineTestKit.engine(ENGINE_ID).selectors(selectClass(SuiteDisplayNameSuite.class));
 
-		assertThat(testKit.discover().getDiscoveryIssues()).noneMatch(
-			issue -> issue.message().contains("@SuiteDisplayName"));
+		assertThat(testKit.discover().getDiscoveryIssues()) //
+				.noneMatch(issue -> issue.message().contains("@SuiteDisplayName"));
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
