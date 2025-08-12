@@ -429,6 +429,7 @@ tasks {
 					"Platform" to listOf("org.junit.platform*")
 			)
 			addStringOption("-add-stylesheet", additionalStylesheetFile)
+			addBooleanOption("-no-fonts", true)
 			use(true)
 			noTimestamp(true)
 
@@ -480,6 +481,10 @@ tasks {
 					}
 					return@filter result
 				}
+			}
+			filesMatching("**/stylesheet.css") {
+				// Remove invalid import of `dejavu.css` due to `javadoc --no-fonts`
+				filter { line -> if (line.startsWith("@import url('fonts/")) null else line }
 			}
 		}
 		into(layout.buildDirectory.dir("docs/fixedJavadoc"))
