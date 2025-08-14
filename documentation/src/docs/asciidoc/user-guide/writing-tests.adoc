@@ -439,7 +439,7 @@ following precedence rules:
 === Assertions
 
 JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few
-that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions
+that lend themselves well to being used with Java lambdas. All JUnit Jupiter assertions
 are `static` methods in the `{Assertions}` class.
 
 Assertion methods optionally accept the assertion message as their third parameter, which
@@ -559,8 +559,8 @@ current runtime environment.
   of marked as a failure.
 
 JUnit Jupiter comes with a subset of the _assumption_ methods that JUnit 4 provides and
-adds a few that lend themselves well to being used with Java 8 lambda expressions and
-method references.
+adds a few that lend themselves well to being used with Java lambda expressions and method
+references.
 
 All JUnit Jupiter assumptions are static methods in the `{Assumptions}` class.
 
