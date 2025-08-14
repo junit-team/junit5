@@ -31,11 +31,6 @@ import org.junit.platform.commons.util.ModuleUtils;
 class ModuleUtilsTests {
 
 	@Test
-	void javaPlatformModuleSystemIsAvailable() {
-		assertTrue(ModuleUtils.isJavaPlatformModuleSystemAvailable());
-	}
-
-	@Test
 	void findAllNonSystemBootModuleNames() {
 		Set<String> moduleNames = ModuleUtils.findAllNonSystemBootModuleNames();
 
