@@ -304,7 +304,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			return extension;
 		}
 
-		public Class<?> getTestClass() {
+		private Class<?> getTestClass() {
 			return testClass;
 		}
 

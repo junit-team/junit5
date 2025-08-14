@@ -83,7 +83,10 @@ tasks {
 			""")
 		}
 
+		duplicatesStrategy = DuplicatesStrategy.INCLUDE
 		mergeServiceFiles()
+		failOnDuplicateEntries = true
+
 		manifest.apply {
 			inheritFrom(jar.get().manifest)
 			attributes(mapOf(
@@ -93,11 +96,6 @@ tasks {
 					// Pattern of key and value: `"Engine-Version-{YourTestEngine#getId()}": "47.11"`
 					"Engine-Version-junit-jupiter" to project.version,
 					"Engine-Version-junit-vintage" to project.version,
-					// Version-aware binaries are already included - set Multi-Release flag here.
-					// See https://openjdk.java.net/jeps/238 for details
-					// Note: the "jar --update ... --release X" command does not work with the
-					// shadowed JAR as it contains nested classes that do not comply with multi-release jars.
-					"Multi-Release" to true
 			))
 		}
 	}

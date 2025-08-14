@@ -80,7 +80,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
 			OutputDirectoryProvider outputDirectoryProvider, EngineDiscoveryListener discoveryListener,
 			DiscoveryIssueReporter issueReporter) {
-		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
+		super(id, getSuiteDisplayName(suiteClass, issueReporter), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
 		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
@@ -140,12 +140,20 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		return Type.CONTAINER;
 	}
 
-	private static String getSuiteDisplayName(Class<?> testClass) {
+	private static String getSuiteDisplayName(Class<?> suiteClass, DiscoveryIssueReporter issueReporter) {
 		// @formatter:off
-		return findAnnotation(testClass, SuiteDisplayName.class)
+		var nonBlank = issueReporter.createReportingCondition(StringUtils::isNotBlank, __ -> {
+			String message = "@SuiteDisplayName on %s must be declared with a non-blank value.".formatted(
+					suiteClass.getName());
+			return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message)
+					.source(ClassSource.from(suiteClass))
+					.build();
+		}).toPredicate();
+
+		return findAnnotation(suiteClass, SuiteDisplayName.class)
 				.map(SuiteDisplayName::value)
-				.filter(StringUtils::isNotBlank)
-				.orElse(testClass.getSimpleName());
+				.filter(nonBlank)
+				.orElse(suiteClass.getSimpleName());
 		// @formatter:on
 	}
 

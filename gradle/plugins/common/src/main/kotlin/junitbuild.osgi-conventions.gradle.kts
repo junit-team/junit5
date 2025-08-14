@@ -48,10 +48,6 @@ tasks.withType<Jar>().named {
 				-fixupmessages.apiguardian.import: "Unused Import-Package instructions: \\[org.apiguardian.*\\]";is:=ignore
 				-fixupmessages.jspecify.import: "Unused Import-Package instructions: \\[org.jspecify.*\\]";is:=ignore
 
-				# This tells bnd to ignore classes it finds in `META-INF/versions/`
-				# because bnd doesn't yet support multi-release jars.
-				-fixupmessages.wrong.dir: "Classes found in the wrong directory: \\{META-INF/versions/...";is:=ignore
-
 				# Don't scan for Class.forName package imports.
 				# See https://bnd.bndtools.org/instructions/noclassforname.html
 				-noclassforname: true

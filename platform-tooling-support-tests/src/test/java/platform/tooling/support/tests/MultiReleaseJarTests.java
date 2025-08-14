@@ -46,7 +46,6 @@ class MultiReleaseJarTests {
 			".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  +-- ModuleUtilsTests [OK]", //
-			"  | +-- javaPlatformModuleSystemIsAvailable() [OK]", //
 			"  | +-- findAllClassesInModule() [OK]", //
 			"  | +-- findAllNonSystemBootModuleNames() [OK]", //
 			"  | '-- preconditions() [OK]", //
@@ -62,11 +61,11 @@ class MultiReleaseJarTests {
 			"[         0 containers aborted    ]", //
 			"[         3 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         7 tests found           ]", //
+			"[         6 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         7 tests started         ]", //
+			"[         6 tests started         ]", //
 			"[         1 tests aborted         ]", //
-			"[         6 tests successful      ]", //
+			"[         5 tests successful      ]", //
 			"[         0 tests failed          ]", //
 			"" //
 		);

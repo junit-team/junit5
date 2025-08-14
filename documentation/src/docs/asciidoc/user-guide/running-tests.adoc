@@ -1116,11 +1116,9 @@ Events are stored in a single file that can be attached to bug reports and exami
 support engineers, allowing after-the-fact analysis of issues in the period leading up
 to a problem.
 
-In order to record Flight Recorder events generated while running tests, you need to:
-
-1. Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.
-2. Start flight recording when launching a test run. Flight Recorder can be started via
-   java command line option:
+In order to record Flight Recorder events generated while running tests, you need to
+start flight recording when launching a test run via the following java command line
+option:
 
    -XX:StartFlightRecording:filename=...
 

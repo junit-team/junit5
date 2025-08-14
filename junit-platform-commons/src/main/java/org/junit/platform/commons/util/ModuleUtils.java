@@ -74,15 +74,6 @@ public class ModuleUtils {
 		// @formatter:on
 	}
 
-	/**
-	 * Java 9+ runtime supports the Java Platform Module System.
-	 *
-	 * @return {@code true}
-	 */
-	public static boolean isJavaPlatformModuleSystemAvailable() {
-		return true;
-	}
-
 	public static Optional<String> getModuleName(Class<?> type) {
 		Preconditions.notNull(type, "Class type must not be null");
 

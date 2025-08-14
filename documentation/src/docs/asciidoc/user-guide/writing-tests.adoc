@@ -79,14 +79,14 @@ overridden.
 
 `*@BeforeAll*`:: Denotes that the annotated method should be executed _before_ *all*
 `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current
-class; analogous to JUnit 4's `@BeforeClass`. Such methods are inherited unless they are
-overridden and must be `static` unless the "per-class"
+top-level or `@Nested` test class; analogous to JUnit 4's `@BeforeClass`. Such methods are
+inherited unless they are overridden and must be `static` unless the "per-class"
 <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
 
 `*@AfterAll*`:: Denotes that the annotated method should be executed _after_ *all*
 `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current
-class; analogous to JUnit 4's `@AfterClass`. Such methods are inherited unless they are
-overridden and must be `static` unless the "per-class"
+top-level or `@Nested` test class; analogous to JUnit 4's `@AfterClass`. Such methods are
+inherited unless they are overridden and must be `static` unless the "per-class"
 <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
 
 `*@ParameterizedClass*`:: Denotes that the annotated class is a
@@ -109,12 +109,7 @@ multiple times depending on the number of invocation contexts returned by the re
 <<extensions-class-templates, providers>>. Such annotations are inherited.
 
 `*@Nested*`:: Denotes that the annotated class is a non-static
-<<writing-tests-nested, nested test class>>. On Java 8 through Java 15, `@BeforeAll` and
-`@AfterAll` methods cannot be used directly in a `@Nested` test class unless the
-"per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
-Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static`
-in a `@Nested` test class with either test instance lifecycle mode. Such annotations are
-not inherited.
+<<writing-tests-nested, nested test class>>. Such annotations are not inherited.
 
 `*@Tag*`:: Used to declare
 <<writing-tests-tagging-and-filtering, tags for filtering tests>>, either at the class or
@@ -439,7 +434,7 @@ following precedence rules:
 === Assertions
 
 JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few
-that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions
+that lend themselves well to being used with Java lambdas. All JUnit Jupiter assertions
 are `static` methods in the `{Assertions}` class.
 
 Assertion methods optionally accept the assertion message as their third parameter, which
@@ -559,8 +554,8 @@ current runtime environment.
   of marked as a failure.
 
 JUnit Jupiter comes with a subset of the _assumption_ methods that JUnit 4 provides and
-adds a few that lend themselves well to being used with Java 8 lambda expressions and
-method references.
+adds a few that lend themselves well to being used with Java lambda expressions and method
+references.
 
 All JUnit Jupiter assumptions are static methods in the `{Assumptions}` class.
 
@@ -1137,12 +1132,7 @@ methods rely on state stored in instance variables, you may need to reset that s
 
 The "per-class" mode has some additional benefits over the default "per-method" mode.
 Specifically, with the "per-class" mode it becomes possible to declare `@BeforeAll` and
-`@AfterAll` on non-static methods as well as on interface `default` methods. The
-"per-class" mode therefore also makes it possible to use `@BeforeAll` and `@AfterAll`
-methods in `@Nested` test classes.
-
-NOTE: Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as
-`static` in `@Nested` test classes.
+`@AfterAll` on non-static methods as well as on interface `default` methods.
 
 If you are authoring tests using the Kotlin programming language, you may also find it
 easier to implement non-static `@BeforeAll` and `@AfterAll` lifecycle methods as well as
@@ -1215,13 +1205,7 @@ running the outer tests, because the setup code from the outer tests is always e
 
 NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as `@Nested` test
 classes. Nesting can be arbitrarily deep, and those inner classes are subject to full
-lifecycle support with one exception: `@BeforeAll` and `@AfterAll` methods do not work _by
-default_. The reason is that Java does not allow `static` members in inner classes prior
-to Java 16. However, this restriction can be circumvented by annotating a `@Nested` test
-class with `@TestInstance(Lifecycle.PER_CLASS)` (see
-<<writing-tests-test-instance-lifecycle>>). If you are using Java 16 or higher,
-`@BeforeAll` and `@AfterAll` methods can be declared as `static` in `@Nested` test
-classes, and this restriction no longer applies.
+lifecycle support, including `@BeforeAll` and `@AfterAll` methods on each level.
 
 [[writing-tests-nested-interoperability]]
 ==== Interoperability
@@ -3436,9 +3420,9 @@ executing tests will not exceed the configured parallelism. For example, when us
 of the synchronization mechanisms described in the next section, the `ForkJoinPool` that
 is used behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism.
-If you require such guarantees, with Java 9+, it is possible to limit the maximum number
-of concurrent threads by controlling the maximum pool size of the `dynamic`, `fixed` and
-`custom` strategies.
+If you require such guarantees, it is possible to limit the maximum number of concurrent
+threads by controlling the maximum pool size of the `dynamic`, `fixed` and `custom`
+strategies.
 
 [[writing-tests-parallel-execution-config-properties]]
 ===== Relevant properties
