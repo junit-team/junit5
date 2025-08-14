@@ -3436,9 +3436,9 @@ executing tests will not exceed the configured parallelism. For example, when us
 of the synchronization mechanisms described in the next section, the `ForkJoinPool` that
 is used behind the scenes may spawn additional threads to ensure execution continues with
 sufficient parallelism.
-If you require such guarantees, with Java 9+, it is possible to limit the maximum number
-of concurrent threads by controlling the maximum pool size of the `dynamic`, `fixed` and
-`custom` strategies.
+If you require such guarantees, it is possible to limit the maximum number of concurrent
+threads by controlling the maximum pool size of the `dynamic`, `fixed` and `custom`
+strategies.
 
 [[writing-tests-parallel-execution-config-properties]]
 ===== Relevant properties

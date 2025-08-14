@@ -272,8 +272,6 @@ public final class Constants {
 	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
 	 * {@code 256 + fixed.parallelism}.
 	 *
-	 * <p>Note: This property only takes affect on Java 9+.
-	 *
 	 * @since 5.10
 	 */
 	@API(status = MAINTAINED, since = "5.13.3")
@@ -289,8 +287,6 @@ public final class Constants {
 	 * pool-size would be exceeded.
 	 *
 	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
-	 *
-	 * <p>Note: This property only takes affect on Java 9+.
 	 *
 	 * @since 5.10
 	 */
