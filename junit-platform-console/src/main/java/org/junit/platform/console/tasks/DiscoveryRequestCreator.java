@@ -107,23 +107,15 @@ class DiscoveryRequestCreator {
 				continue;
 
 			boolean exists = Files.exists(root);
-			boolean readable = Files.isReadable(root);
-			boolean dirOrJar = isDirOrJar(root);
 
-			if (!exists || !readable || !dirOrJar) {
-				logger.warn(
-					() -> "Ignoring invalid search path root: %s (exists=%s, readable=%s, dirOrJar=%s)".formatted(root,
-						exists, readable, dirOrJar));
+			if (!exists) {
+				logger.warn(() -> "Ignoring invalid search path root: %s (exists=%s)".formatted(root, exists));
 				continue;
 			}
 			valid.add(root);
 		}
 
 		return valid;
-	}
-
-	private static boolean isDirOrJar(Path root) {
-		return Files.isDirectory(root) || root.toString().endsWith(".jar");
 	}
 
 	private static void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
