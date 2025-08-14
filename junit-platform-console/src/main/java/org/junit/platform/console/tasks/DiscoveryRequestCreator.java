@@ -92,7 +92,7 @@ class DiscoveryRequestCreator {
 			() -> "No classpath entries selected");
 		if (selectedClasspathEntries.isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
+			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return validateAndLogInvalidRoots(rootDirs);
 		}
 		return validateAndLogInvalidRoots(new LinkedHashSet<>(selectedClasspathEntries));

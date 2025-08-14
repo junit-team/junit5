@@ -391,15 +391,17 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	void doesNotLogInvalidAdditionalClasspathRoots(@TrackLogRecords LogRecordListener listener) {
+	void logsInvalidAdditionalClasspathRoots(@TrackLogRecords LogRecordListener listener) {
 		var opts = new TestDiscoveryOptions();
 		opts.setScanClasspath(true);
 		opts.setAdditionalClasspathEntries(List.of(Paths.get("/also/does/not/exist")));
 
 		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
 
-		assertThat(listener.stream(DiscoveryRequestCreator.class)).map(LogRecord::getMessage).filteredOn(
-			msg -> msg.contains("/also/does/not/exist")).isEmpty();
+		assertThat(listener.stream(DiscoveryRequestCreator.class))
+				.map(LogRecord::getMessage)
+				.filteredOn(msg -> msg.contains("/also/does/not/exist"))
+				.hasSize(1);
 	}
 
 	private LauncherDiscoveryRequest convert() {
