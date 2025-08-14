@@ -26,8 +26,7 @@ import org.junit.jupiter.api.function.Executable;
  * calling {@link Object#toString()} on the implementing instance but may be
  * overridden by concrete implementations to provide a more meaningful name.
  *
- * <p>On Java 16 or later, it is recommended to implement this interface using
- * a record type.
+ * <p>It is recommended to implement this interface using a record type.
  *
  * @since 5.11
  * @see DynamicTest#stream(Stream)
