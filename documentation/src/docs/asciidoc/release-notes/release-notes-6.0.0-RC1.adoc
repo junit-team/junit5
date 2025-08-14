@@ -26,8 +26,7 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
-
+* Prune stack traces up to test or lifecycle method
 
 [[release-notes-6.0.0-RC1-junit-jupiter]]
 === JUnit Jupiter

@@ -97,11 +97,15 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Prune the stack trace of the supplied {@link Throwable} by removing
-	 * {@linkplain StackTraceElement stack trace elements} from the {@code org.junit},
-	 * {@code jdk.internal.reflect}, and {@code sun.reflect} packages. If a
-	 * {@code StackTraceElement} matching one of the supplied {@code classNames}
-	 * is encountered, all subsequent elements in the stack trace will be retained.
+	 * Prune the stack trace of the supplied {@link Throwable}.
+	 *
+	 * <p>Prune all {@linkplain StackTraceElement stack trace elements} up one
+	 * of the supplied {@code classNames} are pruned. All subsequent elements
+	 * in the stack trace will be retained.
+	 *
+	 * <p>If the {@code classNames} do not match any of the stacktrace elements
+	 * then the {@code org.junit}, {@code jdk.internal.reflect}, and
+	 * {@code sun.reflect} packages are pruned.
 	 *
 	 * <p>Additionally, all elements prior to and including the first JUnit Platform
 	 * Launcher call will be removed.
@@ -128,6 +132,9 @@ public final class ExceptionUtils {
 			String className = element.getClassName();
 
 			if (classNames.contains(className)) {
+				// We found the test
+				// everything before that is not informative.
+				prunedStackTrace.clear();
 				// Include all elements called by the test
 				prunedStackTrace.addAll(stackTrace.subList(i, stackTrace.size()));
 				break;
