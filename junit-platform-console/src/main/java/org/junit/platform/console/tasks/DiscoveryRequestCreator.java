@@ -83,7 +83,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private static List<ClasspathRootSelector> createClasspathRootSelectors(TestDiscoveryOptions options) {
-		Set<Path> classpathRoots = determineClasspathRoots(options);
+		Set<Path> classpathRoots = validateAndLogInvalidRoots(determineClasspathRoots(options));
 		return selectClasspathRoots(classpathRoots);
 	}
 
@@ -93,9 +93,9 @@ class DiscoveryRequestCreator {
 		if (selectedClasspathEntries.isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getAdditionalClasspathEntries());
-			return validateAndLogInvalidRoots(rootDirs);
+			return rootDirs;
 		}
-		return validateAndLogInvalidRoots(new LinkedHashSet<>(selectedClasspathEntries));
+		return new LinkedHashSet<>(selectedClasspathEntries);
 	}
 
 	private static Set<Path> validateAndLogInvalidRoots(Set<Path> roots) {
