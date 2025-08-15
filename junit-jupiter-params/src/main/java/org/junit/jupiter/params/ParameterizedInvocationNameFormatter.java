@@ -307,6 +307,19 @@ class ParameterizedInvocationNameFormatter {
 		}
 	}
 
+	/**
+	 * Caches formatters by the length of the consumed <em>arguments</em> which
+	 * may differ from the number of declared parameters.
+	 *
+	 * <p>For example, when using multiple providers or a provider that returns
+	 * argument arrays of different length, such as:
+	 *
+	 * <pre>
+	 * &#064;ParameterizedTest
+	 * &#064;CsvSource({"a", "a,b", "a,b,c"})
+	 * void test(ArgumentsAccessor accessor) {}
+	 * </pre>
+	 */
 	private static class CachingByArgumentsLengthPartialFormatter implements PartialFormatter {
 
 		private final ConcurrentMap<Integer, PartialFormatter> cache = new ConcurrentHashMap<>(1);

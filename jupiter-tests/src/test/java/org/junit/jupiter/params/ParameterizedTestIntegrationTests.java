@@ -311,6 +311,17 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 					event(test(), displayName("[2] book = book 2"), finishedWithFailure(message("book 2"))));
 	}
 
+	/**
+	 * @since 6.0
+	 */
+	@Test
+	void executesWithImplicitGenericConverterWithCharSequenceConstructor() {
+		var results = execute("testWithImplicitGenericConverterWithCharSequenceConstructor", Record.class);
+		results.testEvents().assertThatEvents() //
+				.haveExactly(1, event(displayName("\"record 1\""), finishedWithFailure(message("record 1")))) //
+				.haveExactly(1, event(displayName("\"record 2\""), finishedWithFailure(message("record 2"))));
+	}
+
 	@Test
 	void legacyReportingNames() {
 		var results = execute("testWithCustomName", String.class, int.class);
@@ -1458,6 +1469,12 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		@ValueSource(strings = { "book 1", "book 2" })
 		void testWithImplicitGenericConverter(Book book) {
 			fail(book.title);
+		}
+
+		@ParameterizedTest(name = "{0}")
+		@ValueSource(strings = { "record 1", "record 2" })
+		void testWithImplicitGenericConverterWithCharSequenceConstructor(Record record) {
+			fail(record.title.toString());
 		}
 
 		@ParameterizedTest(quoteTextArguments = false)
@@ -2671,6 +2688,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		static Book factory(String title) {
 			return new Book(title);
 		}
+	}
+
+	record Record(CharSequence title) {
 	}
 
 	static class FailureInBeforeEachTestCase {

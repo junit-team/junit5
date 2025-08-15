@@ -24,7 +24,6 @@ public class Projects {
 	public static final String JUPITER_STARTER = "jupiter-starter";
 	public static final String KOTLIN_COROUTINES = "kotlin-coroutines";
 	public static final String MAVEN_SUREFIRE_COMPATIBILITY = "maven-surefire-compatibility";
-	public static final String MULTI_RELEASE_JAR = "multi-release-jar";
 	public static final String REFLECTION_TESTS = "reflection-tests";
 	public static final String STANDALONE = "standalone";
 	public static final String VINTAGE = "vintage";

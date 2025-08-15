@@ -21,12 +21,18 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The methods `findNestedClasses` and `streamNestedClasses` in `ReflectionSupport` now
+  return nested classes declared in the same enclosing class or interface ordered in a
+  deterministic but intentionally nonobvious way.
 
 [[release-notes-6.0.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * Prune stack traces up to test or lifecycle method
+* Convention-based conversion in `ConversionSupport` now supports factory methods and
+  factory constructors that accept a single `CharSequence` argument in addition to the
+  existing support for factories that accept a single `String` argument.
+
 
 [[release-notes-6.0.0-RC1-junit-jupiter]]
 === JUnit Jupiter
@@ -43,7 +49,9 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* For consistency with test methods, `@Nested` classes declared in the same enclosing
+  class or interface are now ordered in a deterministic but intentionally nonobvious
+  way.
 
 [[release-notes-6.0.0-RC1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -52,6 +60,10 @@ repository on GitHub.
   In addition, special characters are escaped within quoted text. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names-quoted-text,
   User Guide>> for details.
+* <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit-fallback,
+  Fallback String-to-Object Conversion>> for parameterized tests now supports factory
+  methods and factory constructors that accept a single `CharSequence` argument in
+  addition to the existing support for factories that accept a single `String` argument.
 
 
 [[release-notes-6.0.0-RC1-junit-vintage]]

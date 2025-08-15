@@ -2519,11 +2519,12 @@ table, JUnit Jupiter also provides a fallback mechanism for automatic conversion
 method_ or a _factory constructor_ as defined below.
 
 - __factory method__: a non-private, `static` method declared in the target type that
-  accepts a single `String` argument and returns an instance of the target type. The name
-  of the method can be arbitrary and need not follow any particular convention.
+  accepts either a single `String` argument or a single `CharSequence` argument and
+  returns an instance of the target type. The name of the method can be arbitrary and need
+  not follow any particular convention.
 - __factory constructor__: a non-private constructor in the target type that accepts a
-  single `String` argument. Note that the target type must be declared as either a
-  top-level class or as a `static` nested class.
+  either a single `String` argument or a single `CharSequence` argument. Note that the
+  target type must be declared as either a top-level class or as a `static` nested class.
 
 NOTE: If multiple _factory methods_ are discovered, they will be ignored. If a _factory
 method_ and a _factory constructor_ are discovered, the factory method will be used

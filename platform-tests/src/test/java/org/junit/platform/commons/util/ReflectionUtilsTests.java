@@ -1152,6 +1152,15 @@ class ReflectionUtilsTests {
 				runnable4, runnable4, runnable4, runnable5, runnable5, runnable5).parallel().forEach(Runnable::run);
 		}
 
+		@Test
+		void findNestedClassesWithMultipleNestedClasses() {
+			var nestedClasses = findNestedClasses(OuterClassWithMultipleNestedClasses.class);
+
+			assertThat(nestedClasses) //
+					.map(Class::getSimpleName) //
+					.containsExactly("Beta", "Zeta", "Eta", "Alpha", "Delta", "Gamma", "Theta", "Epsilon");
+		}
+
 		private static List<Class<?>> findNestedClasses(Class<?> clazz) {
 			return ReflectionUtils.findNestedClasses(clazz, c -> true);
 		}
@@ -2323,6 +2332,25 @@ class ReflectionUtilsTests {
 	static class OuterClassImplementingInterface implements InterfaceWithNestedClass {
 
 		class InnerClassImplementingInterface implements InterfaceWithNestedClass {
+		}
+	}
+
+	static class OuterClassWithMultipleNestedClasses {
+		class Alpha {
+		}
+		class Beta {
+		}
+		class Gamma {
+		}
+		class Delta {
+		}
+		class Epsilon {
+		}
+		class Zeta {
+		}
+		class Eta {
+		}
+		class Theta {
 		}
 	}
 
