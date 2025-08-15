@@ -11,7 +11,7 @@ runs:
   using: "composite"
   steps:
     - shell: bash
-      run: |
+      run: | # zizmor: ignore[github-env]
         USER_TOKEN=$(printf "${USERNAME}:${PASSWORD}" | base64)
         echo "::add-mask::$USER_TOKEN"
         echo "MAVEN_CENTRAL_USER_TOKEN=$USER_TOKEN" >> $GITHUB_ENV
