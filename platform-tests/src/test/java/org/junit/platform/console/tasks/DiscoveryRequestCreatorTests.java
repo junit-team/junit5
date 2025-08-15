@@ -398,8 +398,10 @@ class DiscoveryRequestCreatorTests {
 
 		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
 
-		assertThat(listener.stream(DiscoveryRequestCreator.class)).map(LogRecord::getMessage).filteredOn(
-			msg -> msg.contains("/also/does/not/exist")).hasSize(1);
+		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
+				.map(LogRecord::getMessage) //
+				.filteredOn(message -> message.contains("/also/does/not/exist")) //
+				.hasSize(1);
 	}
 
 	private LauncherDiscoveryRequest convert() {
