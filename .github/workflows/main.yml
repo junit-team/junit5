@@ -24,6 +24,7 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Install GraalVM
       uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
       with:
@@ -51,6 +52,7 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Build
       uses: ./.github/actions/main-build
       with:
@@ -63,6 +65,7 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Build
       uses: ./.github/actions/main-build
       with:
@@ -81,6 +84,7 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Publish
       uses: ./.github/actions/run-gradle
       env:
@@ -108,6 +112,7 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Install Graphviz
       run: |
         sudo apt-get update
