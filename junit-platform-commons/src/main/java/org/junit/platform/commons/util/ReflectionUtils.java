@@ -1182,7 +1182,7 @@ public final class ReflectionUtils {
 
 		try {
 			// Candidates in current class
-			for (Class<?> nestedClass : clazz.getDeclaredClasses()) {
+			for (Class<?> nestedClass : toSortedMutableList(clazz.getDeclaredClasses())) {
 				if (predicate.test(nestedClass)) {
 					consumer.accept(nestedClass);
 					if (detectInnerClassCycle(nestedClass, errorHandling)) {
@@ -1698,6 +1698,10 @@ public final class ReflectionUtils {
 		return toSortedMutableList(methods, ReflectionUtils::defaultMethodSorter);
 	}
 
+	private static List<Class<?>> toSortedMutableList(Class<?>[] fields) {
+		return toSortedMutableList(fields, ReflectionUtils::defaultClassSorter);
+	}
+
 	private static <T> List<T> toSortedMutableList(T[] items, Comparator<? super T> comparator) {
 		List<T> result = new ArrayList<>(items.length);
 		Collections.addAll(result, items);
@@ -1726,6 +1730,19 @@ public final class ReflectionUtils {
 			if (comparison == 0) {
 				comparison = method1.toString().compareTo(method2.toString());
 			}
+		}
+		return comparison;
+	}
+
+	/**
+	 * Class comparator to achieve deterministic but nonobvious order.
+	 */
+	private static int defaultClassSorter(Class<?> class1, Class<?> class2) {
+		String name1 = class1.getName();
+		String name2 = class2.getName();
+		int comparison = Integer.compare(name1.hashCode(), name2.hashCode());
+		if (comparison == 0) {
+			comparison = name1.compareTo(name2);
 		}
 		return comparison;
 	}

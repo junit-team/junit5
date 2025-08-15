@@ -632,6 +632,10 @@ public final class ReflectionSupport {
 	 * <p>This method does <strong>not</strong> search for nested classes
 	 * recursively.
 	 *
+	 * <p>Nested classes declared in the same enclosing class or interface will
+	 * be ordered using an algorithm that is deterministic but intentionally
+	 * nonobvious.
+	 *
 	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
 	 * class hierarchies &mdash; from the supplied class up to the outermost
 	 * enclosing class &mdash; and throws a {@link JUnitException} if such a cycle
@@ -657,6 +661,10 @@ public final class ReflectionSupport {
 	 *
 	 * <p>This method does <strong>not</strong> search for nested classes
 	 * recursively.
+	 *
+	 * <p>Nested classes declared in the same enclosing class or interface will
+	 * be ordered using an algorithm that is deterministic but intentionally
+	 * nonobvious.
 	 *
 	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
 	 * class hierarchies &mdash; from the supplied class up to the outermost
