@@ -103,16 +103,14 @@ class DiscoveryRequestCreator {
 		HashSet<Path> seen = new HashSet<>();
 
 		for (Path root : roots) {
-			if (!seen.add(root))
-				continue;
-
-			boolean exists = Files.exists(root);
-
-			if (!exists) {
-				logger.warn(() -> "Ignoring invalid search path root: %s (exists=%s)".formatted(root, exists));
+			if (!seen.add(root)) {
 				continue;
 			}
-			valid.add(root);
+			if (Files.exists(root)) {
+				valid.add(root);
+			} else {
+				logger.warn(() -> "Ignoring non-existing classpath root: %s".formatted(root));
+			}
 		}
 
 		return valid;
