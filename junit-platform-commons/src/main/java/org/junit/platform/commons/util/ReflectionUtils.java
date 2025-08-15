@@ -1698,8 +1698,8 @@ public final class ReflectionUtils {
 		return toSortedMutableList(methods, ReflectionUtils::defaultMethodSorter);
 	}
 
-	private static List<Class<?>> toSortedMutableList(Class<?>[] fields) {
-		return toSortedMutableList(fields, ReflectionUtils::defaultClassSorter);
+	private static List<Class<?>> toSortedMutableList(Class<?>[] classes) {
+		return toSortedMutableList(classes, ReflectionUtils::defaultClassSorter);
 	}
 
 	private static <T> List<T> toSortedMutableList(T[] items, Comparator<? super T> comparator) {
