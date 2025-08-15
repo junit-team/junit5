@@ -124,41 +124,8 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const releaseVersion = process.env.RELEASE_VERSION;
-            const query = `
-                query ($owner: String!, $repo: String!, $title: String!) {
-                    repository(owner: $owner, name: $repo) {
-                        milestones(first: 100, query: $title) {
-                            nodes {
-                                title
-                                number
-                                openIssueCount
-                            }
-                        }
-                    }
-                }
-            `;
-            const {repository} = await github.graphql(query, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: releaseVersion
-            });
-            const [milestone] = repository.milestones.nodes.filter(it => it.title === releaseVersion)
-            if (!milestone) {
-                throw new Error(`Milestone "${releaseVersion}" not found`);
-            }
-            if (milestone.openIssueCount > 0) {
-                throw new Error(`Milestone "${releaseVersion}" has ${milestone.openIssueCount} open issue(s)`);
-            }
-            const requestBody = {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                milestone_number: milestone.number,
-                state: 'closed',
-                due_on: new Date().toISOString()
-            };
-            console.log(requestBody);
-            await github.rest.issues.updateMilestone(requestBody);
+            const closeGithubMilestone = require('./.github/scripts/close-github-milestone.js');
+            closeGithubMilestone({ github, context });
 
   publish_deployment:
     name: Publish to Maven Central
@@ -295,15 +262,5 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const releaseVersion = process.env.RELEASE_VERSION;
-            const requestBody = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `r${releaseVersion}`,
-              name: `JUnit ${releaseVersion}`,
-              generate_release_notes: true,
-              body: `JUnit ${releaseVersion} = Platform ${releaseVersion} + Jupiter ${releaseVersion} + Vintage ${releaseVersion}\n\nSee [Release Notes](https://docs.junit.org/${releaseVersion}/release-notes/).`,
-              prerelease: releaseVersion.includes("-"),
-            };
-            console.log(requestBody);
-            await github.rest.repos.createRelease(requestBody);
+            const createGithubRelease = require('./.github/scripts/create-github-release.js');
+            createGithubRelease({ github, context });
