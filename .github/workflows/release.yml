@@ -21,6 +21,7 @@ env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
   STAGING_REPO_URL: https://central.sonatype.com/api/v1/publisher/deployment/${{ inputs.deploymentId }}/download
   RELEASE_TAG: r${{ inputs.releaseVersion }}
+  RELEASE_VERSION: ${{ inputs.releaseVersion }}
 
 jobs:
 
@@ -47,7 +48,7 @@ jobs:
         run: |
           curl --silent --fail --location --output /tmp/reference.jar \
             --header "Authorization: Bearer $MAVEN_CENTRAL_USER_TOKEN" \
-            "${{ env.STAGING_REPO_URL }}/org/junit/jupiter/junit-jupiter-api/${{ inputs.releaseVersion }}/junit-jupiter-api-${{ inputs.releaseVersion }}.jar"
+            "${STAGING_REPO_URL}/org/junit/jupiter/junit-jupiter-api/${RELEASE_VERSION}/junit-jupiter-api-${RELEASE_VERSION}.jar"
           sudo apt-get update && sudo apt-get install --yes jc
           unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
           echo "createdBy=$(jq --raw-output .Created_By /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
@@ -95,7 +96,7 @@ jobs:
           distribution: temurin
       - uses: sbt/setup-sbt@f20dc1bc1f8be605c44ffbcec6f17f708a4af9d1 # v1.1.12
       - name: Update JUnit dependencies in examples
-        run: java src/Updater.java ${{ inputs.releaseVersion }}
+        run: java src/Updater.java ${RELEASE_VERSION}
         working-directory: junit-examples
       - name: Prepare Maven Central user token
         uses: ./junit-framework/.github/actions/maven-central-user-token
@@ -103,7 +104,7 @@ jobs:
           username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       - name: Inject staging repository URL
-        run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
+        run: java src/StagingRepoInjector.java ${STAGING_REPO_URL}
         working-directory: junit-examples
       - name: Build examples
         run: java src/Builder.java --exclude=junit-jupiter-starter-bazel,junit-jupiter-starter-sbt
@@ -123,6 +124,7 @@ jobs:
         with:
           result-encoding: string
           script: |
+            const releaseVersion = process.env.RELEASE_VERSION;
             const query = `
                 query ($owner: String!, $repo: String!, $title: String!) {
                     repository(owner: $owner, name: $repo) {
@@ -139,14 +141,14 @@ jobs:
             const {repository} = await github.graphql(query, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: "${{ inputs.releaseVersion }}"
+                title: releaseVersion
             });
-            const [milestone] = repository.milestones.nodes.filter(it => it.title === "${{ inputs.releaseVersion }}")
+            const [milestone] = repository.milestones.nodes.filter(it => it.title === releaseVersion)
             if (!milestone) {
-                throw new Error('Milestone "${{ inputs.releaseVersion }}" not found');
+                throw new Error(`Milestone "${releaseVersion}" not found`);
             }
             if (milestone.openIssueCount > 0) {
-                throw new Error(`Milestone "${{ inputs.releaseVersion }}" has ${milestone.openIssueCount} open issue(s)`);
+                throw new Error(`Milestone "${releaseVersion}" has ${milestone.openIssueCount} open issue(s)`);
             }
             const requestBody = {
                 owner: context.repo.owner,
@@ -228,14 +230,16 @@ jobs:
         id: pagesDeployment
         timeout-minutes: 20
         run: |
-          URL="https://docs.junit.org/${{ inputs.releaseVersion }}/user-guide/junit-user-guide-${{ inputs.releaseVersion }}.pdf"
+          URL="https://docs.junit.org/${RELEASE_VERSION}/user-guide/junit-user-guide-${RELEASE_VERSION}.pdf"
           ./.github/scripts/waitForUrl.sh "$URL"
           echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
       - name: Verify integrity of PDF version of User Guide
         if: ${{ inputs.dryRun == false }}
         run: |
-          curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
+          curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${PDF_URL}"
           pdfinfo /tmp/junit-user-guide.pdf
+        env:
+          PDF_URL: ${{ steps.pagesDeployment.outputs.pdfUrl }}
 
   update_examples:
     name: Update examples
@@ -257,7 +261,7 @@ jobs:
           distribution: temurin
       - uses: sbt/setup-sbt@f20dc1bc1f8be605c44ffbcec6f17f708a4af9d1 # v1.1.12
       - name: Update JUnit dependencies in examples
-        run: java src/Updater.java ${{ inputs.releaseVersion }}
+        run: java src/Updater.java ${RELEASE_VERSION}
       - name: Build examples
         if: ${{ inputs.dryRun == false }}
         run: java src/Builder.java
@@ -265,18 +269,18 @@ jobs:
         run: |
           git config user.name "JUnit Team"
           git config user.email "team@junit.org"
-          git switch -c "${{ env.RELEASE_TAG }}"
+          git switch -c "${RELEASE_TAG}"
           git status
-          git commit -a -m "Use ${{ inputs.releaseVersion }}"
+          git commit -a -m "Use ${RELEASE_VERSION}"
       - name: Push release branch
         if: ${{ inputs.dryRun == false }}
         run: |
-          git push origin "${{ env.RELEASE_TAG }}"
+          git push origin "${RELEASE_TAG}"
       - name: Update main branch (only for GA releases)
         if: ${{ inputs.dryRun == false && !contains(inputs.releaseVersion, '-') }}
         run: |
           git switch main
-          git merge --ff-only "${{ env.RELEASE_TAG }}"
+          git merge --ff-only "${RELEASE_TAG}"
           git push origin main
 
   create_github_release:
@@ -291,7 +295,7 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const releaseVersion = "${{ inputs.releaseVersion }}";
+            const releaseVersion = process.env.RELEASE_VERSION;
             const requestBody = {
               owner: context.repo.owner,
               repo: context.repo.repo,
