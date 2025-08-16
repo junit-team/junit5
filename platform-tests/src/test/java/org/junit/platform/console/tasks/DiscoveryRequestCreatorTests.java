@@ -28,13 +28,17 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.UniqueId;
@@ -370,6 +374,34 @@ class DiscoveryRequestCreatorTests {
 		assertThat(configurationParameters.get("foo")).contains("bar");
 		assertThat(configurationParameters.get("com.example.prop.first")).contains("baz");
 		assertThat(configurationParameters.get("com.example.prop.second")).contains("second value");
+	}
+
+	@Test
+	void logsInvalidSearchPathRoots(@TrackLogRecords LogRecordListener listener) {
+		var opts = new TestDiscoveryOptions();
+		opts.setScanClasspath(true);
+		opts.setSelectedClasspathEntries(List.of(Paths.get("/does/not/exist")));
+
+		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
+
+		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
+				.map(LogRecord::getMessage) //
+				.filteredOn(message -> message.contains("/does/not/exist")) //
+				.hasSize(1);
+	}
+
+	@Test
+	void logsInvalidAdditionalClasspathRoots(@TrackLogRecords LogRecordListener listener) {
+		var opts = new TestDiscoveryOptions();
+		opts.setScanClasspath(true);
+		opts.setAdditionalClasspathEntries(List.of(Paths.get("/also/does/not/exist")));
+
+		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
+
+		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
+				.map(LogRecord::getMessage) //
+				.filteredOn(message -> message.contains("/also/does/not/exist")) //
+				.hasSize(1);
 	}
 
 	private LauncherDiscoveryRequest convert() {
