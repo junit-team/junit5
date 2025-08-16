@@ -48,7 +48,7 @@ final class QuoteUtils {
 			case '\t' -> "\\t";
 			case '\r' -> "\\r";
 			case '\n' -> "\\n";
-			default -> Character.isISOControl(ch) ? "?" : String.valueOf(ch);
+			default -> String.valueOf(ch);
 		};
 	}
 

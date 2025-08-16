@@ -307,6 +307,32 @@ by test runners and IDEs.
 include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
 
+[NOTE]
+====
+Control characters in text-based arguments in display names for parameterized tests are
+escaped by default. See <<writing-tests-parameterized-tests-display-names-quoted-text>>
+for details.
+
+Any remaining ISO control characters in a display name will be replaced as follows.
+
+[cols="25%,15%,60%"]
+|===
+| Original | Replacement | Description
+
+| ```\r```
+| ```<CR>```
+| Textual representation of a carriage return
+
+| ```\n```
+| ```<LF>```
+| Textual representation of a line feed
+
+| Other control character
+| ```�```
+| Unicode replacement character (U+FFFD)
+|===
+====
+
 [[writing-tests-display-name-generator]]
 ==== Display Name Generators
 
@@ -2778,8 +2804,7 @@ is considered text. A `CharSequence` is wrapped in double quotes (`"`), and a `C
 is wrapped in single quotes (`'`).
 
 Special characters will be escaped in the quoted text. For example, carriage returns and
-line feeds will be escaped as `\\r` and `\\n`, respectively. In addition, any ISO control
-character will be represented as a question mark (`?`) in the quoted text.
+line feeds will be escaped as `\\r` and `\\n`, respectively.
 
 [TIP]
 ====

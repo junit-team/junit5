@@ -32,6 +32,11 @@ repository on GitHub.
 * Convention-based conversion in `ConversionSupport` now supports factory methods and
   factory constructors that accept a single `CharSequence` argument in addition to the
   existing support for factories that accept a single `String` argument.
+* Non-printable control characters in display names are now replaced with alternative
+  representations. For example, `\n` is replaced with `<LF>`. This applies to all display
+  names in JUnit Jupiter, `@SuiteDisplayName`, and any other test engines that subclass
+  `AbstractTestDescriptor`. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-display-names, User Guide>> for details.
 
 
 [[release-notes-6.0.0-RC1-junit-jupiter]]
@@ -64,6 +69,9 @@ repository on GitHub.
   Fallback String-to-Object Conversion>> for parameterized tests now supports factory
   methods and factory constructors that accept a single `CharSequence` argument in
   addition to the existing support for factories that accept a single `String` argument.
+* Non-printable control characters in display names are now replaced with alternative
+  representations. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-display-names, User Guide>> for details.
 
 
 [[release-notes-6.0.0-RC1-junit-vintage]]
