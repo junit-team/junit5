@@ -14,11 +14,11 @@ runs:
         java-version: 8
         check-latest: true
     - shell: bash
-      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
+      run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV # zizmor: ignore[github-env]
     - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
       with:
         distribution: ${{ inputs.distribution }}
         java-version: 17
         check-latest: true
     - shell: bash
-      run: echo "JDK17=$JAVA_HOME" >> $GITHUB_ENV
+      run: echo "JDK17=$JAVA_HOME" >> $GITHUB_ENV # zizmor: ignore[github-env]

@@ -23,7 +23,7 @@ runs:
     - shell: bash
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
-      run: |
+      run: | # zizmor: ignore[template-injection]
         ./gradlew \
         -Porg.gradle.java.installations.auto-download=false \
         -Pjunit.develocity.predictiveTestSelection.enabled=true \
