@@ -28,7 +28,10 @@ nullaway {
 tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
 		val onJ9 = java.toolchain.implementation.orNull == JvmImplementation.J9
-		if (name == "compileJava" && !onJ9) {
+		// Workaround for https://github.com/google/error-prone/issues/5200
+		val onJdk26 = java.toolchain.languageVersion.get() >= JavaLanguageVersion.of(26)
+		val shouldDisableErrorProne = onJ9 || onJdk26
+		if (name == "compileJava" && !shouldDisableErrorProne) {
 			disable(
 
 				// This check is opinionated wrt. which method names it considers unsuitable for import which includes
@@ -56,7 +59,7 @@ tasks.withType<JavaCompile>().configureEach {
 			disableAllChecks = true
 		}
 		nullaway {
-			if (onJ9) {
+			if (shouldDisableErrorProne) {
 				disable()
 			} else {
 				enable()
