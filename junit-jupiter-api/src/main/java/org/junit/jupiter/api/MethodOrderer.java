@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
@@ -47,6 +49,9 @@ import org.junit.platform.commons.util.ClassUtils;
  * <li>{@link OrderAnnotation}</li>
  * <li>{@link Random}</li>
  * </ul>
+ *
+ * <p>In addition, {@link Default} allows reverting back to default ordering for
+ * {@link Nested @Nested} classes.
  *
  * @since 5.4
  * @see TestMethodOrder
@@ -123,6 +128,35 @@ public interface MethodOrderer {
 	 */
 	default Optional<ExecutionMode> getDefaultExecutionMode() {
 		return Optional.of(ExecutionMode.SAME_THREAD);
+	}
+
+	/**
+	 * {@code MethodOrderer} that allows to explicitly specify that the default
+	 * ordering should be applied.
+	 *
+	 * <p>If the {@value #DEFAULT_ORDER_PROPERTY_NAME} is set, specifying this
+	 * {@code MethodOrderer} has the same effect as referencing the configured
+	 * class directly. Otherwise, it has the same effect as not specifying any
+	 * {@code MethodOrderer}.
+	 *
+	 * <p>This annotation is useful to reset the {@code MethodOrderer} for a
+	 * {@link Nested @Nested} class and its {@code @Nested} inner classes,
+	 * recursively, when a {@code MethodOrderer} is configured using
+	 * {@link TestMethodOrder @TestMethodOrder} on an enclosing class.
+	 *
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	final class Default implements MethodOrderer {
+
+		private Default() {
+			throw new JUnitException("This class must not be instantiated");
+		}
+
+		@Override
+		public void orderMethods(MethodOrdererContext context) {
+			// never called
+		}
 	}
 
 	/**

@@ -74,6 +74,9 @@ repository on GitHub.
   <<../user-guide/index.adoc#writing-tests-display-names, User Guide>> for details.
 * For consistency with `@TestClassOrder`, `@TestMethodOrder` annotations specified on a
   test class are now inherited to its `@Nested` inner classes, recursively.
+* Introduce `MethodOrderer.Default` for reverting back to default ordering on a `@Nested`
+  class, recursively, when an enclosing class specifies a different method orderer via
+  `@TestMethodOrder`.
 
 
 [[release-notes-6.0.0-RC1-junit-vintage]]
