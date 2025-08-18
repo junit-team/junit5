@@ -108,7 +108,8 @@ class DiscoveryRequestCreator {
 			}
 			if (Files.exists(root)) {
 				valid.add(root);
-			} else {
+			}
+			else {
 				logger.warn(() -> "Ignoring nonexistent classpath root: %s".formatted(root));
 			}
 		}
