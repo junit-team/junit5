@@ -31,10 +31,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.UniqueId;
@@ -370,6 +373,36 @@ class DiscoveryRequestCreatorTests {
 		assertThat(configurationParameters.get("foo")).contains("bar");
 		assertThat(configurationParameters.get("com.example.prop.first")).contains("baz");
 		assertThat(configurationParameters.get("com.example.prop.second")).contains("second value");
+	}
+
+	@Test
+	void logsInvalidSearchPathRoots(@TrackLogRecords LogRecordListener listener) {
+		var opts = new TestDiscoveryOptions();
+		opts.setScanClasspath(true);
+		var missingPath = Path.of("/does/not/exist");
+		opts.setSelectedClasspathEntries(List.of(missingPath));
+
+		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
+
+		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
+				.map(LogRecord::getMessage) //
+				.filteredOn(message -> message.contains(missingPath.toString())) //
+				.hasSize(1);
+	}
+
+	@Test
+	void logsInvalidAdditionalClasspathRoots(@TrackLogRecords LogRecordListener listener) {
+		var opts = new TestDiscoveryOptions();
+		opts.setScanClasspath(true);
+		var missingPath = Path.of("/also/does/not/exist");
+		opts.setAdditionalClasspathEntries(List.of(missingPath));
+
+		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
+
+		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
+				.map(LogRecord::getMessage) //
+				.filteredOn(message -> message.contains(missingPath.toString())) //
+				.hasSize(1);
 	}
 
 	private LauncherDiscoveryRequest convert() {
