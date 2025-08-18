@@ -28,7 +28,7 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* Prune stack traces up to test or lifecycle method
+* Stack traces are now pruned up to the test method or lifecycle method.
 * Convention-based conversion in `ConversionSupport` now supports factory methods and
   factory constructors that accept a single `CharSequence` argument in addition to the
   existing support for factories that accept a single `String` argument.
@@ -49,7 +49,7 @@ repository on GitHub.
 ==== Bug Fixes
 
 * CSV headers are now properly supported with the default display name pattern and the
-  explicit `{argumentsWithNames}` display name pattern for parameterized tests that
+  explicit `+{argumentsWithNames}+` display name pattern for parameterized tests that
   utilize the `useHeadersInDisplayName` flag in `@CsvSource` and `@CsvFileSource`.
   Specifically, the parameter name is no longer duplicated in the display name when a CSV
   header is desired instead.
