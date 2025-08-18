@@ -694,7 +694,6 @@ class OrderedMethodTests {
 
 	static class OrderAnnotationWithNestedClassTestCase extends OrderAnnotationTestCase {
 		@Nested
-		@TestMethodOrder(OrderAnnotation.class)
 		class NestedTests {
 
 			@BeforeEach

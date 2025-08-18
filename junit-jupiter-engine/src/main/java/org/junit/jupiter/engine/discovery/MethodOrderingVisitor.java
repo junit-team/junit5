@@ -63,8 +63,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 
 	@Override
 	public void visit(TestDescriptor testDescriptor) {
-		doWithMatchingDescriptor(ClassBasedTestDescriptor.class, testDescriptor,
-			descriptor -> orderContainedMethods(descriptor, descriptor.getTestClass()),
+		doWithMatchingDescriptor(ClassBasedTestDescriptor.class, testDescriptor, this::orderContainedMethods,
 			descriptor -> "Failed to order methods for " + descriptor.getTestClass());
 	}
 
@@ -75,11 +74,10 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 		return false;
 	}
 
-	/**
-	 * @since 5.4
-	 */
-	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass) {
-		Optional<MethodOrderer> methodOrderer = findAnnotation(testClass, TestMethodOrder.class)//
+	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor) {
+		var testClass = classBasedTestDescriptor.getTestClass();
+		var enclosingInstanceTypes = classBasedTestDescriptor.getEnclosingTestClasses();
+		Optional<MethodOrderer> methodOrderer = findAnnotation(testClass, TestMethodOrder.class, enclosingInstanceTypes)//
 				.map(TestMethodOrder::value)//
 				.<MethodOrderer> map(ReflectionSupport::newInstance) //
 				.or(configuration::getDefaultTestMethodOrderer);
