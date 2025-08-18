@@ -24,7 +24,9 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -48,6 +52,8 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
  * @since 1.0
  */
 class DiscoveryRequestCreator {
+
+	private static final Logger logger = LoggerFactory.getLogger(DiscoveryRequestCreator.class);
 
 	static LauncherDiscoveryRequestBuilder toDiscoveryRequestBuilder(TestDiscoveryOptions options) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
@@ -77,7 +83,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private static List<ClasspathRootSelector> createClasspathRootSelectors(TestDiscoveryOptions options) {
-		Set<Path> classpathRoots = determineClasspathRoots(options);
+		Set<Path> classpathRoots = validateAndLogInvalidRoots(determineClasspathRoots(options));
 		return selectClasspathRoots(classpathRoots);
 	}
 
@@ -86,10 +92,29 @@ class DiscoveryRequestCreator {
 			() -> "No classpath entries selected");
 		if (selectedClasspathEntries.isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
+			rootDirs.addAll(options.getAdditionalClasspathEntries());
 			return rootDirs;
 		}
 		return new LinkedHashSet<>(selectedClasspathEntries);
+	}
+
+	private static Set<Path> validateAndLogInvalidRoots(Set<Path> roots) {
+		LinkedHashSet<Path> valid = new LinkedHashSet<>();
+		HashSet<Path> seen = new HashSet<>();
+
+		for (Path root : roots) {
+			if (!seen.add(root)) {
+				continue;
+			}
+			if (Files.exists(root)) {
+				valid.add(root);
+			}
+			else {
+				logger.warn(() -> "Ignoring nonexistent classpath root: %s".formatted(root));
+			}
+		}
+
+		return valid;
 	}
 
 	private static void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
