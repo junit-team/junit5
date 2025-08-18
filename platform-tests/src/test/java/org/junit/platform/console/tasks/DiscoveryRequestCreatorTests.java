@@ -28,7 +28,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -380,13 +379,14 @@ class DiscoveryRequestCreatorTests {
 	void logsInvalidSearchPathRoots(@TrackLogRecords LogRecordListener listener) {
 		var opts = new TestDiscoveryOptions();
 		opts.setScanClasspath(true);
-		opts.setSelectedClasspathEntries(List.of(Paths.get("/does/not/exist")));
+		var missingPath = Path.of("/does/not/exist");
+		opts.setSelectedClasspathEntries(List.of(missingPath));
 
 		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
 
 		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
 				.map(LogRecord::getMessage) //
-				.filteredOn(message -> message.contains("/does/not/exist")) //
+				.filteredOn(message -> message.contains(missingPath.toString())) //
 				.hasSize(1);
 	}
 
@@ -394,13 +394,14 @@ class DiscoveryRequestCreatorTests {
 	void logsInvalidAdditionalClasspathRoots(@TrackLogRecords LogRecordListener listener) {
 		var opts = new TestDiscoveryOptions();
 		opts.setScanClasspath(true);
-		opts.setAdditionalClasspathEntries(List.of(Paths.get("/also/does/not/exist")));
+		var missingPath = Path.of("/also/does/not/exist");
+		opts.setAdditionalClasspathEntries(List.of(missingPath));
 
 		DiscoveryRequestCreator.toDiscoveryRequestBuilder(opts);
 
 		assertThat(listener.stream(DiscoveryRequestCreator.class)) //
 				.map(LogRecord::getMessage) //
-				.filteredOn(message -> message.contains("/also/does/not/exist")) //
+				.filteredOn(message -> message.contains(missingPath.toString())) //
 				.hasSize(1);
 	}
 
