@@ -37,6 +37,9 @@ repository on GitHub.
   names in JUnit Jupiter, `@SuiteDisplayName`, and any other test engines that subclass
   `AbstractTestDescriptor`. Please refer to the
   <<../user-guide/index.adoc#writing-tests-display-names, User Guide>> for details.
+* To help diagnosing potentially invalid invocations, the Console Launcher now logs
+  warnings for nonexistent classpath roots added via `--classpath` or `--scan-classpath`
+  rather than silently ignoring them.
 
 
 [[release-notes-6.0.0-RC1-junit-jupiter]]
@@ -89,8 +92,5 @@ repository on GitHub.
 
 [[release-notes-6.0.0-RC1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
-
-* Improved validation of additional classpath roots in the Console Launcher.
-Now logs and skips only non-existent entries, ensuring more consistent behavior.
 
 * ❓
