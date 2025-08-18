@@ -1130,6 +1130,8 @@ To configure test class execution order _locally_ for `@Nested` test classes, de
 want to order, and supply a class reference to the `ClassOrderer` implementation you would
 like to use directly in the `@TestClassOrder` annotation. The configured `ClassOrderer`
 will be applied recursively to `@Nested` test classes and their `@Nested` test classes.
+If you want to avoid that a `@Nested` test class uses the same `ClassOrderer` as its
+enclosing class, you can specify `{ClassOrderer_Default}` together with `@TestClassOrder`.
 Note that a local `@TestClassOrder` declaration always overrides an inherited
 `@TestClassOrder` declaration or a `ClassOrderer` configured globally via the
 `junit.jupiter.testclass.order.default` configuration parameter.

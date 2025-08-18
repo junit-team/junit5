@@ -113,7 +113,6 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 			ClassBasedTestDescriptor classBasedTestDescriptor) {
 		return AnnotationSupport.findAnnotation(classBasedTestDescriptor.getTestClass(), TestClassOrder.class)//
 				.map(TestClassOrder::value)//
-				.map(ReflectionSupport::newInstance)//
 				.map(this::createDescriptorWrapperOrderer)//
 				.orElseGet(() -> {
 					Object parent = classBasedTestDescriptor.getParent().orElse(null);
@@ -123,6 +122,14 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 					}
 					return globalOrderer;
 				});
+	}
+
+	private DescriptorWrapperOrderer<TestDescriptor, ClassOrderer, DefaultClassDescriptor> createDescriptorWrapperOrderer(
+			Class<? extends ClassOrderer> ordererClass) {
+		if (ordererClass == ClassOrderer.Default.class) {
+			return globalOrderer;
+		}
+		return createDescriptorWrapperOrderer(ReflectionSupport.newInstance(ordererClass));
 	}
 
 	private DescriptorWrapperOrderer<TestDescriptor, ClassOrderer, DefaultClassDescriptor> createDescriptorWrapperOrderer(

@@ -200,6 +200,24 @@ class OrderedClassTests {
 				.containsSubsequence(classTemplate.getSimpleName(), otherClass.getSimpleName());
 	}
 
+	@Test
+	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
+		executeTests(null, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("ShortName", "AMuchLongerNameForSure");
+		callSequence.clear();
+
+		executeTests(ClassOrderer.ClassName.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("AMuchLongerNameForSure", "ShortName");
+		callSequence.clear();
+
+		executeTests(ClassOrderer.Default.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("ShortName", "AMuchLongerNameForSure");
+		assertThat(logRecords.stream()) //
+				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
+				.map(LogRecord::getMessage) //
+				.isEmpty();
+	}
+
 	private static void assertIneffectiveOrderAnnotationIssues(List<DiscoveryIssue> discoveryIssues) {
 		assertThat(discoveryIssues).hasSize(2);
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
@@ -433,6 +451,31 @@ class OrderedClassTests {
 			}
 
 			private record Ctx() implements ClassTemplateInvocationContext {
+			}
+		}
+	}
+
+	@TestClassOrder(ClassOrderer.DisplayName.class)
+	static class RevertingBackToDefaultOrderTestCase {
+
+		@Nested
+		@TestClassOrder(ClassOrderer.Default.class)
+		class Inner {
+
+			@Nested
+			class ShortName {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			class AMuchLongerNameForSure {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
 			}
 		}
 	}

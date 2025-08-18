@@ -69,7 +69,8 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 			new InstantiatingConfigurationParameterConverter<>(MethodOrderer.class, "method orderer"));
 
 	private static final ConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
-		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
+		exclude(isEqual(ClassOrderer.Default.class.getName()),
+			new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer"));
 
 	private static final ConfigurationParameterConverter<CleanupMode> cleanupModeConverter = //
 		new EnumConfigurationParameterConverter<>(CleanupMode.class, "cleanup mode");
