@@ -1037,7 +1037,7 @@ following built-in `MethodOrderer` implementations.
 * `{MethodOrderer_Random}`: orders test methods _pseudo-randomly_ and supports
   configuration of a custom _seed_
 
-The `MethodOrderer` configured on a test class is inherited to the `@Nested` test classes
+The `MethodOrderer` configured on a test class is inherited by the `@Nested` test classes
 it contains, recursively. If you want to avoid that a `@Nested` test class uses the same
 `MethodOrderer` as its enclosing class, you can specify `{MethodOrderer_Default}` together
 with `{TestMethodOrder}`.
