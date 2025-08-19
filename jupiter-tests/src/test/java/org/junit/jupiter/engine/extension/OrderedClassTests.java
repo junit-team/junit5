@@ -203,15 +203,15 @@ class OrderedClassTests {
 	@Test
 	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
 		executeTests(null, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
-		assertThat(callSequence).containsExactly("ShortName", "AMuchLongerNameForSure");
+		assertThat(callSequence).containsExactly("Test1", "Test2", "Test3", "Test4");
 		callSequence.clear();
 
-		executeTests(ClassOrderer.ClassName.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
-		assertThat(callSequence).containsExactly("AMuchLongerNameForSure", "ShortName");
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("Test4", "Test2", "Test1", "Test3");
 		callSequence.clear();
 
 		executeTests(ClassOrderer.Default.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
-		assertThat(callSequence).containsExactly("ShortName", "AMuchLongerNameForSure");
+		assertThat(callSequence).containsExactly("Test1", "Test2", "Test3", "Test4");
 		assertThat(logRecords.stream()) //
 				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
 				.map(LogRecord::getMessage) //
@@ -463,7 +463,8 @@ class OrderedClassTests {
 		class Inner {
 
 			@Nested
-			class ShortName {
+			@Order(3)
+			class Test1 {
 				@Test
 				void test() {
 					callSequence.add(getClass().getSimpleName());
@@ -471,7 +472,26 @@ class OrderedClassTests {
 			}
 
 			@Nested
-			class AMuchLongerNameForSure {
+			@Order(2)
+			class Test2 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(4)
+			class Test3 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(1)
+			class Test4 {
 				@Test
 				void test() {
 					callSequence.add(getClass().getSimpleName());

@@ -329,16 +329,16 @@ class OrderedMethodTests {
 
 	@Test
 	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
-		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, null);
-		assertThat(callSequence).containsExactly("shortName()", "aMuchLongerNameForSure()");
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, null, Severity.WARNING);
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()", "test4()");
 		callSequence.clear();
 
-		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, MethodName.class);
-		assertThat(callSequence).containsExactly("aMuchLongerNameForSure()", "shortName()");
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, OrderAnnotation.class);
+		assertThat(callSequence).containsExactly("test4()", "test2()", "test1()", "test3()");
 		callSequence.clear();
 
-		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, Default.class);
-		assertThat(callSequence).containsExactly("shortName()", "aMuchLongerNameForSure()");
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, Default.class, Severity.WARNING);
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()", "test4()");
 		assertThat(logRecords.stream()) //
 				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
 				.map(LogRecord::getMessage) //
@@ -848,6 +848,7 @@ class OrderedMethodTests {
 	}
 
 	static class NestedClassWithDefaultOrderTestCase extends OrderAnnotationTestCase {
+
 		@Nested
 		@TestMethodOrder(Default.class)
 		@Execution(ExecutionMode.SAME_THREAD)
@@ -859,11 +860,23 @@ class OrderedMethodTests {
 			}
 
 			@Test
-			void shortName() {
+			@Order(3)
+			void test1() {
 			}
 
 			@Test
-			void aMuchLongerNameForSure() {
+			@Order(2)
+			void test2() {
+			}
+
+			@Test
+			@Order(4)
+			void test3() {
+			}
+
+			@Test
+			@Order(1)
+			void test4() {
 			}
 		}
 	}
