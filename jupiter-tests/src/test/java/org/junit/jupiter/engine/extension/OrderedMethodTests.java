@@ -330,15 +330,15 @@ class OrderedMethodTests {
 	@Test
 	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
 		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, null);
-		assertThat(callSequence).containsExactly("nestedTest1", "nestedTest2");
+		assertThat(callSequence).containsExactly("shortName()", "aMuchLongerNameForSure()");
 		callSequence.clear();
 
 		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, MethodName.class);
-		assertThat(callSequence).containsExactly("nestedTest2", "nestedTest1");
+		assertThat(callSequence).containsExactly("aMuchLongerNameForSure()", "shortName()");
 		callSequence.clear();
 
 		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, Default.class);
-		assertThat(callSequence).containsExactly("nestedTest1", "nestedTest2");
+		assertThat(callSequence).containsExactly("shortName()", "aMuchLongerNameForSure()");
 		assertThat(logRecords.stream()) //
 				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
 				.map(LogRecord::getMessage) //
@@ -859,12 +859,10 @@ class OrderedMethodTests {
 			}
 
 			@Test
-			@DisplayName("nestedTest1")
 			void shortName() {
 			}
 
 			@Test
-			@DisplayName("nestedTest2")
 			void aMuchLongerNameForSure() {
 			}
 		}
