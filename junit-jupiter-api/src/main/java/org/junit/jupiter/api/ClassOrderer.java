@@ -48,13 +48,11 @@ import org.junit.platform.commons.logging.LoggerFactory;
  *
  * <ul>
  * <li>{@link ClassOrderer.ClassName}</li>
+ * <li>{@link ClassOrderer.Default}</li>
  * <li>{@link ClassOrderer.DisplayName}</li>
  * <li>{@link ClassOrderer.OrderAnnotation}</li>
  * <li>{@link ClassOrderer.Random}</li>
  * </ul>
- *
- * <p>In addition, {@link ClassOrderer.Default} allows reverting back to default ordering for
- * {@link Nested @Nested} classes.
  *
  * @since 5.8
  * @see TestClassOrder

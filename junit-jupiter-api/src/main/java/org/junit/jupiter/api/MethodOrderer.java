@@ -45,13 +45,11 @@ import org.junit.platform.commons.util.ClassUtils;
  * implementations.
  *
  * <ul>
+ * <li>{@link Default}</li>
  * <li>{@link MethodName}</li>
  * <li>{@link OrderAnnotation}</li>
  * <li>{@link Random}</li>
  * </ul>
- *
- * <p>In addition, {@link Default} allows reverting back to default ordering for
- * {@link Nested @Nested} classes.
  *
  * @since 5.4
  * @see TestMethodOrder
