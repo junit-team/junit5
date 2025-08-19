@@ -74,6 +74,7 @@ includeBuild("gradle/base")
 rootProject.name = "junit-framework"
 
 include("documentation")
+include("junit-aggregator")
 include("junit-jupiter")
 include("junit-jupiter-api")
 include("junit-jupiter-engine")
