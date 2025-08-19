@@ -111,7 +111,7 @@ public interface ClassOrderer {
 	 * class directly. Otherwise, it has the same effect as not specifying any
 	 * {@code ClassOrderer}.
 	 *
-	 * <p>This annotation is useful to reset the {@code ClassOrderer} for a
+	 * <p>This class can be used to reset the {@code ClassOrderer} for a
 	 * {@link Nested @Nested} class and its {@code @Nested} inner classes,
 	 * recursively, when a {@code ClassOrderer} is configured using
 	 * {@link TestClassOrder @TestClassOrder} on an enclosing class.

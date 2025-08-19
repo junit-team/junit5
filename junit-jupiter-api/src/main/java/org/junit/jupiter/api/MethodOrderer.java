@@ -139,7 +139,7 @@ public interface MethodOrderer {
 	 * class directly. Otherwise, it has the same effect as not specifying any
 	 * {@code MethodOrderer}.
 	 *
-	 * <p>This annotation is useful to reset the {@code MethodOrderer} for a
+	 * <p>This class can be used to reset the {@code MethodOrderer} for a
 	 * {@link Nested @Nested} class and its {@code @Nested} inner classes,
 	 * recursively, when a {@code MethodOrderer} is configured using
 	 * {@link TestMethodOrder @TestMethodOrder} on an enclosing class.
