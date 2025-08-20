@@ -9,7 +9,6 @@ tasks.compileJava {
 }
 
 buildParameters {
-	enableValidation = false
 	pluginId("junitbuild.build-parameters")
 	bool("ci") {
 		description = "Whether or not this build is running in a CI environment"
