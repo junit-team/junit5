@@ -10,7 +10,7 @@ description = "JUnit Aggregator"
 dependencies {
 	api(projects.junitJupiter)
 	compileOnlyApi(projects.junitJupiterEngine)
-	implementation(projects.junitPlatformLauncher)
+	api(projects.junitPlatformLauncher)
 	implementation(projects.junitPlatformConsole)
 }
 
