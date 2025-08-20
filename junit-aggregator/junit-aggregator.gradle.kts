@@ -8,6 +8,7 @@ plugins {
 description = "JUnit Aggregator"
 
 dependencies {
+	api(platform(projects.junitBom))
 	api(projects.junitJupiter)
 	compileOnlyApi(projects.junitJupiterEngine)
 	api(projects.junitPlatformLauncher)
