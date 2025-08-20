@@ -11,12 +11,13 @@ val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
 val vintageProjects: List<Project> by rootProject
 
-group = when (project) {
-	in jupiterProjects -> "org.junit.jupiter"
-	in platformProjects -> "org.junit.platform"
-	in vintageProjects -> "org.junit.vintage"
-	else -> "org.junit"
-}
+group = buildParameters.publishing.group
+	.getOrElse(when (project) {
+		in jupiterProjects -> "org.junit.jupiter"
+		in platformProjects -> "org.junit.platform"
+		in vintageProjects -> "org.junit.vintage"
+		else -> "org.junit"
+	})
 
 val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(project.version.isSnapshot() || buildParameters.ci))
 

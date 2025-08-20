@@ -93,6 +93,9 @@ buildParameters {
 		bool("signArtifacts") {
 			description = "Sign artifacts before publishing them to Maven repos"
 		}
+		string("group") {
+			description = "Group ID for published Maven artifacts"
+		}
 	}
 	group("jitpack") {
 		string("version") {
