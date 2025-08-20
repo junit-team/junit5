@@ -1,9 +1,15 @@
 [[release-notes-6.0.0-RC1]]
 == 6.0.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* August 20, 2025
 
-*Scope:* ❓
+*Scope:*
+
+* Display name improvements for parameterized classes and tests
+* Replacing of non-printable control characters in display names
+* Deterministic order of `@Nested` classes
+* Inheritance of `@TestMethodOrder` by enclosed `@Nested` classes
+* `MethodOrderer.Default` and `ClassOrderer.Default` for `@Nested` classes
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit-framework-repo}+/milestone/102?closed=1+[6.0.0-RC1] milestone page in the JUnit
@@ -12,11 +18,6 @@ repository on GitHub.
 
 [[release-notes-6.0.0-RC1-junit-platform]]
 === JUnit Platform
-
-[[release-notes-6.0.0-RC1-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
 
 [[release-notes-6.0.0-RC1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -86,17 +87,4 @@ repository on GitHub.
 [[release-notes-6.0.0-RC1-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-6.0.0-RC1-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-6.0.0-RC1-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-6.0.0-RC1-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
