@@ -9,6 +9,13 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit-framework-repo}+/milestone/103?closed=1+[6.0.0] milestone page in the JUnit
 repository on GitHub.
 
+[TIP]
+.Migration Guide
+====
+Please refer to the
+https://github.com/junit-team/junit-framework/wiki/Upgrading-to-JUnit-6.0[wiki] for
+guidance on upgrading from JUnit 5.x.y to 6.0.0.
+====
 
 [[release-notes-6.0.0-junit-platform]]
 === JUnit Platform
