@@ -16,6 +16,8 @@ import java.util.Optional;
 import org.junit.platform.commons.JUnitException;
 
 class ModuleSupport {
+	private static final boolean SOURCE_MODE = System.getProperty("jdk.launcher.sourcefile") != null;
+
 	static List<Class<?>> listClassesInModule(Module module) {
 		var resolved = module.getLayer().configuration().findModule(module.getName()).orElseThrow();
 		try (var reader = resolved.reference().open()) {
@@ -32,7 +34,7 @@ class ModuleSupport {
 
 	static Optional<Class<?>> loadClassByResourceName(Module module, String name) {
 		var className = name;
-		if (System.getProperty("jdk.launcher.sourcefile") != null) {
+		if (SOURCE_MODE) {
 			if (name.endsWith(".java")) {
 				className = name.substring(0, name.length() - 5).replace('/', '.');
 			}
