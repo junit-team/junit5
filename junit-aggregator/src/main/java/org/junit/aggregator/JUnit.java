@@ -69,10 +69,9 @@ public final class JUnit {
 			return;
 
 		summary.printFailuresTo(new PrintWriter(System.err, true, Charset.defaultCharset()));
-		var message = "JUnit run finished with %d failure%s".formatted( //
+		throw new JUnitException("JUnit run finished with %d failure%s".formatted( //
 			summary.getTotalFailureCount(), //
-			summary.getTotalFailureCount() == 1 ? "" : "s");
-		throw new JUnitException(message);
+			summary.getTotalFailureCount() == 1 ? "" : "s"));
 	}
 
 	public static void main(String[] args) {

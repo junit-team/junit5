@@ -83,13 +83,12 @@ class ContainerFeedPrintingListener implements TestExecutionListener {
 	}
 
 	private void printCaptions() {
-		var format = "%5s %5s %5s %5s %5s %s%n";
-		System.out.printf(format, "Found", "OK", "[A]", "[F]", "[S]", "Display Name");
+		System.out.printf("%5s %5s %5s %5s %5s %s%n", //
+			"Found", "OK", "[A]", "[F]", "[S]", "Display Name");
 	}
 
 	private void print(Summary summary, String name) {
-		var format = "%5s %5s %5s %5s %5s %s%n";
-		System.out.printf(format, summary.size, summary.successful, summary.aborted, summary.failed, summary.skipped,
-			name);
+		System.out.printf("%5s %5s %5s %5s %5s %s%n", //
+			summary.size, summary.successful, summary.aborted, summary.failed, summary.skipped, name);
 	}
 }
