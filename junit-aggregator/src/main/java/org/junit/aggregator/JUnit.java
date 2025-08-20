@@ -49,23 +49,30 @@ public final class JUnit {
 	}
 
 	public static void run(Module testModule) {
-		// TODO run(discovery -> discovery.selectors(selectModule(testModule.getName())));
-		// https://github.com/junit-team/junit-framework/issues/4852
-		var selectors = ModuleSupport.listClassesInModule(testModule).stream().map(
-			DiscoverySelectors::selectClass).toList();
+		// TODO run(discovery -> discovery.selectors(selectModule(testModule)));
+		//      https://github.com/junit-team/junit-framework/issues/4852
+		var selectors = ModuleSupport.listClassesInModule(testModule).stream() //
+				.map(DiscoverySelectors::selectClass).toList();
 		run(discovery -> discovery.selectors(selectors));
 	}
 
 	public static void run(UnaryOperator<LauncherDiscoveryRequestBuilder> discovery) {
 		var listener = new SummaryGeneratingListener();
-		var request = discovery.apply(request()).forExecution().listeners(listener).build();
-		LauncherFactory.create().execute(request);
+		var request = discovery.apply(request()).forExecution() //
+				.listeners(listener, new ContainerFeedPrintingListener()) //
+				.build();
+		var launcher = LauncherFactory.create();
+		launcher.execute(request);
 		var summary = listener.getSummary();
-		summary.printTo(new PrintWriter(System.out, true, Charset.defaultCharset()));
-		if (!summary.getFailures().isEmpty()) {
-			summary.printFailuresTo(new PrintWriter(System.err, true, Charset.defaultCharset()));
-			throw new JUnitException("There are test failures!");
-		}
+
+		if (summary.getTotalFailureCount() == 0)
+			return;
+
+		summary.printFailuresTo(new PrintWriter(System.err, true, Charset.defaultCharset()));
+		var message = "JUnit run finished with %d failure%s".formatted( //
+			summary.getTotalFailureCount(), //
+			summary.getTotalFailureCount() == 1 ? "" : "s");
+		throw new JUnitException(message);
 	}
 
 	public static void main(String[] args) {
