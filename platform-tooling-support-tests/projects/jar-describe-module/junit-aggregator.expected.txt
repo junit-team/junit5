@@ -1,0 +1,10 @@
+org.junit.aggregator@${version} jar:file:.+/junit-aggregator-\d.+\.jar..module-info\.class
+exports org.junit.aggregator
+requires java.base mandated
+requires org.apiguardian.api static transitive
+requires org.jspecify static transitive
+requires org.junit.jupiter transitive
+requires org.junit.platform.console
+requires org.junit.platform.launcher transitive
+uses java.util.spi.ToolProvider
+main-class org.junit.aggregator.JUnit

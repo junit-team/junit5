@@ -31,6 +31,7 @@ class HelperTests {
 	@Test
 	void loadModuleDirectoryNames() {
 		assertLinesMatch(List.of( //
+			"junit-aggregator", //
 			"junit-jupiter", //
 			"junit-jupiter-api", //
 			"junit-jupiter-engine", //
