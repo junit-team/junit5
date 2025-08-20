@@ -16,11 +16,6 @@ tasks.withType<Jar>().named {
 
 	val importAPIGuardian by extra { "org.apiguardian.*;resolution:=\"optional\"" }
 	val importJSpecify by extra { "org.jspecify.*;resolution:=\"optional\"" }
-	val exportAPIGuardian = if (providers.environmentVariable("JITPACK").orNull != "true") {
-		"*;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}"
-	} else {
-		"*"
-	}
 
 	extensions.create<BundleTaskExtension>(BundleTaskExtension.NAME, this).apply {
 		properties.set(projectDescription.map {
@@ -67,7 +62,7 @@ tasks.withType<Jar>().named {
 
 				# Instruct the APIGuardianAnnotations how to operate.
 				# See https://bnd.bndtools.org/instructions/export-apiguardian.html
-				-export-apiguardian: $exportAPIGuardian
+				-export-apiguardian: *;version=${'$'}{versionmask;===;${'$'}{version_cleanup;${'$'}{task.archiveVersion}}}
 
 				# Avoid including java packages in Import-Package header to maximize compatibility with older OSGi runtimes.
 				# See https://bnd.bndtools.org/instructions/noimportjava.html
