@@ -3,4 +3,4 @@ before_install:
   - sdk install java 24-open
   - sdk use java 24-open
 install:
-  - ./gradlew --show-version -Ppublishing.version=$VERSION -Ppublishing.signArtifacts=false javaToolchains publishToMavenLocal
+  - ./gradlew --show-version -Pjitpack.version=$VERSION -Ppublishing.signArtifacts=false javaToolchains publishToMavenLocal

@@ -33,7 +33,9 @@ tasks.withType<Sign>().configureEach {
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
-			version = buildParameters.publishing.version.getOrElse(project.version.toString())
+			version = buildParameters.jitpack.version
+				.map { value -> "(.+)-[0-9a-f]+-\\d+".toRegex().matchEntire(value)!!.groupValues[1] + "-SNAPSHOT" }
+				.getOrElse(project.version.toString())
 			pom {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"

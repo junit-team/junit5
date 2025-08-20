@@ -93,8 +93,10 @@ buildParameters {
 		bool("signArtifacts") {
 			description = "Sign artifacts before publishing them to Maven repos"
 		}
+	}
+	group("jitpack") {
 		string("version") {
-			description = "The version to use for published Maven artifacts"
+			description = "The version computed by Jitpack"
 		}
 	}
 	group("manifest") {
