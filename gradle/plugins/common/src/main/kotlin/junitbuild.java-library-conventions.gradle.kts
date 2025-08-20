@@ -220,7 +220,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.compileJava {
-	if (version.toString().matches("\\d\\..+".toRegex())) {
+	if (providers.environmentVariable("JITPACK").orNull != "true") {
 		// Only set module version if it adheres to the syntax rules
 		options.compilerArgs.addAll(listOf(
 			"--module-version", "${project.version}"
