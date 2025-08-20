@@ -33,6 +33,7 @@ tasks.withType<Sign>().configureEach {
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
+			version = buildParameters.publishing.version.getOrElse(project.version.toString())
 			pom {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"

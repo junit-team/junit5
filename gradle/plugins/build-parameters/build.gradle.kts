@@ -93,6 +93,9 @@ buildParameters {
 		bool("signArtifacts") {
 			description = "Sign artifacts before publishing them to Maven repos"
 		}
+		string("version") {
+			description = "The version to use for published Maven artifacts"
+		}
 	}
 	group("manifest") {
 		string("buildTimestamp") {
