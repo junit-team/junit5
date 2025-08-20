@@ -20,7 +20,7 @@ class ModuleSupport {
 		var resolved = module.getLayer().configuration().findModule(module.getName()).orElseThrow();
 		try (var reader = resolved.reference().open()) {
 			return reader.list() //
-					.map(ModuleSupport::loadClassByResourceName) //
+					.map(name -> loadClassByResourceName(module, name)) //
 					.flatMap(Optional::stream) //
 					.distinct() //
 					.toList();
@@ -30,7 +30,7 @@ class ModuleSupport {
 		}
 	}
 
-	static Optional<Class<?>> loadClassByResourceName(String name) {
+	static Optional<Class<?>> loadClassByResourceName(Module module, String name) {
 		var className = name;
 		if (System.getProperty("jdk.launcher.sourcefile") != null) {
 			if (name.endsWith(".java")) {
@@ -41,7 +41,7 @@ class ModuleSupport {
 			className = name.substring(0, name.length() - 6).replace('/', '.');
 		}
 		try {
-			return Optional.of(Class.forName(className));
+			return Optional.of(Class.forName(module, className));
 		}
 		catch (Throwable ignored) {
 			return Optional.empty();
