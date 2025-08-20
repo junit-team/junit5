@@ -200,6 +200,24 @@ class OrderedClassTests {
 				.containsSubsequence(classTemplate.getSimpleName(), otherClass.getSimpleName());
 	}
 
+	@Test
+	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
+		executeTests(null, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("Test1", "Test2", "Test3", "Test4");
+		callSequence.clear();
+
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("Test4", "Test2", "Test1", "Test3");
+		callSequence.clear();
+
+		executeTests(ClassOrderer.Default.class, selectClass(RevertingBackToDefaultOrderTestCase.Inner.class));
+		assertThat(callSequence).containsExactly("Test1", "Test2", "Test3", "Test4");
+		assertThat(logRecords.stream()) //
+				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
+				.map(LogRecord::getMessage) //
+				.isEmpty();
+	}
+
 	private static void assertIneffectiveOrderAnnotationIssues(List<DiscoveryIssue> discoveryIssues) {
 		assertThat(discoveryIssues).hasSize(2);
 		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
@@ -433,6 +451,51 @@ class OrderedClassTests {
 			}
 
 			private record Ctx() implements ClassTemplateInvocationContext {
+			}
+		}
+	}
+
+	@TestClassOrder(ClassOrderer.DisplayName.class)
+	static class RevertingBackToDefaultOrderTestCase {
+
+		@Nested
+		@TestClassOrder(ClassOrderer.Default.class)
+		class Inner {
+
+			@Nested
+			@Order(3)
+			class Test1 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(2)
+			class Test2 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(4)
+			class Test3 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(1)
+			class Test4 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
 			}
 		}
 	}

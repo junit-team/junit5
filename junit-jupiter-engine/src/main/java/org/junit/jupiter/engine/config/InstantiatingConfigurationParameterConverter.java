@@ -22,7 +22,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * @since 5.5
  */
-class InstantiatingConfigurationParameterConverter<T> {
+class InstantiatingConfigurationParameterConverter<T> implements ConfigurationParameterConverter<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(InstantiatingConfigurationParameterConverter.class);
 
@@ -34,7 +34,8 @@ class InstantiatingConfigurationParameterConverter<T> {
 		this.name = name;
 	}
 
-	Optional<T> get(ConfigurationParameters configurationParameters, String key) {
+	@Override
+	public Optional<T> get(ConfigurationParameters configurationParameters, String key) {
 		return supply(configurationParameters, key).get();
 	}
 

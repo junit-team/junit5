@@ -26,7 +26,7 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @since 5.4
  */
 @API(status = INTERNAL, since = "5.8")
-public class EnumConfigurationParameterConverter<E extends Enum<E>> {
+public class EnumConfigurationParameterConverter<E extends Enum<E>> implements ConfigurationParameterConverter<E> {
 
 	private static final Logger logger = LoggerFactory.getLogger(EnumConfigurationParameterConverter.class);
 
@@ -38,14 +38,14 @@ public class EnumConfigurationParameterConverter<E extends Enum<E>> {
 		this.enumDisplayName = enumDisplayName;
 	}
 
-	public Optional<E> get(ExtensionContext extensionContext, String key) {
-		return extensionContext.getConfigurationParameter(key, value -> convert(key, value));
+	@Override
+	public Optional<E> get(ConfigurationParameters configParams, String key) {
+		return configParams.get(key) //
+				.map(value -> convert(key, value));
 	}
 
-	E getOrDefault(ConfigurationParameters configParams, String key, E defaultValue) {
-		return configParams.get(key) //
-				.map(value -> convert(key, value)) //
-				.orElse(defaultValue);
+	public Optional<E> get(ExtensionContext extensionContext, String key) {
+		return extensionContext.getConfigurationParameter(key, value -> convert(key, value));
 	}
 
 	private E convert(String key, String value) {

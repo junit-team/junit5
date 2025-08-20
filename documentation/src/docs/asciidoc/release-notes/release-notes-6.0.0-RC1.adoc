@@ -75,6 +75,12 @@ repository on GitHub.
 * Non-printable control characters in display names are now replaced with alternative
   representations. Please refer to the
   <<../user-guide/index.adoc#writing-tests-display-names, User Guide>> for details.
+* For consistency with `@TestClassOrder`, `@TestMethodOrder` annotations specified on a
+  test class are now inherited by its `@Nested` inner classes, recursively.
+* Introduce `MethodOrderer.Default` and `ClassOrderer.Default` for reverting back to
+  default ordering on a `@Nested` class and its `@Nested` inner classes when an enclosing
+  class specifies a different orderer via `@TestMethodOrder` or `@TestClassOrder`,
+  respectively.
 
 
 [[release-notes-6.0.0-RC1-junit-vintage]]

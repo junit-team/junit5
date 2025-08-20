@@ -40,6 +40,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.MethodOrderer.Default;
 import org.junit.jupiter.api.MethodOrderer.MethodName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
@@ -53,6 +54,8 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -324,6 +327,24 @@ class OrderedMethodTests {
 				.containsSubsequence("test2()", "test4()");// removed item is re-added before ordered item
 	}
 
+	@Test
+	void nestedClassedCanUseDefaultOrder(@TrackLogRecords LogRecordListener logRecords) {
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, null, Severity.WARNING);
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()", "test4()");
+		callSequence.clear();
+
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, OrderAnnotation.class);
+		assertThat(callSequence).containsExactly("test4()", "test2()", "test1()", "test3()");
+		callSequence.clear();
+
+		executeTestsInParallel(NestedClassWithDefaultOrderTestCase.NestedTests.class, Default.class, Severity.WARNING);
+		assertThat(callSequence).containsExactly("test1()", "test2()", "test3()", "test4()");
+		assertThat(logRecords.stream()) //
+				.filteredOn(it -> it.getLevel().intValue() >= Level.WARNING.intValue()) //
+				.map(LogRecord::getMessage) //
+				.isEmpty();
+	}
+
 	private EngineDiscoveryResults discoverTests(Class<?> testClass,
 			@Nullable Class<? extends MethodOrderer> defaultOrderer) {
 		return testKit(testClass, defaultOrderer, Severity.INFO).discover();
@@ -342,6 +363,7 @@ class OrderedMethodTests {
 
 	private static EngineTestKit.Builder testKit(Class<?> testClass,
 			@Nullable Class<? extends MethodOrderer> defaultOrderer, Severity criticalSeverity) {
+
 		var testKit = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent") //
@@ -694,7 +716,6 @@ class OrderedMethodTests {
 
 	static class OrderAnnotationWithNestedClassTestCase extends OrderAnnotationTestCase {
 		@Nested
-		@TestMethodOrder(OrderAnnotation.class)
 		class NestedTests {
 
 			@BeforeEach
@@ -824,6 +845,40 @@ class OrderedMethodTests {
 	}
 
 	static class ClassTemplateTestCase extends WithoutTestMethodOrderTestCase {
+	}
+
+	static class NestedClassWithDefaultOrderTestCase extends OrderAnnotationTestCase {
+
+		@Nested
+		@TestMethodOrder(Default.class)
+		@Execution(ExecutionMode.SAME_THREAD)
+		class NestedTests {
+
+			@BeforeEach
+			void trackInvocations(TestInfo testInfo) {
+				callSequence.add(testInfo.getDisplayName());
+			}
+
+			@Test
+			@Order(3)
+			void test1() {
+			}
+
+			@Test
+			@Order(2)
+			void test2() {
+			}
+
+			@Test
+			@Order(4)
+			void test3() {
+			}
+
+			@Test
+			@Order(1)
+			void test4() {
+			}
+		}
 	}
 
 }

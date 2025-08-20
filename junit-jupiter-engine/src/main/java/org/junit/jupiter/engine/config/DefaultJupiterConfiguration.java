@@ -10,10 +10,12 @@
 
 package org.junit.jupiter.engine.config;
 
+import static java.util.function.Predicate.isEqual;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
+import static org.junit.jupiter.engine.config.FilteringConfigurationParameterConverter.exclude;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,28 +55,30 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		"junit.jupiter.params.arguments.conversion.locale.format" //
 	);
 
-	private static final EnumConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
+	private static final ConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
 		new EnumConfigurationParameterConverter<>(ExecutionMode.class, "parallel execution mode");
 
-	private static final EnumConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
+	private static final ConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
 		new EnumConfigurationParameterConverter<>(Lifecycle.class, "test instance lifecycle mode");
 
-	private static final InstantiatingConfigurationParameterConverter<DisplayNameGenerator> displayNameGeneratorConverter = //
+	private static final ConfigurationParameterConverter<DisplayNameGenerator> displayNameGeneratorConverter = //
 		new InstantiatingConfigurationParameterConverter<>(DisplayNameGenerator.class, "display name generator");
 
-	private static final InstantiatingConfigurationParameterConverter<MethodOrderer> methodOrdererConverter = //
-		new InstantiatingConfigurationParameterConverter<>(MethodOrderer.class, "method orderer");
+	private static final ConfigurationParameterConverter<MethodOrderer> methodOrdererConverter = //
+		exclude(isEqual(MethodOrderer.Default.class.getName()),
+			new InstantiatingConfigurationParameterConverter<>(MethodOrderer.class, "method orderer"));
 
-	private static final InstantiatingConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
-		new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer");
+	private static final ConfigurationParameterConverter<ClassOrderer> classOrdererConverter = //
+		exclude(isEqual(ClassOrderer.Default.class.getName()),
+			new InstantiatingConfigurationParameterConverter<>(ClassOrderer.class, "class orderer"));
 
-	private static final EnumConfigurationParameterConverter<CleanupMode> cleanupModeConverter = //
+	private static final ConfigurationParameterConverter<CleanupMode> cleanupModeConverter = //
 		new EnumConfigurationParameterConverter<>(CleanupMode.class, "cleanup mode");
 
 	private static final InstantiatingConfigurationParameterConverter<TempDirFactory> tempDirFactoryConverter = //
 		new InstantiatingConfigurationParameterConverter<>(TempDirFactory.class, "temp dir factory");
 
-	private static final EnumConfigurationParameterConverter<ExtensionContextScope> extensionContextScopeConverter = //
+	private static final ConfigurationParameterConverter<ExtensionContextScope> extensionContextScopeConverter = //
 		new EnumConfigurationParameterConverter<>(ExtensionContextScope.class, "extension context scope");
 
 	private final ConfigurationParameters configurationParameters;
