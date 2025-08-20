@@ -11,12 +11,13 @@ val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
 val vintageProjects: List<Project> by rootProject
 
-group = when (project) {
-	in jupiterProjects -> "org.junit.jupiter"
-	in platformProjects -> "org.junit.platform"
-	in vintageProjects -> "org.junit.vintage"
-	else -> "org.junit"
-}
+group = buildParameters.publishing.group
+	.getOrElse(when (project) {
+		in jupiterProjects -> "org.junit.jupiter"
+		in platformProjects -> "org.junit.platform"
+		in vintageProjects -> "org.junit.vintage"
+		else -> "org.junit"
+	})
 
 val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(project.version.isSnapshot() || buildParameters.ci))
 
@@ -33,6 +34,9 @@ tasks.withType<Sign>().configureEach {
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
+			version = buildParameters.jitpack.version
+				.map { value -> "(.+)-[0-9a-f]+-\\d+".toRegex().matchEntire(value)!!.groupValues[1] + "-SNAPSHOT" }
+				.getOrElse(project.version.toString())
 			pom {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"
