@@ -220,9 +220,12 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.compileJava {
-	options.compilerArgs.addAll(listOf(
-		"--module-version", "${project.version}"
-	))
+	if (version.toString().matches("\\d\\..+".toRegex())) {
+		// Only set module version if it adheres to the syntax rules
+		options.compilerArgs.addAll(listOf(
+			"--module-version", "${project.version}"
+		))
+	}
 }
 
 configurations {
