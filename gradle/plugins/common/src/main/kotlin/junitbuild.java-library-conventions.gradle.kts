@@ -113,9 +113,11 @@ if (project in mavenizedProjects) {
 		publications {
 			named<MavenPublication>("maven") {
 				from(components["java"])
-				versionMapping {
-					allVariants {
-						fromResolutionResult()
+				if (!buildParameters.jitpack.version.isPresent) {
+					versionMapping {
+						allVariants {
+							fromResolutionResult()
+						}
 					}
 				}
 				pom {
