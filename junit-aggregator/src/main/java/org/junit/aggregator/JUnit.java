@@ -12,6 +12,7 @@ package org.junit.aggregator;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.PrintWriter;
@@ -48,12 +49,23 @@ public final class JUnit {
 		run(discovery -> discovery.selectors(selectClass(testClass)));
 	}
 
+	public enum ModuleSelectionMode {
+		PLATFORM_DEFAULT, AGGREGATOR_LOCAL
+	}
+
 	public static void run(Module testModule) {
-		// TODO run(discovery -> discovery.selectors(selectModule(testModule)));
-		//      https://github.com/junit-team/junit-framework/issues/4852
-		var selectors = ModuleSupport.listClassesInModule(testModule).stream() //
-				.map(DiscoverySelectors::selectClass).toList();
-		run(discovery -> discovery.selectors(selectors));
+		run(testModule, ModuleSelectionMode.PLATFORM_DEFAULT);
+	}
+
+	public static void run(Module testModule, ModuleSelectionMode mode) {
+		switch (mode) {
+			case PLATFORM_DEFAULT -> run(discovery -> discovery.selectors(selectModule(testModule)));
+			case AGGREGATOR_LOCAL -> {
+				var selectors = ModuleSupport.listClassesInModule(testModule).stream() //
+						.map(DiscoverySelectors::selectClass).toList();
+				run(discovery -> discovery.selectors(selectors));
+			}
+		}
 	}
 
 	public static void run(UnaryOperator<LauncherDiscoveryRequestBuilder> discovery) {

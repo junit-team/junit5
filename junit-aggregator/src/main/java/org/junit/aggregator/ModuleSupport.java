@@ -39,14 +39,14 @@ class ModuleSupport {
 		var className = name;
 		if (SOURCE_MODE) {
 			if (name.endsWith(".java")) {
-				className = name.substring(0, name.length() - 5).replace('/', '.');
+				className = name.substring(0, name.length() - 5);
 			}
 		}
 		if (name.endsWith(".class")) {
-			className = name.substring(0, name.length() - 6).replace('/', '.');
+			className = name.substring(0, name.length() - 6);
 		}
 		try {
-			return Optional.of(Class.forName(module, className));
+			return Optional.of(Class.forName(module, className.replace('/', '.')));
 		}
 		catch (Throwable ignored) {
 			return Optional.empty();
