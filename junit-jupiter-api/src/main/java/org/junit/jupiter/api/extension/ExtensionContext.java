@@ -506,7 +506,7 @@ public interface ExtensionContext {
 		 * @since 5.1
 		 * @deprecated Please extend {@code AutoCloseable} directly.
 		 */
-		@Deprecated
+		@Deprecated(since = "5.13")
 		@API(status = DEPRECATED, since = "5.13")
 		interface CloseableResource {
 

@@ -69,7 +69,7 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext, Annotation)}
 	 * instead.
 	 */
-	@Deprecated
+	@Deprecated(since = "5.13")
 	@API(status = DEPRECATED, since = "5.13")
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
 		throw new JUnitException("""

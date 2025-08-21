@@ -180,10 +180,10 @@ public class TestPlan {
 	 * @return the identifier with the supplied unique ID; never {@code null}
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
 	 * with the supplied unique ID is present in this test plan
-	 * @deprecated Use {@link #getTestIdentifier(UniqueId)}
+	 * @deprecated Use {@link #getTestIdentifier(UniqueId)} instead.
 	 */
 	@API(status = DEPRECATED, since = "1.10", consumers = "Gradle")
-	@Deprecated
+	@Deprecated(since = "1.10")
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
 		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
 		return getTestIdentifier(UniqueId.parse(uniqueId));

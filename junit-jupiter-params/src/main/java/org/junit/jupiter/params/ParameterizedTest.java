@@ -148,7 +148,7 @@ public @interface ParameterizedTest {
 	 * instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String DISPLAY_NAME_PLACEHOLDER = ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 
 	/**
@@ -161,7 +161,7 @@ public @interface ParameterizedTest {
 	 * {@link ParameterizedInvocationConstants#INDEX_PLACEHOLDER} instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String INDEX_PLACEHOLDER = ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 
 	/**
@@ -173,7 +173,7 @@ public @interface ParameterizedTest {
 	 * {@link ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String ARGUMENTS_PLACEHOLDER = ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
 
 	/**
@@ -188,7 +188,7 @@ public @interface ParameterizedTest {
 	 * instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = ParameterizedInvocationConstants.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**
@@ -204,7 +204,7 @@ public @interface ParameterizedTest {
 	 * instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String ARGUMENT_SET_NAME_PLACEHOLDER = ParameterizedInvocationConstants.ARGUMENT_SET_NAME_PLACEHOLDER;
 
 	/**
@@ -222,7 +222,7 @@ public @interface ParameterizedTest {
 	 * instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = //
 		ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
@@ -239,7 +239,7 @@ public @interface ParameterizedTest {
 	 * {@link ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME} instead.
 	 */
 	@API(status = DEPRECATED, since = "5.13")
-	@Deprecated
+	@Deprecated(since = "5.13")
 	String DEFAULT_DISPLAY_NAME = ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
 
 	/**

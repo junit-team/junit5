@@ -110,7 +110,7 @@ public interface Launcher {
 	 * @param listeners additional test execution listeners; never {@code null}
 	 * @deprecated Please use {@link #execute(LauncherExecutionRequest)} instead.
 	 */
-	@Deprecated
+	@Deprecated(since = "6.0")
 	@API(status = DEPRECATED, since = "6.0")
 	default void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
 		var executionRequest = LauncherExecutionRequestBuilder.request(launcherDiscoveryRequest) //
@@ -136,7 +136,7 @@ public interface Launcher {
 	 * @since 1.4
 	 * @deprecated Please use {@link #execute(LauncherExecutionRequest)} instead.
 	 */
-	@Deprecated
+	@Deprecated(since = "6.0")
 	@API(status = DEPRECATED, since = "6.0")
 	default void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		var executionRequest = LauncherExecutionRequestBuilder.request(testPlan) //

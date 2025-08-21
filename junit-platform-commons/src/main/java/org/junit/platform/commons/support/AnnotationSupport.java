@@ -176,7 +176,7 @@ public final class AnnotationSupport {
 	 * {@link #findAnnotation(Class, Class, List)} (for
 	 * {@code SearchOption.INCLUDE_ENCLOSING_CLASSES}) instead
 	 */
-	@Deprecated
+	@Deprecated(since = "1.12")
 	@API(status = DEPRECATED, since = "1.12")
 	@SuppressWarnings("deprecation")
 	public static <A extends Annotation> Optional<A> findAnnotation(@Nullable Class<?> clazz, Class<A> annotationType,

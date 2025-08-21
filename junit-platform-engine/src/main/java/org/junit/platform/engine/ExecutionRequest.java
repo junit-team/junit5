@@ -47,7 +47,12 @@ public class ExecutionRequest {
 	private final @Nullable NamespacedHierarchicalStore<Namespace> requestLevelStore;
 	private final CancellationToken cancellationToken;
 
-	@Deprecated
+	/**
+	 * @deprecated Use
+	 * {@link #create(TestDescriptor, EngineExecutionListener, ConfigurationParameters, OutputDirectoryProvider, NamespacedHierarchicalStore, CancellationToken)}
+	 * instead.
+	 */
+	@Deprecated(since = "1.11")
 	@API(status = DEPRECATED, since = "1.11")
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
 			ConfigurationParameters configurationParameters) {
@@ -81,7 +86,7 @@ public class ExecutionRequest {
 	 * @since 1.9
 	 * @deprecated without replacement
 	 */
-	@Deprecated
+	@Deprecated(since = "1.11")
 	@API(status = DEPRECATED, since = "1.11")
 	public static ExecutionRequest create(TestDescriptor rootTestDescriptor,
 			EngineExecutionListener engineExecutionListener, ConfigurationParameters configurationParameters) {

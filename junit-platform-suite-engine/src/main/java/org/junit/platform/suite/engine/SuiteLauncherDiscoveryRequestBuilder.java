@@ -216,7 +216,7 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 	 * {@link #applyConfigurationParametersFromSuite} and
 	 * {@link #applySelectorsAndFiltersFromSuite}
 	 */
-	@Deprecated
+	@Deprecated(since = "1.11")
 	SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 		applyConfigurationParametersFromSuite(suiteClass);

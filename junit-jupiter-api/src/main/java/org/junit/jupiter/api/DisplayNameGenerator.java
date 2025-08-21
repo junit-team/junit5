@@ -107,7 +107,7 @@ public interface DisplayNameGenerator {
 	 * @deprecated in favor of {@link #generateDisplayNameForNestedClass(List, Class)}
 	 */
 	@API(status = DEPRECATED, since = "5.12")
-	@Deprecated
+	@Deprecated(since = "5.12")
 	default String generateDisplayNameForNestedClass(Class<?> nestedClass) {
 		throw new UnsupportedOperationException(
 			"Implement generateDisplayNameForNestedClass(List<Class<?>>, Class<?>) instead");
@@ -153,7 +153,7 @@ public interface DisplayNameGenerator {
 	 * @deprecated in favor of {@link #generateDisplayNameForMethod(List, Class, Method)}
 	 */
 	@API(status = DEPRECATED, since = "5.12")
-	@Deprecated
+	@Deprecated(since = "5.12")
 	default String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 		throw new UnsupportedOperationException(
 			"Implement generateDisplayNameForMethod(List<Class<?>>, Class<?>, Method) instead");
