@@ -614,10 +614,9 @@ public interface ExtensionContext {
 		 * @see #computeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
 		 * @see AutoCloseable
-		 *
 		 * @deprecated Please use {@link #computeIfAbsent(Class)} instead.
 		 */
-		@Deprecated
+		@Deprecated(since = "6.0")
 		@API(status = DEPRECATED, since = "6.0")
 		default <V> V getOrComputeIfAbsent(Class<V> type) {
 			return computeIfAbsent(type);
@@ -691,11 +690,9 @@ public interface ExtensionContext {
 		 * @see #computeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
 		 * @see AutoCloseable
-		 *
-		 * @deprecated Please use {@link #computeIfAbsent(Object, Function)}
-		 * instead.
+		 * @deprecated Please use {@link #computeIfAbsent(Object, Function)} instead.
 		 */
-		@Deprecated
+		@Deprecated(since = "6.0")
 		@API(status = DEPRECATED, since = "6.0")
 		<K, V extends @Nullable Object> @Nullable Object getOrComputeIfAbsent(K key,
 				Function<? super K, ? extends V> defaultCreator);
@@ -734,6 +731,7 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
+		@API(status = MAINTAINED, since = "6.0")
 		<K, V> Object computeIfAbsent(K key, Function<? super K, ? extends V> defaultCreator);
 
 		/**
@@ -765,8 +763,9 @@ public interface ExtensionContext {
 		 * @see #computeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
 		 * @see AutoCloseable
+		 * @deprecated Please use {@link #computeIfAbsent(Object, Function, Class)} instead.
 		 */
-		@Deprecated
+		@Deprecated(since = "6.0")
 		@API(status = DEPRECATED, since = "6.0")
 		<K, V extends @Nullable Object> @Nullable V getOrComputeIfAbsent(K key,
 				Function<? super K, ? extends V> defaultCreator, Class<V> requiredType);
@@ -797,11 +796,13 @@ public interface ExtensionContext {
 		 * @param <K> the key type
 		 * @param <V> the value type
 		 * @return the value; never {@code null}
+		 * @since 6.0
 		 * @see #computeIfAbsent(Class)
 		 * @see #computeIfAbsent(Object, Function)
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
+		@API(status = MAINTAINED, since = "6.0")
 		<K, V> V computeIfAbsent(K key, Function<? super K, ? extends V> defaultCreator, Class<V> requiredType);
 
 		/**
