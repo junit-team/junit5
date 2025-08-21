@@ -206,25 +206,6 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Apply a suite's annotation-based configuration, selectors, and filters to
-	 * this builder.
-	 *
-	 * @param suiteClass the class to apply the annotations from; never {@code null}
-	 * @return this builder for method chaining
-	 * @see org.junit.platform.suite.api.Suite
-	 * @deprecated as of JUnit Platform 1.11 in favor of
-	 * {@link #applyConfigurationParametersFromSuite} and
-	 * {@link #applySelectorsAndFiltersFromSuite}
-	 */
-	@Deprecated(since = "1.11")
-	SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
-		Preconditions.notNull(suiteClass, "Suite class must not be null");
-		applyConfigurationParametersFromSuite(suiteClass);
-		applySelectorsAndFiltersFromSuite(suiteClass);
-		return this;
-	}
-
-	/**
 	 * Apply a suite's annotation-based configuration to this builder.
 	 *
 	 * <p>This will apply the configuration from the following annotations.
