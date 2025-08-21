@@ -36,7 +36,9 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-RC2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `selectClasses(...)` and `selectClassesByName(...)` utility methods have been
+  introduced in `{DiscoverySelectors}` to simplify use cases where one needs to select
+  multiple individual test classes for the `Launcher` or `EngineTestKit`.
 
 
 [[release-notes-6.0.0-RC2-junit-jupiter]]

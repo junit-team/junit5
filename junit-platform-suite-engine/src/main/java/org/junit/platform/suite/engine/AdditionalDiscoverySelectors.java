@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -66,20 +65,6 @@ class AdditionalDiscoverySelectors {
 				.map(DiscoverySelectors::selectPackage)
 				.toList();
 		// @formatter:on
-	}
-
-	static Stream<ClassSelector> selectClasses(Class<?>... classes) {
-		Preconditions.notNull(classes, "classes must not be null");
-		Preconditions.containsNoNullElements(classes, "Individual classes must not be null");
-
-		return uniqueStreamOf(classes).map(DiscoverySelectors::selectClass);
-	}
-
-	static Stream<ClassSelector> selectClasses(String... classNames) {
-		Preconditions.notNull(classNames, "classNames must not be null");
-		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
-
-		return uniqueStreamOf(classNames).map(DiscoverySelectors::selectClass);
 	}
 
 	static List<ModuleSelector> selectModules(String... moduleNames) {

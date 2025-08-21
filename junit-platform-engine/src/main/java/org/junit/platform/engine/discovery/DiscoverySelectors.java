@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -448,6 +449,119 @@ public final class DiscoverySelectors {
 	public static ClassSelector selectClass(@Nullable ClassLoader classLoader, String className) {
 		Preconditions.notBlank(className, "Class name must not be null or blank");
 		return new ClassSelector(classLoader, className);
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied {@link Class}.
+	 *
+	 * @param classes the classes to select; never {@code null} and never containing
+	 * {@code null} class references
+	 * @since 6.0
+	 * @see #selectClass(Class)
+	 * @see #selectClasses(List)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClasses(Class<?>... classes) {
+		return selectClasses(List.of(classes));
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied {@link Class}.
+	 *
+	 * @param classes the classes to select; never {@code null} and never containing
+	 * {@code null} class references
+	 * @since 6.0
+	 * @see #selectClass(Class)
+	 * @see #selectClasses(Class...)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClasses(List<Class<?>> classes) {
+		Preconditions.notNull(classes, "classes must not be null");
+		Preconditions.containsNoNullElements(classes, "Individual classes must not be null");
+
+		// @formatter:off
+		return classes.stream()
+				.distinct()
+				.map(DiscoverySelectors::selectClass)
+				.toArray(ClassSelector[]::new);
+		// @formatter:on
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied class name.
+	 *
+	 * @param classNames the fully qualified names of the classes to select;
+	 * never {@code null} and never containing {@code null} or blank names
+	 * @since 6.0
+	 * @see #selectClass(String)
+	 * @see #selectClassesByName(List)
+	 * @see #selectClassesByName(ClassLoader, String...)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClassesByName(String... classNames) {
+		return selectClassesByName(List.of(classNames));
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied class name.
+	 *
+	 * @param classNames the fully qualified names of the classes to select;
+	 * never {@code null} and never containing {@code null} or blank names
+	 * @since 6.0
+	 * @see #selectClass(String)
+	 * @see #selectClassesByName(String...)
+	 * @see #selectClassesByName(ClassLoader, List)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClassesByName(List<String> classNames) {
+		return selectClassesByName(null, classNames);
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied class name, using the
+	 * supplied class loader.
+	 *
+	 * @param classLoader the class loader to use to load the classes, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
+	 * @param classNames the fully qualified names of the classes to select;
+	 * never {@code null} and never containing {@code null} or blank names
+	 * @since 6.0
+	 * @see #selectClass(ClassLoader, String)
+	 * @see #selectClassesByName(ClassLoader, List)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClassesByName(@Nullable ClassLoader classLoader, String... classNames) {
+		return selectClassesByName(classLoader, List.of(classNames));
+	}
+
+	/**
+	 * Create a {@code ClassSelector} for each supplied class name, using the
+	 * supplied class loader.
+	 *
+	 * @param classLoader the class loader to use to load the classes, or {@code null}
+	 * to signal that the default {@code ClassLoader} should be used
+	 * @param classNames the fully qualified names of the classes to select;
+	 * never {@code null} and never containing {@code null} or blank names
+	 * @since 6.0
+	 * @see #selectClass(ClassLoader, String)
+	 * @see ClassSelector
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public static ClassSelector[] selectClassesByName(@Nullable ClassLoader classLoader, List<String> classNames) {
+		Preconditions.notNull(classNames, "classNames must not be null");
+		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
+
+		// @formatter:off
+		return classNames.stream()
+				.distinct()
+				.map(className -> selectClass(classLoader, className))
+				.toArray(ClassSelector[]::new);
+		// @formatter:on
 	}
 
 	/**

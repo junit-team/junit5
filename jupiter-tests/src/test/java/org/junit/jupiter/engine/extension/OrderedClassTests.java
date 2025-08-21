@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasses;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +94,7 @@ class OrderedClassTests {
 			example.B_TestCase.callSequence = callSequence;
 
 			// @formatter:off
-			executeTests(ClassOrderer.ClassName.class, selectClass(B_TestCase.class), selectClass(example.B_TestCase.class))
+			executeTests(ClassOrderer.ClassName.class, selectClasses(B_TestCase.class, example.B_TestCase.class))
 					.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 			// @formatter:on
 
@@ -193,7 +194,7 @@ class OrderedClassTests {
 		var classTemplate = ClassTemplateWithLocalConfigTestCase.class;
 		var otherClass = A_TestCase.class;
 
-		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(otherClass), selectClass(classTemplate))//
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClasses(otherClass, classTemplate))//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence)//
@@ -231,8 +232,7 @@ class OrderedClassTests {
 	}
 
 	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer) {
-		return executeTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
-			selectClass(C_TestCase.class));
+		return executeTests(classOrderer, selectClasses(A_TestCase.class, B_TestCase.class, C_TestCase.class));
 	}
 
 	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
@@ -244,8 +244,7 @@ class OrderedClassTests {
 	}
 
 	private EngineDiscoveryResults discoverTests(@Nullable Class<? extends ClassOrderer> classOrderer) {
-		return discoverTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
-			selectClass(C_TestCase.class));
+		return discoverTests(classOrderer, selectClasses(A_TestCase.class, B_TestCase.class, C_TestCase.class));
 	}
 
 	private EngineDiscoveryResults discoverTests(@Nullable Class<? extends ClassOrderer> classOrderer,
