@@ -1087,6 +1087,13 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 6.0
+	 */
+	public static List<Resource> findAllResourcesInModule(Module module, Predicate<Resource> resourceFilter) {
+		return List.copyOf(ModuleUtils.findAllResourcesInModule(module, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 */
 	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, ClassFilter classFilter) {

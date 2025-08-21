@@ -134,6 +134,26 @@ public class ModuleUtils {
 	}
 
 	/**
+	 * Find all {@linkplain Resource resources} for the given module.
+	 *
+	 * @param module the module to scan; never {@code null} or <em>empty</em>
+	 * @param filter the class filter to apply; never {@code null}
+	 * @return an immutable list of all such resources found; never {@code null}
+	 * but potentially empty
+	 * @since 6.0
+	 */
+	@API(status = INTERNAL, since = "6.0")
+	public static List<Resource> findAllResourcesInModule(Module module, Predicate<Resource> filter) {
+		Preconditions.notNull(module, "Module name must not be null");
+		Preconditions.notNull(filter, "Resource filter must not be null");
+
+		String name = module.getName();
+		logger.debug(() -> "Looking for classes in module: " + name);
+		var reference = module.getLayer().configuration().findModule(name).orElseThrow().reference();
+		return scan(Set.of(reference), filter, module.getClassLoader());
+	}
+
+	/**
 	 * Stream resolved modules from current (or boot) module layer.
 	 */
 	private static Stream<ResolvedModule> streamResolvedModules(Predicate<String> moduleNamePredicate) {
