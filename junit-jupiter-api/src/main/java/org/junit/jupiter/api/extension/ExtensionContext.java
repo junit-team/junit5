@@ -135,6 +135,22 @@ public interface ExtensionContext {
 	Optional<Class<?>> getTestClass();
 
 	/**
+	 * Get the <em>required</em> {@link Class} associated with the current test
+	 * or container.
+	 *
+	 * <p>Use this method as an alternative to {@link #getTestClass()} for use
+	 * cases in which the test class is required to be present.
+	 *
+	 * @return the test class; never {@code null}
+	 * @throws PreconditionViolationException if the test class is not present
+	 * in this {@code ExtensionContext}
+	 */
+	default Class<?> getRequiredTestClass() {
+		return Preconditions.notNull(getTestClass().orElse(null),
+			"Illegal state: required test class is not present in the current ExtensionContext");
+	}
+
+	/**
 	 * Get the enclosing test classes of the current test or container.
 	 *
 	 * <p>This method is useful to look up annotations on nested test classes
@@ -158,22 +174,6 @@ public interface ExtensionContext {
 	 */
 	@API(status = MAINTAINED, since = "5.13.3")
 	List<Class<?>> getEnclosingTestClasses();
-
-	/**
-	 * Get the <em>required</em> {@link Class} associated with the current test
-	 * or container.
-	 *
-	 * <p>Use this method as an alternative to {@link #getTestClass()} for use
-	 * cases in which the test class is required to be present.
-	 *
-	 * @return the test class; never {@code null}
-	 * @throws PreconditionViolationException if the test class is not present
-	 * in this {@code ExtensionContext}
-	 */
-	default Class<?> getRequiredTestClass() {
-		return Preconditions.notNull(getTestClass().orElse(null),
-			"Illegal state: required test class is not present in the current ExtensionContext");
-	}
 
 	/**
 	 * Get the {@link Lifecycle} of the {@linkplain #getTestInstance() test
