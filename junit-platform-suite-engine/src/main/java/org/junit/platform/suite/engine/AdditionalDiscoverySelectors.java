@@ -114,8 +114,7 @@ class AdditionalDiscoverySelectors {
 	}
 
 	static List<? extends DiscoverySelector> parseIdentifiers(String[] identifiers) {
-		return DiscoverySelectors.parseAll(identifiers) //
-				.toList();
+		return DiscoverySelectors.parseAll(identifiers).toList();
 	}
 
 	private static <T> Stream<T> uniqueStreamOf(T[] elements) {

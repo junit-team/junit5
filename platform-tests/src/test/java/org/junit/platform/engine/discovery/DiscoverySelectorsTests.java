@@ -551,18 +551,15 @@ class DiscoverySelectorsTests {
 	class SelectClassTests {
 
 		@Test
-		void selectClassByName() {
-			var selector = selectClass(getClass().getName());
+		void selectClassByReference() {
+			var selector = selectClass(getClass());
 			assertEquals(getClass(), selector.getJavaClass());
 		}
 
 		@Test
-		void pareClassByName() {
-			var selector = parseIdentifier(selectClass(getClass()));
-			assertThat(selector) //
-					.asInstanceOf(type(ClassSelector.class)) //
-					.extracting(ClassSelector::getJavaClass) //
-					.isEqualTo(getClass());
+		void selectClassByName() {
+			var selector = selectClass(getClass().getName());
+			assertEquals(getClass(), selector.getJavaClass());
 		}
 
 		@Test
@@ -575,6 +572,15 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
 				assertThat(selector.getJavaClass().getClassLoader()).isSameAs(testClassLoader);
 			}
+		}
+
+		@Test
+		void parseClassSelector() {
+			var selector = parseIdentifier(selectClass(getClass()));
+			assertThat(selector) //
+					.asInstanceOf(type(ClassSelector.class)) //
+					.extracting(ClassSelector::getJavaClass) //
+					.isEqualTo(getClass());
 		}
 
 	}
