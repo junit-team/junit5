@@ -115,7 +115,7 @@ class CsvArgumentsProviderTests {
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(new Object[][] { { "", "1" }, { "", "2" }, { "", "3" }, { "", "4" } });
+		assertThat(arguments).containsExactly(array("", "1"), array("", "2"), array("", "3"), array("", "4"));
 	}
 
 	@Test
@@ -124,7 +124,7 @@ class CsvArgumentsProviderTests {
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(new Object[][] { { "1", "" }, { "2", "" }, { "3", "" }, { "4", "" } });
+		assertThat(arguments).containsExactly(array("1", ""), array("2", ""), array("3", ""), array("4", ""));
 	}
 
 	@Test
@@ -159,8 +159,7 @@ class CsvArgumentsProviderTests {
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(
-			new Object[][] { { "1", "a" }, { "2", " b" }, { "3", "c " }, { "4", " d " } });
+		assertThat(arguments).containsExactly(array("1", "a"), array("2", " b"), array("3", "c "), array("4", " d "));
 	}
 
 	@Test
@@ -293,9 +292,7 @@ class CsvArgumentsProviderTests {
 				apple, 1
 				""").build();
 
-		assertThat(headersToValues(annotation)).containsExactly(//
-			array("FRUIT = apple", "null = 1")//
-		);
+		assertThat(headersToValues(annotation)).containsExactly(array("FRUIT = apple", "null = 1"));
 	}
 
 	@Test
@@ -304,7 +301,7 @@ class CsvArgumentsProviderTests {
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(new Object[][] { { "", "" }, { null, null } });
+		assertThat(arguments).containsExactly(array("", ""), array(null, null));
 	}
 
 	@Test
