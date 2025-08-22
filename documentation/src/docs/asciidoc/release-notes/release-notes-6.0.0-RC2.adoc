@@ -24,7 +24,9 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-RC2-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* The `Launcher` (specifically `LauncherDiscoveryResult`) now retains the original
+  `TestEngine` registration order after pruning test engines without tests, thereby
+  ensuring reliable test execution order of multiple test engines.
 
 [[release-notes-6.0.0-RC2-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
