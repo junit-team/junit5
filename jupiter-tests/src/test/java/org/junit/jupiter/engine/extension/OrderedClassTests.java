@@ -236,6 +236,11 @@ class OrderedClassTests {
 	}
 
 	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
+		return executeTests(classOrderer, List.of(selectors));
+	}
+
+	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer,
+			List<? extends DiscoverySelector> selectors) {
 		// @formatter:off
 		return testKit(classOrderer, selectors)
 				.execute()
@@ -248,12 +253,12 @@ class OrderedClassTests {
 	}
 
 	private EngineDiscoveryResults discoverTests(@Nullable Class<? extends ClassOrderer> classOrderer,
-			DiscoverySelector... selectors) {
+			List<? extends DiscoverySelector> selectors) {
 		return testKit(classOrderer, selectors).discover();
 	}
 
 	private static EngineTestKit.Builder testKit(@Nullable Class<? extends ClassOrderer> classOrderer,
-			DiscoverySelector[] selectors) {
+			List<? extends DiscoverySelector> selectors) {
 
 		var testKit = EngineTestKit.engine("junit-jupiter");
 		if (classOrderer != null) {

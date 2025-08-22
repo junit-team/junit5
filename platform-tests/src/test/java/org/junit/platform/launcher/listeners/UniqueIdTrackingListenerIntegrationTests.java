@@ -208,6 +208,10 @@ class UniqueIdTrackingListenerIntegrationTests {
 	}
 
 	private List<String> executeTests(Map<String, String> configurationParameters, ClassSelector... classSelectors) {
+		return executeTests(configurationParameters, List.of(classSelectors));
+	}
+
+	private List<String> executeTests(Map<String, String> configurationParameters, List<ClassSelector> classSelectors) {
 		List<String> uniqueIds = new ArrayList<>();
 		var listener = new TestExecutionListener() {
 
@@ -249,7 +253,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 		return uniqueIds;
 	}
 
-	private static ClassSelector[] selectClasses() {
+	private static List<ClassSelector> selectClasses() {
 		return DiscoverySelectors.selectClasses(TestCase1.class, TestCase2.class, DisabledTestCase.class);
 	}
 

@@ -462,7 +462,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClasses(Class<?>... classes) {
+	public static List<ClassSelector> selectClasses(Class<?>... classes) {
 		return selectClasses(List.of(classes));
 	}
 
@@ -477,7 +477,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClasses(List<Class<?>> classes) {
+	public static List<ClassSelector> selectClasses(List<Class<?>> classes) {
 		Preconditions.notNull(classes, "classes must not be null");
 		Preconditions.containsNoNullElements(classes, "Individual classes must not be null");
 
@@ -485,7 +485,7 @@ public final class DiscoverySelectors {
 		return classes.stream()
 				.distinct()
 				.map(DiscoverySelectors::selectClass)
-				.toArray(ClassSelector[]::new);
+				.toList();
 		// @formatter:on
 	}
 
@@ -501,7 +501,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClassesByName(String... classNames) {
+	public static List<ClassSelector> selectClassesByName(String... classNames) {
 		return selectClassesByName(List.of(classNames));
 	}
 
@@ -517,7 +517,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClassesByName(List<String> classNames) {
+	public static List<ClassSelector> selectClassesByName(List<String> classNames) {
 		return selectClassesByName(null, classNames);
 	}
 
@@ -535,7 +535,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClassesByName(@Nullable ClassLoader classLoader, String... classNames) {
+	public static List<ClassSelector> selectClassesByName(@Nullable ClassLoader classLoader, String... classNames) {
 		return selectClassesByName(classLoader, List.of(classNames));
 	}
 
@@ -552,7 +552,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	public static ClassSelector[] selectClassesByName(@Nullable ClassLoader classLoader, List<String> classNames) {
+	public static List<ClassSelector> selectClassesByName(@Nullable ClassLoader classLoader, List<String> classNames) {
 		Preconditions.notNull(classNames, "classNames must not be null");
 		Preconditions.containsNoNullElements(classNames, "Individual class names must not be null");
 
@@ -560,7 +560,7 @@ public final class DiscoverySelectors {
 		return classNames.stream()
 				.distinct()
 				.map(className -> selectClass(classLoader, className))
-				.toArray(ClassSelector[]::new);
+				.toList();
 		// @formatter:on
 	}
 

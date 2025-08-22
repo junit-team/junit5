@@ -603,7 +603,7 @@ class DiscoverySelectorsTests {
 			assertSelectClassesByReferenceResults(selectClasses(List.of(String.class, Integer.class)));
 		}
 
-		private static void assertSelectClassesByReferenceResults(ClassSelector[] selectors) {
+		private static void assertSelectClassesByReferenceResults(List<ClassSelector> selectors) {
 			Class<?> class1 = String.class;
 			Class<?> class2 = Integer.class;
 

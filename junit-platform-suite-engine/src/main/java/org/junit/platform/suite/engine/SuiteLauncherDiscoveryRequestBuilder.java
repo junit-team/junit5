@@ -376,8 +376,8 @@ final class SuiteLauncherDiscoveryRequestBuilder {
 			() -> "@SelectClasses on class [%s] must declare at least one class reference or name".formatted(
 				suiteClass.getName()));
 		return Stream.concat(//
-			Arrays.stream(DiscoverySelectors.selectClasses(annotation.value())), //
-			Arrays.stream(DiscoverySelectors.selectClassesByName(annotation.names())) //
+			DiscoverySelectors.selectClasses(annotation.value()).stream(), //
+			DiscoverySelectors.selectClassesByName(annotation.names()).stream() //
 		);
 	}
 
