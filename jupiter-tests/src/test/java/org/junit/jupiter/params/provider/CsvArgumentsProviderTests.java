@@ -109,18 +109,24 @@ class CsvArgumentsProviderTests {
 		assertThat(arguments).containsExactly(array("foo", "bar"));
 	}
 
+	/**
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3824">GitHub issue #3824</a>
+	 */
 	@Test
-	void trimsLeadingSpaces() {
-		var annotation = csvSource("'', 1", " '', 2", "'' , 3", " '' , 4");
+	void trimsLeadingWhitespaceAndControlCharacters() {
+		var annotation = csvSource("'', 1", "\t'',\b2", "'',\u00003", " '', \t 4");
 
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(array("", "1"), array("", "2"), array("", "3"), array("", "4"));
 	}
 
+	/**
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3824">GitHub issue #3824</a>
+	 */
 	@Test
-	void trimsTrailingSpaces() {
-		var annotation = csvSource("1,''", "2, ''", "3,'' ", "4, '' ");
+	void trimsTrailingWhitespaceAndControlCharacters() {
+		var annotation = csvSource("1 ,'' ", "2\t,''\b", "3   ,''\u0000", "4,'' \t ");
 
 		var arguments = provideArguments(annotation);
 
@@ -128,38 +134,62 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	void trimsSpacesUsingStringTrim() {
-		// \u0000 (null) removed by trim(), preserved by strip()
-		// \u00A0 (non-breaking space) preserved by trim(), removed by strip()
-		var annotation = csvSource().lines(
-			// Unquoted
-			"\u0000, \u0000foo\u0000, \u00A0bar\u00A0",
-			// Quoted
-			"'\u0000', '\u0000 foo \u0000', ' \u00A0bar\u0000'",
-			// Mixed
-			"\u0000'\u0000 foo', \u00A0' bar\u0000'"//
-		).build();
-
-		var arguments = provideArguments(annotation);
-
-		assertThat(arguments).containsExactly(
-			// Unquoted
-			array("", "foo", "\u00A0bar\u00A0"),
-			// Quoted
-			array("\u0000", "\u0000 foo \u0000", " \u00A0bar\u0000"),
-			// Mixed
-			array("\u0000 foo", "\u00A0' bar\u0000'")//
-		);
-	}
-
-	@Test
-	void ignoresLeadingAndTrailingSpaces() {
-		var annotation = csvSource().lines("1,a", "2, b", "3,c ", "4, d ") //
+	void preservesLeadingAndTrailingWhitespaceAndControlCharactersWhenRequested() {
+		var annotation = csvSource().lines(" 1 , a ", "\t2\b, b   ", "\u00003\u0007,c ", "4, \t d \t ") //
 				.ignoreLeadingAndTrailingWhitespace(false).build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("1", "a"), array("2", " b"), array("3", "c "), array("4", " d "));
+		assertThat(arguments).containsExactly(//
+			array(" 1 ", " a "), //
+			array("\t2\b", " b   "), //
+			array("\u00003\u0007", "c "), //
+			array("4", " \t d \t "));
+	}
+
+	/**
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3824">GitHub issue #3824</a>
+	 */
+	@Test
+	void trimVsStripSemanticsWithUnquotedText() {
+		// \u0000 (null character) removed by trim(), preserved by strip()
+		// \u00A0 (non-breaking space) preserved by trim(), removed by strip()
+
+		var annotation = csvSource().lines("\u0000, \u0000foo\u0000, \u00A0bar\u00A0").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("", "foo", "\u00A0bar\u00A0"));
+	}
+
+	/**
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3824">GitHub issue #3824</a>
+	 */
+	@Test
+	void trimVsStripSemanticsWithQuotedText() {
+		// \u0000 (null character) removed by trim(), preserved by strip()
+		// \u00A0 (non-breaking space) preserved by trim(), removed by strip()
+
+		var annotation = csvSource().lines("'\u0000', '\u0000 foo \u0000', '\t\u00A0bar\u0000'").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("\u0000", "\u0000 foo \u0000", "\t\u00A0bar\u0000"));
+	}
+
+	/**
+	 * @see <a href="https://github.com/junit-team/junit-framework/issues/3824">GitHub issue #3824</a>
+	 */
+	@Test
+	void trimVsStripSemanticsWithUnquotedAndQuotedText() {
+		// \u0000 (null character) removed by trim(), preserved by strip()
+		// \u00A0 (non-breaking space) preserved by trim(), removed by strip()
+
+		var annotation = csvSource().lines("\u0000'\u0000 foo', \u00A0' bar\u0000'").build();
+
+		var arguments = provideArguments(annotation);
+
+		assertThat(arguments).containsExactly(array("\u0000 foo", "\u00A0' bar\u0000'"));
 	}
 
 	@Test
