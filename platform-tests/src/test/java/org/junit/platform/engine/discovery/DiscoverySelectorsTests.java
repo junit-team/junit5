@@ -94,11 +94,6 @@ class DiscoverySelectorsTests {
 			assertEquals(uri, selector.getUri());
 		}
 
-	}
-
-	@Nested
-	class SelectFileTests {
-
 		@Test
 		void parseUriSelector() {
 			var selector = parseIdentifier(selectUri("https://junit.org"));
@@ -107,6 +102,11 @@ class DiscoverySelectorsTests {
 					.extracting(UriSelector::getUri) //
 					.isEqualTo(URI.create("https://junit.org"));
 		}
+
+	}
+
+	@Nested
+	class SelectFileTests {
 
 		@SuppressWarnings("DataFlowIssue")
 		@Test
@@ -174,11 +174,6 @@ class DiscoverySelectorsTests {
 			assertEquals(FilePosition.from(12, 34), selector.getPosition().orElseThrow());
 		}
 
-	}
-
-	@Nested
-	class SelectDirectoryTests {
-
 		@Test
 		void parseFileSelectorWithRelativePath() {
 			var path = "src/test/resources/do_not_delete_me.txt";
@@ -232,6 +227,11 @@ class DiscoverySelectorsTests {
 						Optional.of(filePosition));
 		}
 
+	}
+
+	@Nested
+	class SelectDirectoryTests {
+
 		@SuppressWarnings("DataFlowIssue")
 		@Test
 		void selectDirectoryByName() {
@@ -263,11 +263,6 @@ class DiscoverySelectorsTests {
 			assertEquals(Path.of(path), selector.getPath());
 		}
 
-	}
-
-	@Nested
-	class SelectClasspathResourceTests {
-
 		@Test
 		void parseDirectorySelectorWithRelativePath() {
 			var path = "src/test/resources";
@@ -293,6 +288,11 @@ class DiscoverySelectorsTests {
 						DirectorySelector::getPath) //
 					.containsExactly(path, new File(path), Path.of(path));
 		}
+
+	}
+
+	@Nested
+	class SelectClasspathResourceTests {
 
 		@SuppressWarnings("DataFlowIssue")
 		@Test
@@ -417,21 +417,6 @@ class DiscoverySelectorsTests {
 	@Nested
 	class SelectModuleTests {
 
-		@Test
-		void selectModuleByName() {
-			var selector = selectModule("java.base");
-			assertEquals("java.base", selector.getModuleName());
-		}
-
-		@Test
-		void parseModuleByName() {
-			var selector = parseIdentifier(selectModule("java.base"));
-			assertThat(selector) //
-					.asInstanceOf(type(ModuleSelector.class)) //
-					.extracting(ModuleSelector::getModuleName) //
-					.isEqualTo("java.base");
-		}
-
 		@SuppressWarnings("DataFlowIssue")
 		@Test
 		void selectModuleByNamePreconditions() {
@@ -441,10 +426,9 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
-		void selectModulesByNames() {
-			var selectors = selectModules(Set.of("a", "b"));
-			var names = selectors.stream().map(ModuleSelector::getModuleName).toList();
-			assertThat(names).containsExactlyInAnyOrder("b", "a");
+		void selectModuleByName() {
+			var selector = selectModule("java.base");
+			assertEquals("java.base", selector.getModuleName());
 		}
 
 		@SuppressWarnings("DataFlowIssue")
@@ -452,6 +436,22 @@ class DiscoverySelectorsTests {
 		void selectModulesByNamesPreconditions() {
 			assertViolatesPrecondition(() -> selectModules(null));
 			assertViolatesPrecondition(() -> selectModules(Set.of("a", " ")));
+		}
+
+		@Test
+		void selectModulesByNames() {
+			var selectors = selectModules(Set.of("a", "b"));
+			var names = selectors.stream().map(ModuleSelector::getModuleName).toList();
+			assertThat(names).containsExactlyInAnyOrder("b", "a");
+		}
+
+		@Test
+		void parseModuleSelector() {
+			var selector = parseIdentifier(selectModule("java.base"));
+			assertThat(selector) //
+					.asInstanceOf(type(ModuleSelector.class)) //
+					.extracting(ModuleSelector::getModuleName) //
+					.isEqualTo("java.base");
 		}
 
 	}
@@ -466,7 +466,7 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
-		void parsePackageByName() {
+		void parsePackageSelector() {
 			var selector = parseIdentifier(selectPackage(getClass().getPackage().getName()));
 			assertThat(selector) //
 					.asInstanceOf(type(PackageSelector.class)) //
@@ -508,6 +508,41 @@ class DiscoverySelectorsTests {
 			var selectors = selectClasspathRoots(Set.of(jarFile));
 
 			assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(jarUri);
+		}
+
+		@Test
+		void parseClasspathRootSelectorWithNonExistingDirectory() {
+			var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(Path.of("some/local/path"))));
+			assertThat(selectorStream).isEmpty();
+		}
+
+		@Test
+		void parseClasspathRootSelectorWithNonExistingJarFile() {
+			var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(Path.of("some.jar"))));
+			assertThat(selectorStream).isEmpty();
+		}
+
+		@Test
+		void parseClasspathRootSelectorWithExistingDirectory(@TempDir Path tempDir) {
+			var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(tempDir)));
+			var selector = selectorStream.findAny().orElseThrow();
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathRootSelector.class)) //
+					.extracting(ClasspathRootSelector::getClasspathRoot) //
+					.isEqualTo(tempDir.toUri());
+		}
+
+		@Test
+		void parseClasspathRootSelectorWithExistingJarFile() throws Exception {
+			var jarUri = requireNonNull(getClass().getResource("/jartest.jar")).toURI();
+			var jarPath = Path.of(jarUri);
+
+			var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(jarPath)));
+			var selector = selectorStream.findAny().orElseThrow();
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathRootSelector.class)) //
+					.extracting(ClasspathRootSelector::getClasspathRoot) //
+					.isEqualTo(jarUri);
 		}
 
 	}
@@ -1062,41 +1097,6 @@ class DiscoverySelectorsTests {
 
 	}
 
-	@Test
-	void parseClasspathRootsWithNonExistingDirectory() {
-		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(Path.of("some/local/path"))));
-		assertThat(selectorStream).isEmpty();
-	}
-
-	@Test
-	void parseClasspathRootsWithNonExistingJarFile() {
-		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(Path.of("some.jar"))));
-		assertThat(selectorStream).isEmpty();
-	}
-
-	@Test
-	void parseClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
-		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(tempDir)));
-		var selector = selectorStream.findAny().orElseThrow();
-		assertThat(selector) //
-				.asInstanceOf(type(ClasspathRootSelector.class)) //
-				.extracting(ClasspathRootSelector::getClasspathRoot) //
-				.isEqualTo(tempDir.toUri());
-	}
-
-	@Test
-	void parseClasspathRootsWithExistingJarFile() throws Exception {
-		var jarUri = requireNonNull(getClass().getResource("/jartest.jar")).toURI();
-		var jarPath = Path.of(jarUri);
-
-		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(jarPath)));
-		var selector = selectorStream.findAny().orElseThrow();
-		assertThat(selector) //
-				.asInstanceOf(type(ClasspathRootSelector.class)) //
-				.extracting(ClasspathRootSelector::getClasspathRoot) //
-				.isEqualTo(jarUri);
-	}
-
 	@Nested
 	class SelectNestedClassAndSelectNestedMethodTests {
 
@@ -1413,6 +1413,7 @@ class DiscoverySelectorsTests {
 
 	@Nested
 	class SelectIterationTests {
+
 		@Test
 		void selectsIteration() throws Exception {
 			Class<?> clazz = DiscoverySelectorsTests.class;
@@ -1423,16 +1424,19 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getIterationIndices()).containsExactly(23, 42);
 			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
+
 	}
 
 	@Nested
 	class SelectUniqueIdTests {
+
 		@Test
 		void selectsUniqueId() {
 			var selector = selectUniqueId(uniqueIdForMethod(DiscoverySelectorsTests.class, "myTest(int)"));
 			assertThat(selector.getUniqueId()).isNotNull();
 			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
+
 	}
 
 	// -------------------------------------------------------------------------
