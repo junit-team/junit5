@@ -100,7 +100,7 @@ public class LauncherDiscoveryResult {
 		return this.testEngineResults.entrySet()
 				.stream()
 				.filter(entry -> predicate.test(entry.getValue().getRootDescriptor()))
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		// @formatter:on
 	}
 
