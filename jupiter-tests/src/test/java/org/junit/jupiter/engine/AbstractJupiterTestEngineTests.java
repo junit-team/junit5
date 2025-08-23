@@ -20,6 +20,7 @@ import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_E
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -52,6 +53,10 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
+		return executeTests(List.of(selectors));
+	}
+
+	protected EngineExecutionResults executeTests(List<? extends DiscoverySelector> selectors) {
 		return executeTests(request -> request.selectors(selectors));
 	}
 

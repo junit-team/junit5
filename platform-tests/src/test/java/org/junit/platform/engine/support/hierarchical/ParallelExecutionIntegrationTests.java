@@ -25,6 +25,7 @@ import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELI
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasses;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -38,7 +39,6 @@ import static org.junit.platform.testkit.engine.EventType.REPORTING_ENTRY_PUBLIS
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,8 +69,6 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -556,11 +554,8 @@ class ParallelExecutionIntegrationTests {
 
 	private EngineExecutionResults executeWithFixedParallelism(int parallelism, Map<String, String> configParams,
 			Class<?>... testClasses) {
-		var classSelectors = Arrays.stream(testClasses) //
-				.map(DiscoverySelectors::selectClass) //
-				.toArray(ClassSelector[]::new);
 		return EngineTestKit.engine("junit-jupiter") //
-				.selectors(classSelectors) //
+				.selectors(selectClasses(testClasses)) //
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true)) //
 				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed") //
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism)) //

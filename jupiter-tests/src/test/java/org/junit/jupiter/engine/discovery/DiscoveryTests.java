@@ -22,6 +22,7 @@ import static org.junit.platform.commons.test.IdeUtils.runningInEclipse;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasses;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
@@ -254,8 +255,8 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 					.filters(includeClassNamePatterns(
 						Pattern.quote(InvalidTestCases.InvalidTestMethodTestCase.class.getName()))).build()), //
 			named("subclasses", defaultRequest() //
-					.selectors(selectClass(InvalidTestCases.InvalidTestMethodSubclass1TestCase.class),
-						selectClass(InvalidTestCases.InvalidTestMethodSubclass2TestCase.class)) //
+					.selectors(selectClasses(InvalidTestCases.InvalidTestMethodSubclass1TestCase.class,
+						InvalidTestCases.InvalidTestMethodSubclass2TestCase.class)) //
 					.build()) //
 		);
 	}

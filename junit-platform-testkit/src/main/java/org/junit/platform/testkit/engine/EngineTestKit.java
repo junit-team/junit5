@@ -329,12 +329,34 @@ public final class EngineTestKit {
 		 *
 		 * @param selectors the discovery selectors to add; never {@code null}
 		 * @return this builder for method chaining
+		 * @see #selectors(List)
 		 * @see #filters(Filter...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 */
 		public Builder selectors(DiscoverySelector... selectors) {
+			this.requestBuilder.selectors(selectors);
+			return this;
+		}
+
+		/**
+		 * Add all of the supplied {@linkplain DiscoverySelector discovery selectors}.
+		 *
+		 * <p>Built-in discovery selectors can be created via the static factory
+		 * methods in {@link org.junit.platform.engine.discovery.DiscoverySelectors}.
+		 *
+		 * @param selectors the discovery selectors to add; never {@code null}
+		 * @return this builder for method chaining
+		 * @since 6.0
+		 * @see #selectors(DiscoverySelector...)
+		 * @see #filters(Filter...)
+		 * @see #configurationParameter(String, String)
+		 * @see #configurationParameters(Map)
+		 * @see #execute()
+		 */
+		@API(status = MAINTAINED, since = "6.0")
+		public Builder selectors(List<? extends DiscoverySelector> selectors) {
 			this.requestBuilder.selectors(selectors);
 			return this;
 		}

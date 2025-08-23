@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.TemporaryClasspathExecutor.withAdditionalClasspathRoot;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasses;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -461,8 +462,7 @@ class LauncherFactoryTests {
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
-				.selectors(selectClass(JUnit4Example.class))
-				.selectors(selectClass(JUnit5Example.class))
+				.selectors(selectClasses(JUnit4Example.class, JUnit5Example.class))
 				.enableImplicitConfigurationParameters(false)
 				.build();
 		// @formatter:on

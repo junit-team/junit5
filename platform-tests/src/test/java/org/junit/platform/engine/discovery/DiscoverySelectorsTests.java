@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasses;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClassesByName;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
@@ -581,6 +583,80 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(ClassSelector.class)) //
 					.extracting(ClassSelector::getJavaClass) //
 					.isEqualTo(getClass());
+		}
+
+	}
+
+	/**
+	 * @since 6.0
+	 */
+	@Nested
+	class SelectClassesTests {
+
+		@Test
+		void selectClassesByReferenceViaVarargs() {
+			assertSelectClassesByReferenceResults(selectClasses(String.class, Integer.class));
+		}
+
+		@Test
+		void selectClassesByReferenceViaList() {
+			assertSelectClassesByReferenceResults(selectClasses(List.of(String.class, Integer.class)));
+		}
+
+		private static void assertSelectClassesByReferenceResults(List<ClassSelector> selectors) {
+			Class<?> class1 = String.class;
+			Class<?> class2 = Integer.class;
+
+			assertThat(selectors).satisfiesExactly(//
+				selector1 -> {
+					assertThat(selector1.getJavaClass()).isEqualTo(class1);
+					assertThat(selector1.getClassName()).isEqualTo(class1.getName());
+				}, //
+				selector2 -> {
+					assertThat(selector2.getJavaClass()).isEqualTo(class2);
+					assertThat(selector2.getClassName()).isEqualTo(class2.getName());
+				});
+
+		}
+
+		@Test
+		void selectClassesByNameViaVarargsWithExplicitClassLoader() throws Exception {
+			Class<?> class1 = Foo.class;
+			Class<?> class2 = Bar.class;
+
+			try (var testClassLoader = TestClassLoader.forClasses(class1, class2)) {
+				assertThat(selectClassesByName(testClassLoader, class1.getName(), class2.getName())).satisfiesExactly(
+					selector1 -> checkClassSelector(testClassLoader, selector1, class1), //
+					selector2 -> checkClassSelector(testClassLoader, selector2, class2)); //
+			}
+		}
+
+		@Test
+		void selectClassesByNameViaListWithExplicitClassLoader() throws Exception {
+			Class<?> class1 = Foo.class;
+			Class<?> class2 = Bar.class;
+
+			try (var testClassLoader = TestClassLoader.forClasses(class1, class2)) {
+				assertThat(selectClassesByName(testClassLoader, List.of(class1.getName(), class2.getName())))//
+						.satisfiesExactly(//
+							selector1 -> checkClassSelector(testClassLoader, selector1, class1), //
+							selector2 -> checkClassSelector(testClassLoader, selector2, class2)); //
+			}
+		}
+
+		private static void checkClassSelector(TestClassLoader testClassLoader, ClassSelector selector,
+				Class<?> clazz) {
+
+			assertThat(selector.getJavaClass().getName()).isEqualTo(clazz.getName());
+			assertThat(selector.getJavaClass()).isNotEqualTo(clazz);
+			assertThat(selector.getJavaClass().getClassLoader()).isSameAs(testClassLoader);
+			assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
+		}
+
+		class Foo {
+		}
+
+		class Bar {
 		}
 
 	}

@@ -56,6 +56,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -207,6 +208,10 @@ class UniqueIdTrackingListenerIntegrationTests {
 	}
 
 	private List<String> executeTests(Map<String, String> configurationParameters, ClassSelector... classSelectors) {
+		return executeTests(configurationParameters, List.of(classSelectors));
+	}
+
+	private List<String> executeTests(Map<String, String> configurationParameters, List<ClassSelector> classSelectors) {
 		List<String> uniqueIds = new ArrayList<>();
 		var listener = new TestExecutionListener() {
 
@@ -248,9 +253,8 @@ class UniqueIdTrackingListenerIntegrationTests {
 		return uniqueIds;
 	}
 
-	private static ClassSelector[] selectClasses() {
-		return new ClassSelector[] { selectClass(TestCase1.class), selectClass(TestCase2.class),
-				selectClass(DisabledTestCase.class) };
+	private static List<ClassSelector> selectClasses() {
+		return DiscoverySelectors.selectClasses(TestCase1.class, TestCase2.class, DisabledTestCase.class);
 	}
 
 	private static Stream<Path> findFiles(Path outputDir, String prefix) throws IOException {
