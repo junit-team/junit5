@@ -65,9 +65,11 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  *        selectMethod("org.example.order.OrderTests", "test4"),
  *        selectMethod(OrderTests.class, "test5"),
  *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots(Collections.singleton(Paths.get("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
+ *     )
+ *     .selectors(
+ *        selectClasspathRoots(Set.of(Paths.get("/my/local/path1")))
  *     )
  *     .filters(
  *        includeEngines("junit-jupiter", "spek"),
