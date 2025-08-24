@@ -6,8 +6,12 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit-framework-repo}+/milestone/103?closed=1+[6.0.0] milestone page in the JUnit
-repository on GitHub.
+link:{junit-framework-repo}+/milestone/87?closed=1+[6.0.0-M1],
+link:{junit-framework-repo}+/milestone/99?closed=1+[6.0.0-M2],
+link:{junit-framework-repo}+/milestone/102?closed=1+[6.0.0-RC1],
+link:{junit-framework-repo}+/milestone/105?closed=1+[6.0.0-RC2], and
+link:{junit-framework-repo}+/milestone/103?closed=1+[6.0.0]
+milestone pages in the JUnit repository on GitHub.
 
 [TIP]
 .Migration Guide
