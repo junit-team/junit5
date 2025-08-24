@@ -51,10 +51,11 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  * import static org.junit.platform.engine.discovery.ClassNameFilter.*;
  * import static org.junit.platform.launcher.EngineFilter.*;
  * import static org.junit.platform.launcher.TagFilter.*;
+ * import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.discoveryRequest;
  *
  * // ...
  *
- *   LauncherDiscoveryRequestBuilder.request()
+ *   discoveryRequest()
  *     .selectors(
  *        selectPackage("org.example.user"),
  *        selectClass("org.example.payment.PaymentTests"),
@@ -122,9 +123,26 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
 	 *
 	 * @return a new builder
+	 * @see #discoveryRequest()
 	 */
 	public static LauncherDiscoveryRequestBuilder request() {
 		return new LauncherDiscoveryRequestBuilder();
+	}
+
+	/**
+	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
+	 *
+	 * <p>This method is an <em>alias</em> for {@link #request()} and is intended
+	 * to be used when statically imported &mdash; for example, via:
+	 * {@code import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.discoveryRequest;}
+	 *
+	 * @return a new builder
+	 * @since 6.0
+	 * @see #request()
+	 */
+	@API(status = STABLE, since = "6.0")
+	public static LauncherDiscoveryRequestBuilder discoveryRequest() {
+		return request();
 	}
 
 	private LauncherDiscoveryRequestBuilder() {

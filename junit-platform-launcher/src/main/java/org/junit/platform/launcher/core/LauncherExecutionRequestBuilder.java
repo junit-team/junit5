@@ -41,6 +41,7 @@ public final class LauncherExecutionRequestBuilder {
 	 * {@link LauncherDiscoveryRequest}.
 	 *
 	 * @return a new builder
+	 * @see #executionRequest(LauncherDiscoveryRequest)
 	 */
 	public static LauncherExecutionRequestBuilder request(LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
@@ -49,13 +50,44 @@ public final class LauncherExecutionRequestBuilder {
 
 	/**
 	 * Create a new {@code LauncherExecutionRequestBuilder} from the supplied
+	 * {@link LauncherDiscoveryRequest}.
+	 *
+	 * <p>This method is an <em>alias</em> for {@link #request(LauncherDiscoveryRequest)}
+	 * and is intended to be used when statically imported &mdash; for example, via:
+	 * {@code import static org.junit.platform.launcher.core.LauncherExecutionRequestBuilder.executionRequest;}
+	 *
+	 * @return a new builder
+	 * @see #request(LauncherDiscoveryRequest)
+	 */
+	public static LauncherExecutionRequestBuilder executionRequest(LauncherDiscoveryRequest discoveryRequest) {
+		return request(discoveryRequest);
+	}
+
+	/**
+	 * Create a new {@code LauncherExecutionRequestBuilder} from the supplied
 	 * {@link TestPlan}.
 	 *
 	 * @return a new builder
+	 * @see #executionRequest(TestPlan)
 	 */
 	public static LauncherExecutionRequestBuilder request(TestPlan testPlan) {
 		Preconditions.notNull(testPlan, "TestPlan must not be null");
 		return new LauncherExecutionRequestBuilder(null, testPlan);
+	}
+
+	/**
+	 * Create a new {@code LauncherExecutionRequestBuilder} from the supplied
+	 * {@link TestPlan}.
+	 *
+	 * <p>This method is an <em>alias</em> for {@link #request(TestPlan)}
+	 * and is intended to be used when statically imported &mdash; for example, via:
+	 * {@code import static org.junit.platform.launcher.core.LauncherExecutionRequestBuilder.executionRequest;}
+	 *
+	 * @return a new builder
+	 * @see #request(TestPlan)
+	 */
+	public static LauncherExecutionRequestBuilder executionRequest(TestPlan testPlan) {
+		return request(testPlan);
 	}
 
 	private final @Nullable LauncherDiscoveryRequest discoveryRequest;
