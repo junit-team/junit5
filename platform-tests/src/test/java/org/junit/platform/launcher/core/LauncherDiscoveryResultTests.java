@@ -34,55 +34,35 @@ class LauncherDiscoveryResultTests {
 	 * @see <a href="https://github.com/junit-team/junit-framework/issues/4862">GitHub issue #4862</>
 	 */
 	@Test
-	void withRetainedEnginesRetainsLinkedHashMapSemantics() {
-		TestEngine engine1 = new DummyEngine1();
-		TestEngine engine2 = new DummyEngine2();
-		TestEngine engine3 = new DummyEngine3();
-		TestEngine engine4 = new DummyEngine4();
-
-		TestDescriptor rootDescriptor1 = mock();
-		TestDescriptor rootDescriptor2 = mock();
-		TestDescriptor rootDescriptor3 = mock();
-		TestDescriptor rootDescriptor4 = mock();
-		when(rootDescriptor1.isTest()).thenReturn(true);
-		when(rootDescriptor2.isTest()).thenReturn(false);
-		when(rootDescriptor3.isTest()).thenReturn(false);
-		when(rootDescriptor4.isTest()).thenReturn(true);
-
-		EngineResultInfo engineResultInfo1 = mock();
-		EngineResultInfo engineResultInfo2 = mock();
-		EngineResultInfo engineResultInfo3 = mock();
-		EngineResultInfo engineResultInfo4 = mock();
-		when(engineResultInfo1.getRootDescriptor()).thenReturn(rootDescriptor1);
-		when(engineResultInfo2.getRootDescriptor()).thenReturn(rootDescriptor2);
-		when(engineResultInfo3.getRootDescriptor()).thenReturn(rootDescriptor3);
-		when(engineResultInfo4.getRootDescriptor()).thenReturn(rootDescriptor4);
+	void withRetainedEnginesMaintainsOriginalTestEngineRegistrationOrder() {
+		var engine1 = new DemoEngine("Engine 1");
+		var engine2 = new DemoEngine("Engine 2");
+		var engine3 = new DemoEngine("Engine 3");
+		var engine4 = new DemoEngine("Engine 4");
 
 		@SuppressWarnings("serial")
 		Map<TestEngine, EngineResultInfo> engineResults = new LinkedHashMap<>() {
 			{
-				put(engine1, engineResultInfo1);
-				put(engine2, engineResultInfo2);
-				put(engine3, engineResultInfo3);
-				put(engine4, engineResultInfo4);
+				put(engine1, new DemoEngineResultInfo(true));
+				put(engine2, new DemoEngineResultInfo(false));
+				put(engine3, new DemoEngineResultInfo(false));
+				put(engine4, new DemoEngineResultInfo(true));
 			}
 		};
-
 		assertThat(engineResults.keySet()).containsExactly(engine1, engine2, engine3, engine4);
 
 		LauncherDiscoveryResult discoveryResult = new LauncherDiscoveryResult(engineResults, mock(), mock());
 		assertThat(discoveryResult.getTestEngines()).containsExactly(engine1, engine2, engine3, engine4);
 
-		LauncherDiscoveryResult withRetainedEngines = discoveryResult.withRetainedEngines(TestDescriptor::isTest);
-
-		assertThat(withRetainedEngines.getTestEngines()).containsExactly(engine1, engine4);
+		LauncherDiscoveryResult prunedDiscoveryResult = discoveryResult.withRetainedEngines(TestDescriptor::isTest);
+		assertThat(prunedDiscoveryResult.getTestEngines()).containsExactly(engine1, engine4);
 	}
 
-	private static abstract class AbstractDummyEngine implements TestEngine {
+	private record DemoEngine(String id) implements TestEngine {
 
 		@Override
 		public String getId() {
-			return getClass().getSimpleName();
+			return this.id;
 		}
 
 		@Override
@@ -94,18 +74,24 @@ class LauncherDiscoveryResultTests {
 		public void execute(ExecutionRequest request) {
 			throw new UnsupportedOperationException("execute");
 		}
+
+		@Override
+		public String toString() {
+			return getId();
+		}
 	}
 
-	private static class DummyEngine1 extends AbstractDummyEngine {
-	}
+	private static class DemoEngineResultInfo extends EngineResultInfo {
 
-	private static class DummyEngine2 extends AbstractDummyEngine {
-	}
+		DemoEngineResultInfo(boolean isTest) {
+			super(createRootDescriptor(isTest), mock(), null);
+		}
 
-	private static class DummyEngine3 extends AbstractDummyEngine {
-	}
-
-	private static class DummyEngine4 extends AbstractDummyEngine {
+		private static TestDescriptor createRootDescriptor(boolean isTest) {
+			TestDescriptor rootDescriptor = mock();
+			when(rootDescriptor.isTest()).thenReturn(isTest);
+			return rootDescriptor;
+		}
 	}
 
 }
