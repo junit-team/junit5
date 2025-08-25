@@ -81,12 +81,11 @@ public interface Launcher {
 	 * {@link #execute(TestPlan, TestExecutionListener...)} for execution at
 	 * most once.
 	 *
-	 * @param launcherDiscoveryRequest the launcher discovery request; never
-	 * {@code null}
+	 * @param discoveryRequest the launcher discovery request; never {@code null}
 	 * @return an unmodifiable {@code TestPlan} that contains all resolved
 	 * {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
-	TestPlan discover(LauncherDiscoveryRequest launcherDiscoveryRequest);
+	TestPlan discover(LauncherDiscoveryRequest discoveryRequest);
 
 	/**
 	 * Execute a {@link TestPlan} which is built according to the supplied
@@ -106,14 +105,14 @@ public interface Launcher {
 	 * performance degradation (e.g., classpath scanning) of running test
 	 * discovery twice.
 	 *
-	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
+	 * @param discoveryRequest the launcher discovery request; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
 	 * @deprecated Please use {@link #execute(LauncherExecutionRequest)} instead.
 	 */
 	@Deprecated(since = "6.0")
 	@API(status = DEPRECATED, since = "6.0")
-	default void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
-		var executionRequest = LauncherExecutionRequestBuilder.request(launcherDiscoveryRequest) //
+	default void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners) {
+		var executionRequest = LauncherExecutionRequestBuilder.request(discoveryRequest) //
 				.listeners(listeners) //
 				.build();
 		execute(executionRequest);
@@ -146,8 +145,8 @@ public interface Launcher {
 	}
 
 	/**
-	 * Execute tests according to the supplied {@link LauncherExecutionRequest}
-	 * {@linkplain #registerTestExecutionListeners registered listeners} about
+	 * Execute tests according to the supplied {@link LauncherExecutionRequest} and
+	 * notify {@linkplain #registerTestExecutionListeners registered listeners} about
 	 * the progress and results of the execution.
 	 *
 	 * <p>Test execution listeners supplied
@@ -167,11 +166,10 @@ public interface Launcher {
 	 * supplied execution request to avoid the potential performance degradation
 	 * (e.g., classpath scanning) of running test discovery twice.
 	 *
-	 * @param launcherExecutionRequest the launcher execution request; never
-	 * {@code null}
+	 * @param executionRequest the launcher execution request; never {@code null}
 	 * @since 6.0
 	 */
 	@API(status = MAINTAINED, since = "6.0")
-	void execute(LauncherExecutionRequest launcherExecutionRequest);
+	void execute(LauncherExecutionRequest executionRequest);
 
 }
