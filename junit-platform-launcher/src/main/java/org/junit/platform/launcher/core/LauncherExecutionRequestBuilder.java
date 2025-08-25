@@ -30,8 +30,33 @@ import org.junit.platform.launcher.TestPlan;
  * The {@code LauncherExecutionRequestBuilder} provides a light-weight DSL for
  * generating a {@link LauncherExecutionRequest}.
  *
+ * <h2>Example</h2>
+ *
+ * <pre class="code">
+ * import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+ * import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.discoveryRequest;
+ * import static org.junit.platform.launcher.core.LauncherExecutionRequestBuilder.executionRequest;
+ *
+ * import org.junit.platform.engine.CancellationToken;
+ * import org.junit.platform.launcher.LauncherDiscoveryRequest;
+ * import org.junit.platform.launcher.LauncherExecutionRequest;
+ * import org.junit.platform.launcher.TestExecutionListener;
+ *
+ * TestExecutionListener listener = ...
+ * CancellationToken cancellationToken = CancellationToken.create();
+ *
+ * LauncherDiscoveryRequest discoveryRequest = discoveryRequest()
+ *    .selectors(selectPackage("org.example.user"))
+ *    .build();
+ *
+ * LauncherExecutionRequest executionRequest = executionRequest(discoveryRequest)
+ *    .listeners(listener)
+ *    .cancellationToken(cancellationToken)
+ *    .build();</pre>
+ *
  * @since 6.0
  * @see LauncherExecutionRequest
+ * @see LauncherDiscoveryRequestBuilder
  */
 @API(status = MAINTAINED, since = "6.0")
 public final class LauncherExecutionRequestBuilder {
