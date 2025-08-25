@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -107,10 +106,9 @@ public interface Launcher {
 	 *
 	 * @param discoveryRequest the launcher discovery request; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
-	 * @deprecated Please use {@link #execute(LauncherExecutionRequest)} instead.
+	 * @see #execute(TestPlan, TestExecutionListener...)
+	 * @see #execute(LauncherExecutionRequest)
 	 */
-	@Deprecated(since = "6.0")
-	@API(status = DEPRECATED, since = "6.0")
 	default void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners) {
 		var executionRequest = LauncherExecutionRequestBuilder.request(discoveryRequest) //
 				.listeners(listeners) //
@@ -133,10 +131,10 @@ public interface Launcher {
 	 * @param testPlan the test plan to execute; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
 	 * @since 1.4
-	 * @deprecated Please use {@link #execute(LauncherExecutionRequest)} instead.
+	 * @see #execute(LauncherDiscoveryRequest, TestExecutionListener...)
+	 * @see #execute(LauncherExecutionRequest)
 	 */
-	@Deprecated(since = "6.0")
-	@API(status = DEPRECATED, since = "6.0")
+	@API(status = STABLE, since = "1.4")
 	default void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		var executionRequest = LauncherExecutionRequestBuilder.request(testPlan) //
 				.listeners(listeners) //
@@ -168,6 +166,8 @@ public interface Launcher {
 	 *
 	 * @param executionRequest the launcher execution request; never {@code null}
 	 * @since 6.0
+	 * @see #execute(LauncherDiscoveryRequest, TestExecutionListener...)
+	 * @see #execute(TestPlan, TestExecutionListener...)
 	 */
 	@API(status = MAINTAINED, since = "6.0")
 	void execute(LauncherExecutionRequest executionRequest);

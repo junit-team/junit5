@@ -36,7 +36,6 @@ class LauncherSessionTests {
 			.build();
 	LauncherDiscoveryRequest discoveryRequest = discoveryRequest().build();
 
-	@SuppressWarnings("deprecation")
 	@Test
 	void callsRegisteredListenersWhenLauncherIsUsedDirectly() {
 		var launcher = LauncherFactory.create(launcherConfig);
@@ -87,7 +86,7 @@ class LauncherSessionTests {
 	}
 
 	@Test
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings("resource")
 	void callsRegisteredListenersWhenLauncherIsUsedViaSession() {
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();
@@ -115,7 +114,7 @@ class LauncherSessionTests {
 	}
 
 	@Test
-	@SuppressWarnings({ "deprecation", "resource" })
+	@SuppressWarnings("resource")
 	void closedSessionCannotBeUsed() {
 		var session = LauncherFactory.openSession(launcherConfig);
 		var launcher = session.getLauncher();

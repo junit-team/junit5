@@ -36,6 +36,9 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-RC2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* The `execute(TestPlan,{nbsp}TestExecutionListener...)` and
+  `execute(LauncherDiscoveryRequest,{nbsp}TestExecutionListener...)` methods in the
+  `Launcher` API are no longer deprecated.
 * New `discoveryRequest()` method in `{LauncherDiscoveryRequestBuilder}`, which is an
   alias for the existing `request()` method and is intended to be used via a `static`
   import.
