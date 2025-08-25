@@ -1,7 +1,7 @@
 [[release-notes-6.0.0-RC2]]
 == 6.0.0-RC2
 
-*Date of Release:* ❓
+*Date of Release:* August 25, 2025
 
 *Scope:* Minor enhancements and bug fixes since 6.0.0-RC1.
 
@@ -28,11 +28,6 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
   `TestEngine` registration order after pruning test engines without tests, thereby
   ensuring reliable test execution order of multiple test engines.
 
-[[release-notes-6.0.0-RC2-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-6.0.0-RC2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
@@ -56,36 +51,10 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-RC2-junit-jupiter]]
 === JUnit Jupiter
 
-[[release-notes-6.0.0-RC2-junit-jupiter-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-6.0.0-RC2-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-6.0.0-RC2-junit-jupiter-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-6.0.0-RC2-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-6.0.0-RC2-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-6.0.0-RC2-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-6.0.0-RC2-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
