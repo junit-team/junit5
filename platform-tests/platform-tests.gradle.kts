@@ -69,7 +69,7 @@ dependencies {
 		// Add all projects to the classpath for tests using classpath scanning
 		testRuntimeOnly(it)
 	}
-	testRuntimeOnly(libs.groovy4) {
+	testRuntimeOnly(libs.groovy) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 	woodstox(libs.woodstox)
@@ -79,7 +79,7 @@ dependencies {
 	jmh(libs.junit4)
 
 	// --- ProcessStarter dependencies --------------------------------------------
-	processStarter.implementationConfigurationName(libs.groovy4) {
+	processStarter.implementationConfigurationName(libs.groovy) {
 		because("it provides convenience methods to handle process output")
 	}
 	processStarter.implementationConfigurationName(libs.commons.io) {

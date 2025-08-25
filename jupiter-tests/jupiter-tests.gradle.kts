@@ -22,7 +22,7 @@ dependencies {
 	testImplementation(libs.jimfs)
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
-	testImplementation(libs.groovy4)
+	testImplementation(libs.groovy)
 	testImplementation(libs.memoryfilesystem)
 	testImplementation(testFixtures(projects.junitJupiterApi))
 	testImplementation(testFixtures(projects.junitJupiterEngine))
