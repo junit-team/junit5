@@ -55,8 +55,8 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  *
  * // ...
  *
- *   discoveryRequest()
- *     .selectors(
+ * LauncherDiscoveryRequest discoveryRequest = discoveryRequest()
+ *    .selectors(
  *        selectPackage("org.example.user"),
  *        selectClass("org.example.payment.PaymentTests"),
  *        selectClass(ShippingTests.class),
@@ -68,27 +68,28 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  *        selectMethod(OrderTests.class, testMethod),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
- *     )
- *     .selectors(
+ *    )
+ *    .selectors(
  *        selectClasspathRoots(Set.of(Paths.get("/my/local/path1")))
- *     )
- *     .filters(
+ *    )
+ *   .filters(
  *        includeEngines("junit-jupiter", "spek"),
  *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
  *        // excludeTags("slow"),
  *        includeClassNamePatterns(".*Test[s]?")
  *        // includeClassNamePatterns("org\.example\.tests.*")
- *     )
- *     .configurationParameter("key1", "value1")
- *     .configurationParameters(configParameterMap)
- *     .build();</pre>
+ *    )
+ *    .configurationParameter("key1", "value1")
+ *    .configurationParameters(configParameterMap)
+ *    .build();</pre>
  *
  * @since 1.0
  * @see org.junit.platform.engine.discovery.DiscoverySelectors
  * @see org.junit.platform.engine.discovery.ClassNameFilter
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
+ * @see LauncherExecutionRequestBuilder
  */
 @API(status = STABLE, since = "1.0")
 public final class LauncherDiscoveryRequestBuilder {
