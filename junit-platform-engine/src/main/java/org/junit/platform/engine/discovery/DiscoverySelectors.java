@@ -245,6 +245,13 @@ public final class DiscoverySelectors {
 	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
 	 * {@linkplain Thread thread} that uses these selectors.
 	 *
+	 * <p>The {@link Set} supplied to this method should have a reliable iteration
+	 * order to support reliable discovery and execution order. It is therefore
+	 * recommended that the set be a {@link java.util.SequencedSet} (on Java 21
+	 * or higher), {@link java.util.SortedSet}, {@link java.util.LinkedHashSet},
+	 * or similar. Note that {@link Set#of(Object[])} and related {@code Set.of()}
+	 * methods do not guarantee a reliable iteration order.
+	 *
 	 * @param classpathRoots set of directories and JAR files in the filesystem
 	 * that represent classpath roots; never {@code null}
 	 * @return a list of selectors for the supplied classpath roots; elements
@@ -340,6 +347,13 @@ public final class DiscoverySelectors {
 	 * named or unnamed modules. These resources are also considered to be
 	 * classpath resources.
 	 *
+	 * <p>The {@link Set} supplied to this method should have a reliable iteration
+	 * order to support reliable discovery and execution order. It is therefore
+	 * recommended that the set be a {@link java.util.SequencedSet} (on Java 21
+	 * or higher), {@link java.util.SortedSet}, {@link java.util.LinkedHashSet},
+	 * or similar. Note that {@link Set#of(Object[])} and related {@code Set.of()}
+	 * methods do not guarantee a reliable iteration order.
+	 *
 	 * @param classpathResources a set of classpath resources; never
 	 * {@code null} or empty. All resources must have the same name, may not
 	 * be {@code null} or blank.
@@ -378,6 +392,13 @@ public final class DiscoverySelectors {
 	 * Create a list of {@code ModuleSelectors} for the supplied module names.
 	 *
 	 * <p>The unnamed module is not supported.
+	 *
+	 * <p>The {@link Set} supplied to this method should have a reliable iteration
+	 * order to support reliable discovery and execution order. It is therefore
+	 * recommended that the set be a {@link java.util.SequencedSet} (on Java 21
+	 * or higher), {@link java.util.SortedSet}, {@link java.util.LinkedHashSet},
+	 * or similar. Note that {@link Set#of(Object[])} and related {@code Set.of()}
+	 * methods do not guarantee a reliable iteration order.
 	 *
 	 * @param moduleNames the module names to select; never {@code null}, never
 	 * containing {@code null} or blank
