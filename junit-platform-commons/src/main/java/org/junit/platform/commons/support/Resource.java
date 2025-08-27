@@ -51,7 +51,7 @@ public interface Resource {
 	/**
 	 * Get the URI of this resource.
 	 *
-	 * @return the uri of the resource; never {@code null}
+	 * @return the URI of the resource; never {@code null}
 	 */
 	URI getUri();
 

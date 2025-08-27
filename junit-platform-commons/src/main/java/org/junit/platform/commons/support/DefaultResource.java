@@ -21,8 +21,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * <h2>DISCLAIMER</h2>
  *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
+ * <p>This class is intended solely for usage within the JUnit framework itself.
+ * <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
  * @since 1.11
@@ -52,4 +52,5 @@ public record DefaultResource(String name, URI uri) implements Resource {
 				.append("uri", uri) //
 				.toString();
 	}
+
 }
