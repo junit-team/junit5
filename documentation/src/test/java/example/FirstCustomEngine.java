@@ -43,6 +43,13 @@ public class FirstCustomEngine implements TestEngine {
 		return "first-custom-test-engine";
 	}
 
+	//end::user_guide[]
+	@Nullable
+	//tag::user_guide[]
+	public ServerSocket getSocket() {
+		return this.socket;
+	}
+
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		return new EngineDescriptor(uniqueId, "First Custom Test Engine");
@@ -68,5 +75,6 @@ public class FirstCustomEngine implements TestEngine {
 				// tag::custom_line_break[]
 				.executionFinished(request.getRootTestDescriptor(), successful());
 	}
+
 }
 //end::user_guide[]

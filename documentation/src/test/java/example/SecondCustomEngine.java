@@ -43,6 +43,13 @@ public class SecondCustomEngine implements TestEngine {
 		return "second-custom-test-engine";
 	}
 
+	//end::user_guide[]
+	@Nullable
+	//tag::user_guide[]
+	public ServerSocket getSocket() {
+		return this.socket;
+	}
+
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		return new EngineDescriptor(uniqueId, "Second Custom Test Engine");
@@ -68,5 +75,6 @@ public class SecondCustomEngine implements TestEngine {
 				// tag::custom_line_break[]
 				.executionFinished(request.getRootTestDescriptor(), successful());
 	}
+
 }
 //end::user_guide[]

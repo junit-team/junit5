@@ -878,7 +878,7 @@ An example implementation of `AutoCloseable` is shown below, using an `HttpServe
 resource.
 
 [source,java,indent=0]
-.`HttpServer` resource implementing `AutoCloseable`
+.`_HttpServer_` resource implementing `_AutoCloseable_`
 ----
 include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
 ----
@@ -890,13 +890,13 @@ it lazily to ensure it's only created once per test run and reused across differ
 classes and methods.
 
 [source,java,indent=0]
-.Lazily storing in root context with `Store.getOrComputeIfAbsent`
+.Lazily storing in root context with `_Store.computeIfAbsent_`
 ----
 include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
 ----
 
 [source,java,indent=0]
-.A test case using the `HttpServerExtension`
+.A test case using the `_HttpServerExtension_`
 ----
 include::{testDir}/example/HttpServerDemo.java[tags=user_guide]
 ----

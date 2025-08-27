@@ -7,11 +7,11 @@
 One of the prominent goals of the JUnit Platform is to make the interface between JUnit
 and its programmatic clients – build tools and IDEs – more powerful and stable. The
 purpose is to decouple the internals of discovering and executing tests from all the
-filtering and configuration that's necessary from the outside.
+filtering and configuration that is necessary from the outside.
 
-JUnit Platform introduces the concept of a `Launcher` that can be used to discover,
-filter, and execute tests. Moreover, third party test libraries – like Spock or Cucumber
-– can plug into the JUnit Platform's launching infrastructure by providing a custom
+JUnit Platform provides a `Launcher` API that can be used to discover, filter, and execute
+tests. Moreover, third party test libraries – like Spock or Cucumber – can plug into the
+JUnit Platform's launching infrastructure by providing a custom
 <<test-engines,TestEngine>>.
 
 The launcher API is in the `{junit-platform-launcher}` module.
@@ -22,9 +22,9 @@ An example consumer of the launcher API is the `{ConsoleLauncher}` in the
 [[launcher-api-discovery]]
 ==== Discovering Tests
 
-Having _test discovery_ as a dedicated feature of the platform itself frees IDEs and build
-tools from most of the difficulties they had to go through to identify test classes and
-test methods in previous versions of JUnit.
+Having _test discovery_ as a dedicated feature of the platform frees IDEs and build tools
+from most of the difficulties they had to go through to identify test classes and test
+methods in previous versions of JUnit.
 
 Usage Example:
 

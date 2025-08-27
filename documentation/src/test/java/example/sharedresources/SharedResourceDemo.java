@@ -41,8 +41,9 @@ class SharedResourceDemo {
 
 		launcher.execute(request().forExecution().build());
 
-		assertSame(firstCustomEngine.socket, secondCustomEngine.socket);
-		assertTrue(firstCustomEngine.socket.isClosed(), "socket should be closed");
+		assertSame(firstCustomEngine.getSocket(), secondCustomEngine.getSocket());
+		assertTrue(firstCustomEngine.getSocket().isClosed(), "socket should be closed");
 	}
 	//end::user_guide[]
+
 }
