@@ -199,9 +199,9 @@ tests to JUnit Jupiter.
   - Note that you may continue to use assertion methods from `org.junit.Assert` or any
     other assertion library such as {AssertJ}, {Hamcrest}, {Truth}, etc.
 * Assumptions reside in `org.junit.jupiter.api.Assumptions`.
-  - Note that JUnit Jupiter 5.4 and later versions support methods from JUnit 4's
-    `org.junit.Assume` class for assumptions. Specifically, JUnit Jupiter supports JUnit
-    4's `AssumptionViolatedException` to signal that a test should be aborted instead of
+  - Note that JUnit Jupiter supports methods from JUnit 4's `org.junit.Assume` class for
+    assumptions. Specifically, JUnit Jupiter supports JUnit 4's
+    `AssumptionViolatedException` to signal that a test should be aborted instead of
     marked as a failure.
 * `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
 * `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll`

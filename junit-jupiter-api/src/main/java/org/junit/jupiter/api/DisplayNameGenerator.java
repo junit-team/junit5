@@ -16,6 +16,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.jupiter.api.DisplayNameGenerator.getDisplayNameGenerator;
+import static org.junit.jupiter.api.DisplayNameGenerator.parameterTypesAsString;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameterTypes;
@@ -209,7 +211,7 @@ public interface DisplayNameGenerator {
 	 * Standard {@code DisplayNameGenerator}.
 	 *
 	 * <p>This implementation matches the standard display name generation
-	 * behavior in place since JUnit Jupiter 5.0 was released.
+	 * behavior in place since JUnit Jupiter was introduced.
 	 */
 	class Standard implements DisplayNameGenerator {
 

@@ -4,8 +4,7 @@
 [[reproducible-builds]]
 === Reproducible Builds
 
-Starting with version 5.7, JUnit aims for its non-javadoc JARs to be
-https://reproducible-builds.org/[reproducible].
+JUnit aims for its non-javadoc JARs to be https://reproducible-builds.org/[reproducible].
 
 Under identical build conditions, such as Java version, repeated builds should provide the
 same output byte-for-byte.

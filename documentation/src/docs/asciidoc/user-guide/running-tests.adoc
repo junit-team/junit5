@@ -559,7 +559,7 @@ the task and can serve as a starting point.
 ===== Basic Usage
 
 The following example demonstrates how to configure the `junitlauncher` task to select a
-single test class (i.e., `org.myapp.test.MyFirstJUnit5Test`).
+single test class (i.e., `com.example.project.CalculatorTests`).
 
 [source,xml,indent=0]
 ----
@@ -572,7 +572,7 @@ single test class (i.e., `org.myapp.test.MyFirstJUnit5Test`).
 
 	<junitlauncher>
 		<classpath refid="test.classpath" />
-		<test name="org.myapp.test.MyFirstJUnit5Test" />
+		<test name="com.example.project.CalculatorTests" />
 	</junitlauncher>
 ----
 

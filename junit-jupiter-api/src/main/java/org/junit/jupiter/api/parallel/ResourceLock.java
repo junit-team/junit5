@@ -48,8 +48,7 @@ import org.junit.jupiter.api.ClassTemplate;
  * <p>Uniqueness of a shared resource is determined by both the {@link #value()}
  * and the {@link #mode()}. Duplicated shared resources do not cause errors.
  *
- * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
- * within class hierarchies.
+ * <p>This annotation is {@linkplain Inherited inherited} within class hierarchies.
  *
  * <p>Since JUnit Jupiter 5.12, this annotation supports adding shared resources
  * dynamically at runtime via {@link #providers}. Resources declared "statically"

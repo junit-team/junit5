@@ -31,7 +31,7 @@ following values.
                      incompatible way for *at least* the next minor release of the current
                      major version. If scheduled for removal, it will be demoted to `DEPRECATED` first.
 | `STABLE`         | Intended for features that will not be changed in a backwards-
-                     incompatible way in the current major version (`5.*`).
+                     incompatible way in the current major version (`6.*`).
 |===
 
 If the `@API` annotation is present on a type, it is considered to be applicable for all

@@ -27,8 +27,7 @@ import org.junit.jupiter.api.TestInstance;
  * {@code @Execution} is used to configure the parallel execution
  * {@linkplain #value mode} of a test class or test method.
  *
- * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
- * within class hierarchies.
+ * <p>This annotation is {@linkplain Inherited inherited} within class hierarchies.
  *
  * <h2>Default Execution Mode</h2>
  *

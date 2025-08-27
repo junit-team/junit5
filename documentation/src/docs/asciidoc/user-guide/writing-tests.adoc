@@ -346,7 +346,7 @@ table lists the default display name generators available in Jupiter.
 |===
 | DisplayNameGenerator   | Behavior
 
-| `Standard`            | Matches the standard display name generation behavior in place since JUnit Jupiter 5.0 was released.
+| `Standard`            | Matches the standard display name generation behavior in place since JUnit Jupiter was introduced.
 | `Simple`              | Extends the functionality of `Standard` by removing trailing parentheses for methods with no parameters.
 | `ReplaceUnderscores`  | Replaces underscores with spaces.
 | `IndicativeSentences` | Generates complete sentences by concatenating the names of the test and the enclosing classes.
@@ -858,11 +858,12 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_jre
 
 Since the enum constants defined in {JRE} are static for any given JUnit release, you
 might find that you need to configure a Java version that is not supported by the `JRE`
-enum. For example, as of JUnit Jupiter 5.12 the `JRE` enum defines `JAVA_25` as the
-highest supported Java version. However, you may wish to run your tests against later
-versions of Java. To support such use cases, you can specify arbitrary Java versions via
-the `versions` attributes in `@EnabledOnJre` and `@DisabledOnJre` and via the `minVersion`
-and `maxVersion` attributes in `@EnabledForJreRange` and `@DisabledForJreRange`.
+enum. For example, when JUnit Jupiter 5.12 was released the `JRE` enum defined `JAVA_25`
+as the highest supported Java version. However, you may wish to run your tests against
+later versions of Java. To support such use cases, you can specify arbitrary Java versions
+via the `versions` attributes in `@EnabledOnJre` and `@DisabledOnJre` and via the
+`minVersion` and `maxVersion` attributes in `@EnabledForJreRange` and
+`@DisabledForJreRange`.
 
 The following listing demonstrates the use of these annotations with arbitrary Java
 versions.
@@ -902,10 +903,10 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_sys
 
 [TIP]
 ====
-As of JUnit Jupiter 5.6, `{EnabledIfSystemProperty}` and `{DisabledIfSystemProperty}` are
-_repeatable annotations_. Consequently, these annotations may be declared multiple times
-on a test interface, test class, or test method. Specifically, these annotations will be
-found if they are directly present, indirectly present, or meta-present on a given element.
+`{EnabledIfSystemProperty}` and `{DisabledIfSystemProperty}` are _repeatable annotations_.
+Consequently, these annotations may be declared multiple times on a test interface, test
+class, or test method. Specifically, these annotations will be found if they are directly
+present, indirectly present, or meta-present on a given element.
 ====
 
 [[writing-tests-conditional-execution-environment-variables]]
@@ -923,11 +924,10 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_env
 
 [TIP]
 ====
-As of JUnit Jupiter 5.6, `{EnabledIfEnvironmentVariable}` and
-`{DisabledIfEnvironmentVariable}` are _repeatable annotations_. Consequently, these
-annotations may be declared multiple times on a test interface, test class, or test
-method. Specifically, these annotations will be found if they are directly present,
-indirectly present, or meta-present on a given element.
+`{EnabledIfEnvironmentVariable}` and `{DisabledIfEnvironmentVariable}` are _repeatable
+annotations_. Consequently, these annotations may be declared multiple times on a test
+interface, test class, or test method. Specifically, these annotations will be found if
+they are directly present, indirectly present, or meta-present on a given element.
 ====
 
 [[writing-tests-conditional-execution-custom]]
@@ -1472,11 +1472,11 @@ void repeatedTest() {
 }
 ----
 
-Since JUnit Jupiter 5.10, `@RepeatedTest` can be configured with a failure threshold which
-signifies the number of failures after which remaining repetitions will be automatically
-skipped. Set the `failureThreshold` attribute to a positive number less than the total
-number of repetitions in order to skip the invocations of remaining repetitions after the
-specified number of failures has been encountered.
+`@RepeatedTest` can be configured with a failure threshold which signifies the number of
+failures after which remaining repetitions will be automatically skipped. Set the
+`failureThreshold` attribute to a positive number less than the total number of
+repetitions in order to skip the invocations of remaining repetitions after the specified
+number of failures has been encountered.
 
 For example, if you are using `@RepeatedTest` to repeatedly invoke a test that you suspect
 to be _flaky_, a single failure is sufficient to demonstrate that the test is flaky, and
@@ -3276,12 +3276,11 @@ This heuristic is queried by the `disabled_on_debug` mode.
 [[writing-tests-parallel-execution]]
 === Parallel Execution
 
-By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
-parallel -- for example, to speed up execution -- is available as an opt-in feature since
-version 5.3. To enable parallel execution, set the
-`junit.jupiter.execution.parallel.enabled` configuration parameter to `true` -- for
-example, in `junit-platform.properties` (see <<running-tests-config-params>> for other
-options).
+By default, JUnit Jupiter tests are run sequentially in a single thread; however, running
+tests in parallel -- for example, to speed up execution -- is available as an opt-in
+feature. To enable parallel execution, set the `junit.jupiter.execution.parallel.enabled`
+configuration parameter to `true` -- for example, in `junit-platform.properties` (see
+<<running-tests-config-params>> for other options).
 
 Please note that enabling this property is only the first step required to execute tests
 in parallel. If enabled, test classes and methods will still be executed sequentially by

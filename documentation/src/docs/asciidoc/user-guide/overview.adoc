@@ -11,11 +11,10 @@ This document is also available as a link:{userGuidePdfFileName}[PDF download].
 endif::linkToPdf[]
 endif::backend-html5[]
 
-[[overview-what-is-junit-5]]
+[[overview-what-is-junit]]
 === What is JUnit?
 
-Unlike previous versions of JUnit, JUnit 5 and later is composed of several different
-modules from three different sub-projects.
+JUnit is composed of several different modules from three different sub-projects.
 
 **JUnit {version} = _JUnit Platform_ + _JUnit Jupiter_ + _JUnit Vintage_**
 
