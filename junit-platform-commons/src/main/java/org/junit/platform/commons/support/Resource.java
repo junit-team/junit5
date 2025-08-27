@@ -22,6 +22,11 @@ import org.apiguardian.api.API;
 /**
  * {@code Resource} represents a resource on the classpath.
  *
+ * <p><strong>WARNING</strong>: a {@code Resource} must provide correct
+ * {@link Object#equals(Object) equals} and {@link Object#hashCode() hashCode}
+ * implementations since a {@code Resource} may potentially be stored in a
+ * collection or map.
+ *
  * @since 1.11
  * @see ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate)
  * @see ReflectionSupport#findAllResourcesInPackage(String, Predicate)
