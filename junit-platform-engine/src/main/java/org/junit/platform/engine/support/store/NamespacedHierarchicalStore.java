@@ -504,6 +504,13 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	@FunctionalInterface
 	public interface CloseAction<N> {
 
+		/**
+		 * Static factory method for creating a {@link CloseAction} which
+		 * {@linkplain #close(Object, Object, Object) closes} any value that
+		 * implements {@link AutoCloseable}.
+		 *
+		 * @since 6.0
+		 */
 		@API(status = EXPERIMENTAL, since = "6.0")
 		static <N> CloseAction<N> closeAutoCloseables() {
 			return (__, ___, value) -> {
