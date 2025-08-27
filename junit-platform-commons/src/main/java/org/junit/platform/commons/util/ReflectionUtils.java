@@ -14,7 +14,6 @@ import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
@@ -1107,7 +1106,10 @@ public final class ReflectionUtils {
 		return findNestedClasses(clazz, predicate, CycleErrorHandling.THROW_EXCEPTION);
 	}
 
-	@API(status = INTERNAL, since = "5.13.2")
+	/**
+	 * @since 1.13.2
+	 */
+	@API(status = INTERNAL, since = "1.13.2")
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
 			CycleErrorHandling errorHandling) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -1136,6 +1138,7 @@ public final class ReflectionUtils {
 	 * checked; never {@code null}
 	 * @return {@code true} if such a nested class is present
 	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
+	 * @since 1.13.2
 	 */
 	@API(status = INTERNAL, since = "1.13.2")
 	public static boolean isNestedClassPresent(Class<?> clazz, Predicate<Class<?>> predicate,
@@ -1150,14 +1153,18 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * since 1.10
+	 * @since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamNestedClasses(Class, Predicate)
 	 */
+	@API(status = INTERNAL, since = "1.10")
 	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		return findNestedClasses(clazz, predicate).stream();
 	}
 
-	@API(status = INTERNAL, since = "5.13.2")
+	/**
+	 * @since 1.13.2
+	 */
+	@API(status = INTERNAL, since = "1.13.2")
 	public static Stream<Class<?>> streamNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
 			CycleErrorHandling errorHandling) {
 		return findNestedClasses(clazz, predicate, errorHandling).stream();
@@ -1312,6 +1319,7 @@ public final class ReflectionUtils {
 	 * @since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
+	@API(status = INTERNAL, since = "1.10")
 	public static Stream<Field> streamFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 
@@ -1453,6 +1461,9 @@ public final class ReflectionUtils {
 		return findMethod(clazz, methodName, resolveParameterTypes(clazz, methodName, parameterTypeNames));
 	}
 
+	/**
+	 * @since 1.10
+	 */
 	@API(status = INTERNAL, since = "1.10")
 	public static Class<?>[] resolveParameterTypes(Class<?> clazz, String methodName,
 			@Nullable String parameterTypeNames) {
@@ -1539,7 +1550,7 @@ public final class ReflectionUtils {
 	 * @since 1.7
 	 * @see #findMethod(Class, String, Class...)
 	 */
-	@API(status = STABLE, since = "1.7")
+	@API(status = INTERNAL, since = "1.7")
 	public static Method getRequiredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(() -> new JUnitException(
 			"Could not find method [%s] in class [%s]".formatted(methodName, clazz.getName())));
@@ -1575,6 +1586,7 @@ public final class ReflectionUtils {
 	 * @since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
+	@API(status = INTERNAL, since = "1.10")
 	public static Stream<Method> streamMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
@@ -1886,6 +1898,9 @@ public final class ReflectionUtils {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
+	/**
+	 * @since 1.11
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	public static <T extends Executable> T makeAccessible(T executable) {
@@ -1895,6 +1910,9 @@ public final class ReflectionUtils {
 		return executable;
 	}
 
+	/**
+	 * @since 1.12
+	 */
 	@API(status = INTERNAL, since = "1.12")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	public static Field makeAccessible(Field field) {
@@ -1958,7 +1976,10 @@ public final class ReflectionUtils {
 		return t;
 	}
 
-	@API(status = INTERNAL, since = "5.13.2")
+	/**
+	 * @since 1.13.2
+	 */
+	@API(status = INTERNAL, since = "1.13.2")
 	public enum CycleErrorHandling {
 
 		THROW_EXCEPTION {

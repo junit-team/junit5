@@ -96,7 +96,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * <p>If this store does not have a parent, an empty {@code Optional} is returned.
 	 *
 	 * @return an {@code Optional} containing the parent store, or an empty {@code Optional} if there is no parent
-	 * @since 5.13
+	 * @since 1.13
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
 	public Optional<NamespacedHierarchicalStore<N>> getParent() {

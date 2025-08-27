@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
- * @since 5.13.2
+ * @since 1.13.2
  */
 interface GitInfoCollector {
 

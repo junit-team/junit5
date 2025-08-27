@@ -29,9 +29,9 @@ import org.junit.platform.commons.function.Try;
 /**
  * Internal Kotlin-specific reflection utilities
  *
- * @since 5.13.3
+ * @since 1.13.3
  */
-@API(status = INTERNAL, since = "5.13.3")
+@API(status = INTERNAL, since = "1.13.3")
 public class KotlinReflectionUtils {
 
 	private static final String DEFAULT_IMPLS_CLASS_NAME = "DefaultImpls";
@@ -82,10 +82,7 @@ public class KotlinReflectionUtils {
 	 * <p>See
 	 * <a href="https://kotlinlang.org/docs/interfaces.html#jvm-default-method-generation-for-interface-functions">Kotlin documentation</a>
 	 * for details.
-	 *
-	 * @since 5.13.3
 	 */
-	@API(status = INTERNAL, since = "5.13.3")
 	public static boolean isKotlinInterfaceDefaultImplsClass(Class<?> clazz) {
 		if (!isKotlinType(clazz) || !DEFAULT_IMPLS_CLASS_NAME.equals(clazz.getSimpleName()) || !isStatic(clazz)) {
 			return false;

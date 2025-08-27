@@ -22,7 +22,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
 /**
- * @since 5.13
+ * @since 1.13
  */
 class DelegatingLauncherDiscoveryRequest implements LauncherDiscoveryRequest {
 
