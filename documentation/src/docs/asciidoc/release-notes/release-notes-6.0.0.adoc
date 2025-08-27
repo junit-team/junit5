@@ -38,7 +38,8 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `Resource.from(String, URI)` static factory method for creating an
+  `org.junit.platform.commons.support.Resource`.
 
 
 [[release-notes-6.0.0-junit-jupiter]]

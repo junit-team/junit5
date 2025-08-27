@@ -38,7 +38,6 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.support.DefaultResource;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.PackageUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -215,7 +214,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		try {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
-			Resource resource = new DefaultResource(fullyQualifiedResourceName, resourceFile.toUri());
+			Resource resource = Resource.from(fullyQualifiedResourceName, resourceFile.toUri());
 			if (resourceFilter.test(resource)) {
 				resourceConsumer.accept(resource);
 			}

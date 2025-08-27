@@ -39,6 +39,19 @@ import org.apiguardian.api.API;
 public interface Resource {
 
 	/**
+	 * Create a new {@link Resource} with the given name and URI.
+	 *
+	 * @param name the name of the resource; never {@code null}
+	 * @param uri the URI of the resource; never {@code null}
+	 * @return a new {@code Resource}
+	 * @since 6.0
+	 */
+	@API(status = MAINTAINED, since = "6.0")
+	static Resource from(String name, URI uri) {
+		return new DefaultResource(name, uri);
+	}
+
+	/**
 	 * Get the name of this resource.
 	 *
 	 * <p>The resource name is a {@code /}-separated path. The path is relative

@@ -36,7 +36,6 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.support.DefaultResource;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.support.scanning.ClassFilter;
 
@@ -289,7 +288,7 @@ public class ModuleUtils {
 		private Resource loadResourceUnchecked(String binaryName) {
 			try {
 				URI uri = requireNonNull(classLoader.getResource(binaryName)).toURI();
-				return new DefaultResource(binaryName, uri);
+				return Resource.from(binaryName, uri);
 			}
 			catch (NullPointerException | URISyntaxException e) {
 				throw new JUnitException("Failed to load resource with name '" + binaryName + "'.", e);
