@@ -3322,7 +3322,7 @@ test class or method:
 
 [source,java]
 ----
-include::{testDir}/example/ExplicitExecutionModeDemo.java[]
+include::{testDir}/example/ExplicitExecutionModeDemo.java[tags=user_guide]
 ----
 
 This allows test classes or methods to opt in or out of concurrent execution regardless of
