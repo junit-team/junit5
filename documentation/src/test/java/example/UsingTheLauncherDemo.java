@@ -36,7 +36,6 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherExecutionRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -70,14 +69,14 @@ class UsingTheLauncherDemo {
 
 		try (LauncherSession session = LauncherFactory.openSession()) {
 			Launcher launcher = session.getLauncher();
-			// Register a listener of your choice
+			// Register one ore more listeners of your choice.
 			launcher.registerTestExecutionListeners(listener);
-			// Discover tests and build a test plan
+			// Discover tests and build a test plan.
 			TestPlan testPlan = launcher.discover(discoveryRequest);
-			// Execute test plan
-			launcher.execute(LauncherExecutionRequestBuilder.request(testPlan).build());
-			// Alternatively, execute the discoveryRequest request directly
-			launcher.execute(LauncherExecutionRequestBuilder.request(discoveryRequest).build());
+			// Execute the test plan.
+			launcher.execute(testPlan);
+			// Alternatively, execute the discovery request directly.
+			launcher.execute(discoveryRequest);
 		}
 
 		TestExecutionSummary summary = listener.getSummary();
@@ -107,13 +106,12 @@ class UsingTheLauncherDemo {
 			.addTestExecutionListeners(new CustomTestExecutionListener())
 			.build();
 
-		LauncherExecutionRequest request = LauncherDiscoveryRequestBuilder.request()
+		LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder.request()
 			.selectors(selectPackage("com.example.mytests"))
-			.forExecution()
 			.build();
 
 		try (LauncherSession session = LauncherFactory.openSession(launcherConfig)) {
-			session.getLauncher().execute(request);
+			session.getLauncher().execute(discoveryRequest);
 		}
 		// end::launcherConfig[]
 		// @formatter:on

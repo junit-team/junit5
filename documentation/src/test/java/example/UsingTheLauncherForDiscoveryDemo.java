@@ -14,11 +14,11 @@ package example;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.discoveryRequest;
 
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.TestPlan;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 // end::imports[]
 
@@ -32,7 +32,7 @@ class UsingTheLauncherForDiscoveryDemo {
 	void discovery() {
 		// @formatter:off
 		// tag::discovery[]
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+		LauncherDiscoveryRequest discoveryRequest = discoveryRequest()
 			.selectors(
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
@@ -43,7 +43,7 @@ class UsingTheLauncherForDiscoveryDemo {
 			.build();
 
 		try (LauncherSession session = LauncherFactory.openSession()) {
-			TestPlan testPlan = session.getLauncher().discover(request);
+			TestPlan testPlan = session.getLauncher().discover(discoveryRequest);
 
 			// ... discover additional test plans or execute tests
 		}
