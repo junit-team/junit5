@@ -1128,10 +1128,6 @@ https://docs.oracle.com/en/java/javase/14/docs/specs/man/jfr.html[jfr]
 command line tool shipped with recent JDKs or open the recording file with
 https://jdk.java.net/jmc/[JDK Mission Control].
 
-WARNING: Flight Recorder support is currently an _experimental_ feature. You're invited to
-give it a try and provide feedback to the JUnit team so they can improve and eventually
-<<api-evolution, promote>> this feature.
-
 [[stacktrace-pruning]]
 === Stack Trace Pruning
 
