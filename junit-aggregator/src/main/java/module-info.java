@@ -17,7 +17,7 @@ module org.junit.aggregator {
 	requires static transitive org.jspecify;
 
 	requires transitive org.junit.jupiter;
-	requires transitive org.junit.platform.launcher;
+	requires org.junit.platform.launcher;
 	requires org.junit.platform.console;
 
 	exports org.junit.aggregator;

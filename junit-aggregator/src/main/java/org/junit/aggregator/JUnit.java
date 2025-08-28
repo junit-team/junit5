@@ -68,7 +68,8 @@ public final class JUnit {
 		}
 	}
 
-	public static void run(UnaryOperator<LauncherDiscoveryRequestBuilder> discovery) {
+	// Don't transitively expose types from org.junit.platform.launcher module
+	private static void run(UnaryOperator<LauncherDiscoveryRequestBuilder> discovery) {
 		var listener = new SummaryGeneratingListener();
 		var request = discovery.apply(request()).forExecution() //
 				.listeners(listener, new ContainerFeedPrintingListener()) //
