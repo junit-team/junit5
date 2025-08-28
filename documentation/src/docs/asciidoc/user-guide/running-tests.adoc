@@ -767,8 +767,8 @@ include::{consoleLauncherEnginesOptionsFile}[]
 [[running-tests-console-launcher-argument-files]]
 ==== Argument Files (@-files)
 
-On some platforms you may run into system limitations on the length of a command line
-when creating a command line with lots of options or with long arguments.
+On some platforms you may run into system limitations on the length of a command line when
+creating a command line with lots of options or with long arguments.
 
 Since version 1.3, the `ConsoleLauncher` supports _argument files_, also known as
 _@-files_. Argument files are files that themselves contain arguments to be passed to the
@@ -1111,14 +1111,14 @@ Since version 1.7, the JUnit Platform provides opt-in support for generating Fli
 Recorder events. https://openjdk.java.net/jeps/328[JEP 328] describes the Java Flight
 Recorder (JFR) as:
 
-NOTE: Flight Recorder records events originating from applications, the JVM and the OS.
+> Flight Recorder records events originating from applications, the JVM, and the OS.
 Events are stored in a single file that can be attached to bug reports and examined by
 support engineers, allowing after-the-fact analysis of issues in the period leading up
 to a problem.
 
 In order to record Flight Recorder events generated while running tests, you need to
-start flight recording when launching a test run via the following java command line
-option:
+start flight recording when launching a test suite via the following java command line
+option.
 
    -XX:StartFlightRecording:filename=...
 
@@ -1147,7 +1147,7 @@ or any of its ancestors. For that reason, calls to `{Assertions}` or `{Assumptio
 never be excluded.
 
 In addition, all elements prior to and including the first call from the JUnit Platform
-Launcher will be removed.
+`Launcher` will be removed.
 
 [[running-tests-discovery-issues]]
 === Discovery Issues
