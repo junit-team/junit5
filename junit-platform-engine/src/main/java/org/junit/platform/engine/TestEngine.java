@@ -67,6 +67,10 @@ public interface TestEngine {
 	 * must be used to create unique IDs for children of the root's descriptor
 	 * by calling {@link UniqueId#append}.
 	 *
+	 * <p>Furthermore, implementations must publish events about test discovery
+	 * via the supplied {@link EngineDiscoveryRequest#getDiscoveryListener()
+	 * EngineDiscoveryListener}.
+	 *
 	 * @param discoveryRequest the discovery request; never {@code null}
 	 * @param uniqueId the unique ID to be used for this test engine's
 	 * {@code TestDescriptor}; never {@code null}
