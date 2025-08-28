@@ -195,6 +195,7 @@ public interface TestExecutionListener {
 	 *
 	 * @param testIdentifier describes the test or container to which the entry pertains
 	 * @param file the published {@code FileEntry}
+	 * @since 1.12
 	 */
 	@API(status = MAINTAINED, since = "1.13.3")
 	default void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
