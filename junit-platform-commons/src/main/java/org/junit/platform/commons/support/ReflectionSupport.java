@@ -534,10 +534,10 @@ public final class ReflectionSupport {
 	 * interface and traversing up the type hierarchy until such a method is
 	 * found or the type hierarchy is exhausted.
 	 *
-	 * <p>As of JUnit Platform 1.10, this method uses the {@link ClassLoader} of
-	 * the supplied {@code clazz} to load parameter types instead of using the
-	 * <em>default</em> {@code ClassLoader}, which allows parameter types to be
-	 * resolved in different {@code ClassLoader} arrangements.
+	 * <p>This method uses the {@link ClassLoader} of the supplied {@code clazz}
+	 * to load parameter types instead of using the <em>default</em>
+	 * {@code ClassLoader}, which allows parameter types to be resolved in different
+	 * {@code ClassLoader} arrangements.
 	 *
 	 * <p>The algorithm does not search for methods in {@link java.lang.Object}.
 	 *
@@ -636,11 +636,11 @@ public final class ReflectionSupport {
 	 * be ordered using an algorithm that is deterministic but intentionally
 	 * nonobvious.
 	 *
-	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
-	 * class hierarchies &mdash; from the supplied class up to the outermost
-	 * enclosing class &mdash; and throws a {@link JUnitException} if such a cycle
-	 * is detected. Cycles within inner class hierarchies <em>below</em> the
-	 * supplied class are not detected by this method.
+	 * <p>This method detects cycles in <em>inner</em> class hierarchies &mdash;
+	 * from the supplied class up to the outermost enclosing class &mdash; and
+	 * throws a {@link JUnitException} if such a cycle is detected. Cycles within
+	 * inner class hierarchies <em>below</em> the supplied class are not detected
+	 * by this method.
 	 *
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
@@ -666,11 +666,11 @@ public final class ReflectionSupport {
 	 * be ordered using an algorithm that is deterministic but intentionally
 	 * nonobvious.
 	 *
-	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
-	 * class hierarchies &mdash; from the supplied class up to the outermost
-	 * enclosing class &mdash; and throws a {@link JUnitException} if such a cycle
-	 * is detected. Cycles within inner class hierarchies <em>below</em> the
-	 * supplied class are not detected by this method.
+	 * <p>This method detects cycles in <em>inner</em> class hierarchies &mdash;
+	 * from the supplied class up to the outermost enclosing class &mdash; and
+	 * throws a {@link JUnitException} if such a cycle is detected. Cycles within
+	 * inner class hierarchies <em>below</em> the supplied class are not detected
+	 * by this method.
 	 *
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
