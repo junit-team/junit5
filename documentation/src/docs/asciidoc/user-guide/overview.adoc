@@ -35,7 +35,9 @@ sub-project provides a `TestEngine` for running Jupiter based tests on the platf
 
 **JUnit Vintage** provides a `TestEngine` for running JUnit 3 and JUnit 4 based tests on
 the platform. It requires JUnit 4.12 or later to be present on the class path or module
-path.
+path. Note, however, that the JUnit Vintage engine is deprecated and should only be used
+temporarily while migrating tests to JUnit Jupiter or another testing framework with
+native JUnit Platform support.
 
 [[overview-java-versions]]
 === Supported Java Versions
