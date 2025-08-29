@@ -133,7 +133,7 @@ public enum JRE {
 	 * @deprecated in favor of {@link #currentJre()}
 	 */
 	@API(status = DEPRECATED, since = "5.12")
-	@Deprecated
+	@Deprecated(since = "5.12")
 	public static JRE currentVersion() {
 		return currentJre();
 	}
