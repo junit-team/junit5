@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
-import org.junit.platform.launcher.core.LauncherExecutionRequestBuilder;
 
 /**
  * The {@code Launcher} API is the main entry point for client code that
@@ -109,12 +108,7 @@ public interface Launcher {
 	 * @see #execute(TestPlan, TestExecutionListener...)
 	 * @see #execute(LauncherExecutionRequest)
 	 */
-	default void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners) {
-		var executionRequest = LauncherExecutionRequestBuilder.request(discoveryRequest) //
-				.listeners(listeners) //
-				.build();
-		execute(executionRequest);
-	}
+	void execute(LauncherDiscoveryRequest discoveryRequest, TestExecutionListener... listeners);
 
 	/**
 	 * Execute the supplied {@link TestPlan} and notify
@@ -135,12 +129,7 @@ public interface Launcher {
 	 * @see #execute(LauncherExecutionRequest)
 	 */
 	@API(status = STABLE, since = "1.4")
-	default void execute(TestPlan testPlan, TestExecutionListener... listeners) {
-		var executionRequest = LauncherExecutionRequestBuilder.request(testPlan) //
-				.listeners(listeners) //
-				.build();
-		execute(executionRequest);
-	}
+	void execute(TestPlan testPlan, TestExecutionListener... listeners);
 
 	/**
 	 * Execute tests according to the supplied {@link LauncherExecutionRequest} and

@@ -70,8 +70,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.core.LauncherExecutionRequestBuilder;
 
 @AnalyzeClasses(packages = { "org.junit.platform", "org.junit.jupiter", "org.junit.vintage" })
 class ArchUnitTests {
@@ -169,9 +167,6 @@ class ArchUnitTests {
 				// Needs more investigation
 				.ignoreDependency(resideInAPackage("org.junit.platform.console.options"),
 					resideInAPackage("org.junit.platform.console.tasks"))
-
-				// Should be implemented in DefaultLauncher instead
-				.ignoreDependency(Launcher.class, LauncherExecutionRequestBuilder.class)
 
 				// Needs more investigation
 				.ignoreDependency(ParameterInfo.class, ArgumentsAccessor.class)
