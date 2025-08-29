@@ -53,6 +53,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
+import org.junit.jupiter.engine.execution.LauncherStoreFacade;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

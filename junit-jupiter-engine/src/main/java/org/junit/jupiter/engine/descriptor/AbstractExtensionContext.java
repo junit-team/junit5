@@ -33,6 +33,7 @@ import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
+import org.junit.jupiter.engine.execution.LauncherStoreFacade;
 import org.junit.jupiter.engine.extension.ExtensionContextInternal;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;

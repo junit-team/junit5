@@ -8,19 +8,18 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.descriptor;
+package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
-@API(status = INTERNAL, since = "5.13")
+@API(status = INTERNAL, since = "6.0")
 public class LauncherStoreFacade {
 
 	private final NamespacedHierarchicalStore<Namespace> requestLevelStore;
@@ -32,19 +31,19 @@ public class LauncherStoreFacade {
 			() -> new JUnitException("Request-level store must have a parent"));
 	}
 
-	NamespacedHierarchicalStore<Namespace> getRequestLevelStore() {
+	public NamespacedHierarchicalStore<Namespace> getRequestLevelStore() {
 		return this.requestLevelStore;
 	}
 
-	ExtensionContext.Store getRequestLevelStore(ExtensionContext.Namespace namespace) {
+	public ExtensionContext.Store getRequestLevelStore(ExtensionContext.Namespace namespace) {
 		return getStoreAdapter(this.requestLevelStore, namespace);
 	}
 
-	ExtensionContext.Store getSessionLevelStore(ExtensionContext.Namespace namespace) {
+	public ExtensionContext.Store getSessionLevelStore(ExtensionContext.Namespace namespace) {
 		return getStoreAdapter(this.sessionLevelStore, namespace);
 	}
 
-	NamespaceAwareStore getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
+	public NamespaceAwareStore getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
 			ExtensionContext.Namespace namespace) {
 		Preconditions.notNull(namespace, "Namespace must not be null");
 		return new NamespaceAwareStore(valuesStore, convert(namespace));

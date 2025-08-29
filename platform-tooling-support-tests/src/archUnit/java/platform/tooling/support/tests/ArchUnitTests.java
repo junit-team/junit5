@@ -55,8 +55,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.MediaType;
-import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
-import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.support.ParameterInfo;
 import org.junit.platform.commons.support.Resource;
@@ -167,12 +165,6 @@ class ArchUnitTests {
 				.ignoreDependency(DefaultClasspathScanner.class, Preconditions.class) //
 				.ignoreDependency(DefaultClasspathScanner.class, StringUtils.class) //
 				.ignoreDependency(DefaultClasspathScanner.class, UnrecoverableExceptions.class) //
-
-				// LauncherStoreFacade should be in org.junit.jupiter.engine.execution
-				.ignoreDependency(JupiterEngineExecutionContext.class, LauncherStoreFacade.class) //
-				.ignoreDependency(
-					Class.forName("org.junit.jupiter.engine.execution.JupiterEngineExecutionContext$State"),
-					LauncherStoreFacade.class) //
 
 				// Needs more investigation
 				.ignoreDependency(resideInAPackage("org.junit.platform.console.options"),
