@@ -61,7 +61,6 @@ class SessionPerRequestLauncher implements Launcher {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
 		try (LauncherSession session = createSession()) {
@@ -69,7 +68,6 @@ class SessionPerRequestLauncher implements Launcher {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		try (LauncherSession session = createSession()) {

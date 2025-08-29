@@ -117,13 +117,11 @@ class DefaultLauncherSession implements LauncherSession {
 			throw new PreconditionViolationException("Launcher session has already been closed");
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
 			throw new PreconditionViolationException("Launcher session has already been closed");
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 			throw new PreconditionViolationException("Launcher session has already been closed");

@@ -43,13 +43,11 @@ class DelegatingLauncher implements Launcher {
 		return delegate.discover(launcherDiscoveryRequest);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
 		delegate.execute(launcherDiscoveryRequest, listeners);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		delegate.execute(testPlan, listeners);
