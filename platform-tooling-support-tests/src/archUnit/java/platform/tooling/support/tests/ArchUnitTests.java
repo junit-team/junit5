@@ -67,8 +67,6 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.support.ParameterInfo;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
-import org.junit.platform.commons.util.ModuleUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
@@ -157,6 +155,7 @@ class ArchUnitTests {
 		slices().matching("org.junit.(*)..").should().beFreeOfCycles().check(classes);
 	}
 
+	@SuppressWarnings("removal")
 	@ArchTest
 	void freeOfPackageCycles(JavaClasses classes) throws Exception {
 		slices().matching("org.junit.(**)").should().beFreeOfCycles() //
@@ -165,14 +164,7 @@ class ArchUnitTests {
 				.ignoreDependency(TestReporter.class, MediaType.class) //
 
 				// https://github.com/junit-team/junit-framework/issues/4885
-				.ignoreDependency(ModuleUtils.class, Resource.class) //
-				.ignoreDependency(
-					Class.forName("org.junit.platform.commons.util.ModuleUtils$ModuleReferenceResourceScanner"),
-					Resource.class) //
-				.ignoreDependency(ReflectionUtils.class, Resource.class) //
 				.ignoreDependency(ClasspathScanner.class, Resource.class) //
-				.ignoreDependency(Class.forName("org.junit.platform.commons.util.DefaultClasspathScanner"),
-					Resource.class) //
 
 				// Needs more investigation
 				.ignoreDependency(resideInAPackage("org.junit.platform.console.options"),

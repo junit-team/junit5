@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -30,8 +31,8 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.io.Resource;
 import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -362,9 +363,17 @@ public final class DiscoverySelectors {
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
 	 * @see ReflectionSupport#tryToGetResources(String)
+	 * @deprecated Please use {@link #selectClasspathResources(Set)} instead.
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
-	public static ClasspathResourceSelector selectClasspathResource(Set<Resource> classpathResources) {
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0")
+	@SuppressWarnings("removal")
+	public static ClasspathResourceSelector selectClasspathResource(
+			Set<org.junit.platform.commons.support.Resource> classpathResources) {
+		return selectClasspathResources(classpathResources);
+	}
+
+	public static ClasspathResourceSelector selectClasspathResources(Set<? extends Resource> classpathResources) {
 		Preconditions.notEmpty(classpathResources, "classpath resources must not be null or empty");
 		Preconditions.containsNoNullElements(classpathResources, "individual classpath resources must not be null");
 		List<String> resourceNames = classpathResources.stream().map(Resource::getName).distinct().toList();

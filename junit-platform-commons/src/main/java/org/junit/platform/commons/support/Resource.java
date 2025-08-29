@@ -10,10 +10,8 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.function.Predicate;
 
@@ -34,10 +32,12 @@ import org.apiguardian.api.API;
  * @see ReflectionSupport#streamAllResourcesInClasspathRoot(URI, Predicate)
  * @see ReflectionSupport#streamAllResourcesInPackage(String, Predicate)
  * @see ReflectionSupport#streamAllResourcesInModule(String, Predicate)
+ * @deprecated Please use {@link org.junit.platform.commons.io.Resource} instead.
  */
-@API(status = MAINTAINED, since = "1.13.3")
-public interface Resource {
-
+@SuppressWarnings("removal")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
+public interface Resource extends org.junit.platform.commons.io.Resource {
 	/**
 	 * Create a new {@link Resource} with the given name and URI.
 	 *
@@ -46,39 +46,12 @@ public interface Resource {
 	 * @return a new {@code Resource}
 	 * @since 6.0
 	 */
-	@API(status = MAINTAINED, since = "6.0")
 	static Resource from(String name, URI uri) {
 		return new DefaultResource(name, uri);
 	}
 
-	/**
-	 * Get the name of this resource.
-	 *
-	 * <p>The resource name is a {@code /}-separated path. The path is relative
-	 * to the classpath root in which the resource is located.
-	 *
-	 * @return the resource name; never {@code null}
-	 */
-	String getName();
-
-	/**
-	 * Get the URI of this resource.
-	 *
-	 * @return the URI of the resource; never {@code null}
-	 */
-	URI getUri();
-
-	/**
-	 * Get an {@link InputStream} for reading this resource.
-	 *
-	 * <p>The default implementation delegates to {@link java.net.URL#openStream()}
-	 * for this resource's {@link #getUri() URI}.
-	 *
-	 * @return an input stream for this resource; never {@code null}
-	 * @throws IOException if an I/O exception occurs
-	 */
-	default InputStream getInputStream() throws IOException {
-		return getUri().toURL().openStream();
+	static Resource from(org.junit.platform.commons.io.Resource resource) {
+		return new DefaultResource(resource.getName(), resource.getUri());
 	}
 
 }

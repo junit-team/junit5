@@ -10,21 +10,25 @@
 
 package org.junit.platform.commons.support;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.io.ResourceFilter;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -110,10 +114,14 @@ public final class ReflectionSupport {
 	 * {@code null}
 	 * @since 1.12
 	 * @see #tryToGetResources(String, ClassLoader)
+	 * @deprecated Please use {@link ResourceSupport#tryToGetResources(String)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
-		return ReflectionUtils.tryToGetResources(classpathResourceName);
+		return ResourceSupport.tryToGetResources(classpathResourceName) //
+				.andThenTry(ReflectionSupport::toSupportResourcesSet);
 	}
 
 	/**
@@ -135,10 +143,14 @@ public final class ReflectionSupport {
 	 * {@code null}
 	 * @since 1.12
 	 * @see #tryToGetResources(String)
+	 * @deprecated Please use {@link ResourceSupport#tryToGetResources(String, ClassLoader)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
-		return ReflectionUtils.tryToGetResources(classpathResourceName, classLoader);
+		return ResourceSupport.tryToGetResources(classpathResourceName, classLoader) //
+				.andThenTry(ReflectionSupport::toSupportResourcesSet);
 	}
 
 	/**
@@ -179,10 +191,14 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #findAllResourcesInPackage(String, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#findAllResourcesInClasspathRoot(URI, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter);
+		return toSupportResourcesList(
+			ResourceSupport.findAllResourcesInClasspathRoot(root, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -225,10 +241,14 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #streamAllResourcesInPackage(String, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#streamAllResourcesInClasspathRoot(URI, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter);
+		return toSupportResourcesStream(
+			ResourceSupport.streamAllResourcesInClasspathRoot(root, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -272,10 +292,14 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#findAllResourcesInPackage(String, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
-		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter);
+		return toSupportResourcesList(
+			ResourceSupport.findAllResourcesInPackage(basePackageName, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -322,12 +346,16 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#streamAllResourcesInPackage(String, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
 			Predicate<Resource> resourceFilter) {
 
-		return ReflectionUtils.streamAllResourcesInPackage(basePackageName, resourceFilter);
+		return toSupportResourcesStream(
+			ResourceSupport.streamAllResourcesInPackage(basePackageName, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -370,10 +398,14 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #findAllResourcesInPackage(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#findAllResourcesInModule(String, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter);
+		return toSupportResourcesList(
+			ResourceSupport.findAllResourcesInModule(moduleName, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -416,10 +448,14 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
 	 * @see #streamAllResourcesInPackage(String, Predicate)
+	 * @deprecated Please use {@link ResourceSupport#streamAllResourcesInModule(String, ResourceFilter)} instead
 	 */
-	@API(status = MAINTAINED, since = "1.13.3")
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter);
+		return toSupportResourcesStream(
+			ResourceSupport.streamAllResourcesInModule(moduleName, toResourceFilter(resourceFilter)));
 	}
 
 	/**
@@ -702,6 +738,27 @@ public final class ReflectionSupport {
 	@API(status = MAINTAINED, since = "1.13.3")
 	public static Field makeAccessible(Field field) {
 		return ReflectionUtils.makeAccessible(Preconditions.notNull(field, "field must not be null"));
+	}
+
+	@SuppressWarnings("removal")
+	private static ResourceFilter toResourceFilter(Predicate<Resource> resourceFilter) {
+		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
+		return ResourceFilter.of(r -> resourceFilter.test(Resource.from(r)));
+	}
+
+	@SuppressWarnings("removal")
+	static List<Resource> toSupportResourcesList(List<org.junit.platform.commons.io.Resource> resources) {
+		return toSupportResourcesStream(resources.stream()).toList();
+	}
+
+	@SuppressWarnings("removal")
+	static Set<Resource> toSupportResourcesSet(Set<org.junit.platform.commons.io.Resource> resources) {
+		return toSupportResourcesStream(resources.stream()).collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	@SuppressWarnings("removal")
+	static Stream<Resource> toSupportResourcesStream(Stream<org.junit.platform.commons.io.Resource> resources) {
+		return resources.map(Resource::from);
 	}
 
 }

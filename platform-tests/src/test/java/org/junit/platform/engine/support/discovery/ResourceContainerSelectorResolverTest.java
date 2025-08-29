@@ -22,10 +22,9 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.io.ResourceFilter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -37,10 +36,10 @@ class ResourceContainerSelectorResolverTest {
 
 	final TestDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("resource-engine"),
 		"Resource Engine");
-	final Predicate<Resource> isResource = resource -> resource.getName().endsWith(".resource");
+	final ResourceFilter resourceFilter = ResourceFilter.of(resource -> resource.getName().endsWith(".resource"));
 
 	final EngineDiscoveryRequestResolver<TestDescriptor> resolver = EngineDiscoveryRequestResolver.builder() //
-			.addResourceContainerSelectorResolver(isResource) //
+			.addResourceContainerSelectorResolver(resourceFilter) //
 			.addSelectorResolver(new ResourceSelectorResolver()) //
 			.build();
 
