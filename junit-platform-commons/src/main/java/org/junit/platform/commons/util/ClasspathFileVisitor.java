@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.support.scanning;
+package org.junit.platform.commons.util;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 

@@ -59,12 +59,8 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.support.ParameterInfo;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
-import org.junit.platform.commons.support.scanning.DefaultClasspathScanner;
 import org.junit.platform.commons.util.ModuleUtils;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -153,12 +149,8 @@ class ArchUnitTests {
 					Resource.class) //
 				.ignoreDependency(ReflectionUtils.class, Resource.class) //
 				.ignoreDependency(ClasspathScanner.class, Resource.class) //
-				.ignoreDependency(DefaultClasspathScanner.class, Resource.class) //
-
-				// Move DefaultClasspathScanner to org.junit.platform.commons.util?
-				.ignoreDependency(DefaultClasspathScanner.class, Preconditions.class) //
-				.ignoreDependency(DefaultClasspathScanner.class, StringUtils.class) //
-				.ignoreDependency(DefaultClasspathScanner.class, UnrecoverableExceptions.class) //
+				.ignoreDependency(Class.forName("org.junit.platform.commons.util.DefaultClasspathScanner"),
+					Resource.class) //
 
 				// Needs more investigation
 				.ignoreDependency(resideInAPackage("org.junit.platform.console.options"),

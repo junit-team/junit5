@@ -7,7 +7,7 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
-		<Logger name="org.junit.platform.commons.support.scanning.DefaultClasspathScanner" level="error" />
+		<Logger name="org.junit.platform.commons.util.DefaultClasspathScanner" level="error" />
 		<Logger name="org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor" level="error" />
 		<Logger name="org.junit.platform.launcher.core.CompositeEngineExecutionListener" level="error" />
 		<Logger name="org.junit.platform.launcher.core.CompositeTestExecutionListener" level="error" />

@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.support.scanning;
+package org.junit.platform.commons.util;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,8 +49,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.scanning.ClassFilter;
 
 /**
  * Unit tests for {@link DefaultClasspathScanner}.
