@@ -58,7 +58,6 @@ import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.support.ParameterInfo;
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.support.scanning.ClassFilter;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
 import org.junit.platform.commons.support.scanning.DefaultClasspathScanner;
 import org.junit.platform.commons.util.ModuleUtils;
@@ -155,9 +154,6 @@ class ArchUnitTests {
 				.ignoreDependency(ReflectionUtils.class, Resource.class) //
 				.ignoreDependency(ClasspathScanner.class, Resource.class) //
 				.ignoreDependency(DefaultClasspathScanner.class, Resource.class) //
-
-				// Avoid using Preconditions
-				.ignoreDependency(ClassFilter.class, Preconditions.class) //
 
 				// Move DefaultClasspathScanner to org.junit.platform.commons.util?
 				.ignoreDependency(DefaultClasspathScanner.class, Preconditions.class) //

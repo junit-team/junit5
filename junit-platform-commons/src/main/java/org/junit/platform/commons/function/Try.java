@@ -84,6 +84,7 @@ public abstract class Try<V extends @Nullable Object> {
 	}
 
 	// Cannot use Preconditions due to package cycle
+	@Contract("null, _ -> fail; !null, _ -> param1")
 	private static <T> T checkNotNull(@Nullable T input, String title) {
 		if (input == null) {
 			// Cannot use PreconditionViolationException due to package cycle
