@@ -63,8 +63,6 @@ import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
-import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
-import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 @AnalyzeClasses(packages = { "org.junit.platform", "org.junit.jupiter", "org.junit.vintage" })
 class ArchUnitTests {
@@ -161,9 +159,6 @@ class ArchUnitTests {
 
 				// Needs more investigation
 				.ignoreDependency(OutputDirectoryProvider.class, TestDescriptor.class) //
-
-				// Needs more investigation
-				.ignoreDependency(NamespacedHierarchicalStore.class, ThrowableCollector.class) //
 
 				.check(classes);
 	}
