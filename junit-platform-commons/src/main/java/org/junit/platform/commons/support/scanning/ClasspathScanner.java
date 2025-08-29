@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support.scanning;
 
-import static org.apiguardian.api.API.Status;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.net.URI;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.junit.platform.commons.support.Resource;
  *
  * @since 1.12
  */
-@API(status = Status.MAINTAINED, since = "1.13.3")
+@API(status = MAINTAINED, since = "1.13.3")
 public interface ClasspathScanner {
 
 	/**
