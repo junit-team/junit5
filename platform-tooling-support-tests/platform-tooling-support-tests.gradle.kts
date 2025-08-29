@@ -139,7 +139,7 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 		implementation(libs.assertj)
 		runtimeOnly.bundle(libs.bundles.log4j)
 		modularProjects.forEach {
-			runtimeOnly(project(it.path))
+			implementation(project(it.path))
 		}
 	}
 
