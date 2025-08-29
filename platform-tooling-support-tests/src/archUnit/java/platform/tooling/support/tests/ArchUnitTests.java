@@ -59,12 +59,10 @@ import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.support.ParameterInfo;
-import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.support.scanning.ClassFilter;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
 import org.junit.platform.commons.support.scanning.DefaultClasspathScanner;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -161,9 +159,6 @@ class ArchUnitTests {
 				.ignoreDependency(ReflectionUtils.class, Resource.class) //
 				.ignoreDependency(ClasspathScanner.class, Resource.class) //
 				.ignoreDependency(DefaultClasspathScanner.class, Resource.class) //
-
-				// Should call ReflectionUtils instead
-				.ignoreDependency(CollectionUtils.class, ReflectionSupport.class) //
 
 				// Avoid using Preconditions
 				.ignoreDependency(ClassFilter.class, Preconditions.class) //
