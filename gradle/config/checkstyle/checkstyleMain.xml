@@ -47,6 +47,7 @@
 		<module name="RedundantModifier"/>
 		<module name="EqualsAvoidNull"/>
 		<module name="EmptyStatement"/>
+		<module name="MissingDeprecated"/>
 	</module>
 
 	<module name="JavadocPackage" />
