@@ -9,7 +9,8 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit-framework-repo}+/milestone/87?closed=1+[6.0.0-M1],
 link:{junit-framework-repo}+/milestone/99?closed=1+[6.0.0-M2],
 link:{junit-framework-repo}+/milestone/102?closed=1+[6.0.0-RC1],
-link:{junit-framework-repo}+/milestone/105?closed=1+[6.0.0-RC2], and
+link:{junit-framework-repo}+/milestone/105?closed=1+[6.0.0-RC2],
+link:{junit-framework-repo}+/milestone/106?closed=1+[6.0.0-RC3], and
 link:{junit-framework-repo}+/milestone/103?closed=1+[6.0.0]
 milestone pages in the JUnit repository on GitHub.
 
@@ -38,8 +39,7 @@ guidance on upgrading from JUnit 5.x.y to 6.0.0.
 [[release-notes-6.0.0-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New `Resource.from(String, URI)` static factory method for creating an
-  `org.junit.platform.commons.support.Resource`.
+* ❓
 
 
 [[release-notes-6.0.0-junit-jupiter]]
