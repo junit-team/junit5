@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.nio.charset.Charset;
@@ -64,7 +65,10 @@ public final class MediaType {
 
 	/**
 	 * The {@code application/json; charset=UTF-8} media type.
+	 * @deprecated Use {@link #APPLICATION_JSON} instead.
 	 */
+	@Deprecated(since = "6.0")
+	@API(status = DEPRECATED, since = "6.0")
 	public static final MediaType APPLICATION_JSON_UTF_8 = create("application", "json", UTF_8);
 
 	/**
