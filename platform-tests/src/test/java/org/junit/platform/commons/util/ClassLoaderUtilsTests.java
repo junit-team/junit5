@@ -11,11 +11,11 @@
 package org.junit.platform.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
@@ -32,8 +32,7 @@ class ClassLoaderUtilsTests {
 	@SuppressWarnings("DataFlowIssue")
 	@Test
 	void getClassLoaderPreconditions() {
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> ClassLoaderUtils.getClassLoader(null))//
+		assertPreconditionViolationFor(() -> ClassLoaderUtils.getClassLoader(null))//
 				.withMessage("Class must not be null");
 	}
 

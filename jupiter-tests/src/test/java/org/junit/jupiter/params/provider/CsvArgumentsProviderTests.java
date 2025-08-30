@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvSource;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.mockito.Mockito.mock;
 
 import java.util.stream.Stream;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.support.ParameterNameAndArgument;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * @since 5.0
@@ -44,8 +44,7 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionIfNeitherValueNorTextBlockIsDeclared() {
 		var annotation = csvSource().build();
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation).findAny())//
+		assertPreconditionViolationFor(() -> provideArguments(annotation).findAny())//
 				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
 	}
 
@@ -56,8 +55,7 @@ class CsvArgumentsProviderTests {
 				baz
 				""").build();
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation).findAny())//
+		assertPreconditionViolationFor(() -> provideArguments(annotation).findAny())//
 				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
 	}
 
@@ -281,8 +279,7 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
 		var annotation = csvSource().delimiter('|').delimiterString("~~~").build();
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation).findAny())//
+		assertPreconditionViolationFor(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("The delimiter and delimiterString attributes cannot be set simultaneously in")//
 				.withMessageContaining("CsvSource");
 	}
@@ -377,8 +374,7 @@ class CsvArgumentsProviderTests {
 	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumberOrMinusOne(int maxCharsPerColumn) {
 		var annotation = csvSource().lines("41").maxCharsPerColumn(maxCharsPerColumn).build();
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation).findAny())//
+		assertPreconditionViolationFor(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
 	}
 
@@ -453,10 +449,8 @@ class CsvArgumentsProviderTests {
 				banana, 2, BOOM!
 				""").build();
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation).findAny())//
-				.withMessage(
-					"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
+		assertPreconditionViolationFor(() -> provideArguments(annotation).findAny()).withMessage(
+			"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {

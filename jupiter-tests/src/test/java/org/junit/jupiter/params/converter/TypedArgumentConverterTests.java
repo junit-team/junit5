@@ -13,6 +13,7 @@ package org.junit.jupiter.params.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +31,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
@@ -51,12 +51,10 @@ class TypedArgumentConverterTests {
 		@SuppressWarnings("DataFlowIssue")
 		@Test
 		void preconditions() {
-			assertThatExceptionOfType(PreconditionViolationException.class)//
-					.isThrownBy(() -> new StringLengthArgumentConverter(null, Integer.class))//
+			assertPreconditionViolationFor(() -> new StringLengthArgumentConverter(null, Integer.class))//
 					.withMessage("sourceType must not be null");
 
-			assertThatExceptionOfType(PreconditionViolationException.class)//
-					.isThrownBy(() -> new StringLengthArgumentConverter(String.class, null))//
+			assertPreconditionViolationFor(() -> new StringLengthArgumentConverter(String.class, null))//
 					.withMessage("targetType must not be null");
 		}
 

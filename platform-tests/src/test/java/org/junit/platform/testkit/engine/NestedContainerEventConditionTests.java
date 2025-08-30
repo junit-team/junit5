@@ -11,8 +11,8 @@
 package org.junit.platform.testkit.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -30,7 +30,6 @@ import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.testkit.engine.NestedContainerEventConditionTests.ATestCase.BTestCase;
@@ -44,12 +43,10 @@ class NestedContainerEventConditionTests {
 	@SuppressWarnings("DataFlowIssue")
 	@Test
 	void preconditions() {
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> nestedContainer(null))//
+		assertPreconditionViolationFor(() -> nestedContainer(null))//
 				.withMessage("Class must not be null");
 
-		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> nestedContainer(NestedContainerEventConditionTests.class))//
+		assertPreconditionViolationFor(() -> nestedContainer(NestedContainerEventConditionTests.class))//
 				.withMessage(NestedContainerEventConditionTests.class.getName() + " must be a nested class");
 	}
 

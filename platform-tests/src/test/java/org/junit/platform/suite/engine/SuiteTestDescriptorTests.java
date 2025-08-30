@@ -11,8 +11,8 @@
 package org.junit.platform.suite.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -85,11 +84,9 @@ class SuiteTestDescriptorTests {
 		suite.discover();
 
 		assertAll(//
-			() -> assertThatExceptionOfType(PreconditionViolationException.class)//
-					.isThrownBy(() -> suite.addDiscoveryRequestFrom(SelectClassesSuite.class))//
+			() -> assertPreconditionViolationFor(() -> suite.addDiscoveryRequestFrom(SelectClassesSuite.class))//
 					.withMessage("discovery request cannot be modified after discovery"),
-			() -> assertThatExceptionOfType(PreconditionViolationException.class)//
-					.isThrownBy(() -> suite.addDiscoveryRequestFrom(methodId))//
+			() -> assertPreconditionViolationFor(() -> suite.addDiscoveryRequestFrom(methodId))//
 					.withMessage("discovery request cannot be modified after discovery"));
 	}
 

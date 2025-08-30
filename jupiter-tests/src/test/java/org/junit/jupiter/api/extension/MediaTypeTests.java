@@ -11,13 +11,13 @@
 package org.junit.jupiter.api.extension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationNotNullFor;
 
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.PreconditionViolationException;
 
 class MediaTypeTests {
 
@@ -41,15 +41,13 @@ class MediaTypeTests {
 
 	@Test
 	void parseWithInvalidMediaType() {
-		var exception = assertThrows(PreconditionViolationException.class, () -> MediaType.parse("invalid"));
-		assertEquals("Invalid media type: 'invalid'", exception.getMessage());
+		assertPreconditionViolationFor(() -> MediaType.parse("invalid")).withMessage("Invalid media type: 'invalid'");
 	}
 
 	@SuppressWarnings("DataFlowIssue")
 	@Test
 	void parseWithNullMediaType() {
-		var exception = assertThrows(PreconditionViolationException.class, () -> MediaType.parse(null));
-		assertEquals("value must not be null", exception.getMessage());
+		assertPreconditionViolationNotNullFor("value", () -> MediaType.parse(null));
 	}
 
 	@Test
@@ -60,4 +58,5 @@ class MediaTypeTests {
 
 		assertEqualsAndHashCode(mediaType1, mediaType2, mediaType3);
 	}
+
 }

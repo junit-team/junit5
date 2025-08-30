@@ -17,6 +17,8 @@ dependencies {
 	compileOnly(kotlin("stdlib"))
 	compileOnly(kotlin("reflect"))
 	compileOnly(libs.kotlinx.coroutines)
+
+	testFixturesImplementation(libs.assertj)
 }
 
 tasks.compileJava {
