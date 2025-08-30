@@ -10,53 +10,94 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationNotNullFor;
 
-import java.nio.charset.StandardCharsets;
-
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class MediaTypeTests {
 
 	@Test
-	void parse() {
-		MediaType mediaType = MediaType.parse("text/plain");
-		assertEquals("text/plain", mediaType.toString());
-	}
-
-	@Test
-	void create() {
-		MediaType mediaType = MediaType.create("application", "json");
-		assertEquals("application/json", mediaType.toString());
-	}
-
-	@Test
-	void createWithCharset() {
-		MediaType mediaType = MediaType.create("application", "json", StandardCharsets.UTF_8);
-		assertEquals("application/json; charset=UTF-8", mediaType.toString());
-	}
-
-	@Test
-	void parseWithInvalidMediaType() {
-		assertPreconditionViolationFor(() -> MediaType.parse("invalid")).withMessage("Invalid media type: 'invalid'");
-	}
-
-	@SuppressWarnings("DataFlowIssue")
-	@Test
-	void parseWithNullMediaType() {
-		assertPreconditionViolationNotNullFor("value", () -> MediaType.parse(null));
-	}
-
-	@Test
 	void equals() {
-		MediaType mediaType1 = MediaType.TEXT_PLAIN;
-		MediaType mediaType2 = MediaType.parse("text/plain");
-		MediaType mediaType3 = MediaType.parse("application/json");
+		var mediaType1 = MediaType.TEXT_PLAIN;
+		var mediaType2 = MediaType.parse(mediaType1.toString());
+		var mediaType3 = MediaType.APPLICATION_JSON;
 
 		assertEqualsAndHashCode(mediaType1, mediaType2, mediaType3);
+	}
+
+	@Nested
+	class ParseTests {
+
+		@Test
+		@SuppressWarnings("DataFlowIssue") // MediaType.parse() parameter is not @Nullable
+		void parseWithNullMediaType() {
+			assertPreconditionViolationNotNullFor("value", () -> MediaType.parse(null));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "", "   ", "/", " / ", "type", "type/", "/subtype" })
+		void parseWithInvalidMediaType(String mediaType) {
+			assertPreconditionViolationFor(() -> MediaType.parse(mediaType))//
+					.withMessage("Invalid media type: '%s'", mediaType);
+		}
+
+		@Test
+		void parse() {
+			assertThat(MediaType.parse("text/plain")).hasToString("text/plain");
+		}
+	}
+
+	@Nested
+	class CreateTests {
+
+		@Test
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void createWithNullType() {
+			assertPreconditionViolationNotNullFor("type", () -> MediaType.create(null, "json"));
+		}
+
+		@Test
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void createWithNullSubtype() {
+			assertPreconditionViolationNotNullFor("subtype", () -> MediaType.create("json", null));
+		}
+
+		@Test
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void createWithNullCharset() {
+			assertPreconditionViolationNotNullFor("charset", () -> MediaType.create("application", "json", null));
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
+		void createWithInvalidType(String type) {
+			assertPreconditionViolationFor(() -> MediaType.create(type, "json"))//
+					.withMessage("Invalid media type: '%s/json'", type);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
+		void createWithInvalidSubtype(String subtype) {
+			assertPreconditionViolationFor(() -> MediaType.create("application", subtype))//
+					.withMessage("Invalid media type: 'application/%s'", subtype);
+		}
+
+		@Test
+		void create() {
+			assertThat(MediaType.create("application", "json")).hasToString("application/json");
+		}
+
+		@Test
+		void createWithCharset() {
+			assertThat(MediaType.create("text", "plain", UTF_8)).hasToString("text/plain; charset=UTF-8");
+		}
 	}
 
 }
