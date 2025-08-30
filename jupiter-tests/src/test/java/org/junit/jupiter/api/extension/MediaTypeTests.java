@@ -45,12 +45,14 @@ class MediaTypeTests {
 		@ValueSource(strings = { "", "   ", "/", " / ", "type", "type/", "/subtype" })
 		void parseWithInvalidMediaType(String mediaType) {
 			assertPreconditionViolationFor(() -> MediaType.parse(mediaType))//
-					.withMessage("Invalid media type: '%s'", mediaType);
+					.withMessage("Invalid media type: '%s'", mediaType.strip());
 		}
 
-		@Test
-		void parse() {
-			assertThat(MediaType.parse("text/plain")).hasToString("text/plain");
+		@ParameterizedTest
+		@ValueSource(strings = { "text/plain", "   text/plain   ", "text/plain; charset=UTF-8",
+				"\t text/plain; charset=UTF-8 \t" })
+		void parse(String value) {
+			assertThat(MediaType.parse(value)).hasToString(value.strip());
 		}
 	}
 
@@ -79,14 +81,14 @@ class MediaTypeTests {
 		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
 		void createWithInvalidType(String type) {
 			assertPreconditionViolationFor(() -> MediaType.create(type, "json"))//
-					.withMessage("Invalid media type: '%s/json'", type);
+					.withMessage("Invalid media type: '%s/json'", type.strip());
 		}
 
 		@ParameterizedTest
 		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
 		void createWithInvalidSubtype(String subtype) {
 			assertPreconditionViolationFor(() -> MediaType.create("application", subtype))//
-					.withMessage("Invalid media type: 'application/%s'", subtype);
+					.withMessage("Invalid media type: 'application/%s'", subtype.strip());
 		}
 
 		@Test
