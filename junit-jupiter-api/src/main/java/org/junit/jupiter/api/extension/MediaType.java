@@ -39,6 +39,7 @@ import org.junit.platform.commons.util.Preconditions;
 public final class MediaType {
 
 	private static final Pattern PATTERN;
+
 	static {
 		// https://datatracker.ietf.org/doc/html/rfc2045#section-5.1
 		String whitespace = "[ \t]*";
@@ -94,7 +95,7 @@ public final class MediaType {
 	 * <p>Must be valid according to
 	 * <a href="https://tools.ietf.org/html/rfc2045">RFC 2045</a>.
 	 *
-	 * @param value the media type value to parse; never {@code null}
+	 * @param value the media type value to parse; never {@code null} or blank
 	 * @return the parsed media type
 	 * @throws PreconditionViolationException if the value is not a valid media type
 	 */
@@ -105,33 +106,33 @@ public final class MediaType {
 	/**
 	 * Create a media type with the given type and subtype.
 	 *
-	 * @param type the type; never {@code null}
-	 * @param subtype the subtype; never {@code null}
+	 * @param type the type; never {@code null} or blank
+	 * @param subtype the subtype; never {@code null} or blank
 	 * @return the media type
 	 */
 	public static MediaType create(String type, String subtype) {
-		Preconditions.notNull(type, "type must not be null");
-		Preconditions.notNull(subtype, "subtype must not be null");
+		Preconditions.notBlank(type, "type must not be null or blank");
+		Preconditions.notBlank(subtype, "subtype must not be null or blank");
 		return new MediaType(type.strip() + "/" + subtype.strip());
 	}
 
 	/**
 	 * Create a media type with the given type, subtype, and charset.
 	 *
-	 * @param type the type; never {@code null}
-	 * @param subtype the subtype; never {@code null}
+	 * @param type the type; never {@code null} or blank
+	 * @param subtype the subtype; never {@code null} or blank
 	 * @param charset the charset; never {@code null}
 	 * @return the media type
 	 */
 	public static MediaType create(String type, String subtype, Charset charset) {
-		Preconditions.notNull(type, "type must not be null");
-		Preconditions.notNull(subtype, "subtype must not be null");
+		Preconditions.notBlank(type, "type must not be null or blank");
+		Preconditions.notBlank(subtype, "subtype must not be null or blank");
 		Preconditions.notNull(charset, "charset must not be null");
 		return new MediaType(type.strip() + "/" + subtype.strip() + "; charset=" + charset.name());
 	}
 
 	private MediaType(String value) {
-		String strippedValue = Preconditions.notNull(value, "value must not be null").strip();
+		String strippedValue = Preconditions.notBlank(value, "value must not be null or blank").strip();
 		Matcher matcher = PATTERN.matcher(strippedValue);
 		Preconditions.condition(matcher.matches(), () -> "Invalid media type: '" + strippedValue + "'");
 		this.value = strippedValue;

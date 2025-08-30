@@ -15,12 +15,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationNotNullFor;
+import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationNotNullOrBlankFor;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+/**
+ * Unit tests for {@link MediaType}.
+ */
 class MediaTypeTests {
 
 	@Test
@@ -35,14 +41,16 @@ class MediaTypeTests {
 	@Nested
 	class ParseTests {
 
-		@Test
-		@SuppressWarnings("DataFlowIssue") // MediaType.parse() parameter is not @Nullable
-		void parseWithNullMediaType() {
-			assertPreconditionViolationNotNullFor("value", () -> MediaType.parse(null));
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { "   ", " \t " })
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void parseWithNullOrBlankMediaType(@Nullable String mediaType) {
+			assertPreconditionViolationNotNullOrBlankFor("value", () -> MediaType.parse(mediaType));
 		}
 
 		@ParameterizedTest
-		@ValueSource(strings = { "", "   ", "/", " / ", "type", "type/", "/subtype" })
+		@ValueSource(strings = { "/", " / ", "type", "type/", "/subtype" })
 		void parseWithInvalidMediaType(String mediaType) {
 			assertPreconditionViolationFor(() -> MediaType.parse(mediaType))//
 					.withMessage("Invalid media type: '%s'", mediaType.strip());
@@ -59,16 +67,37 @@ class MediaTypeTests {
 	@Nested
 	class CreateTests {
 
-		@Test
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { "   ", " \t " })
 		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
-		void createWithNullType() {
-			assertPreconditionViolationNotNullFor("type", () -> MediaType.create(null, "json"));
+		void createWithNullOrBlankType(@Nullable String type) {
+			assertPreconditionViolationNotNullOrBlankFor("type", () -> MediaType.create(type, "json"));
 		}
 
-		@Test
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { "   ", " \t " })
 		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
-		void createWithNullSubtype() {
-			assertPreconditionViolationNotNullFor("subtype", () -> MediaType.create("json", null));
+		void createWithNullOrBlankTypeAndCharset(@Nullable String type) {
+			assertPreconditionViolationNotNullOrBlankFor("type", () -> MediaType.create(type, "json", UTF_8));
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { "   ", " \t " })
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void createWithNullOrBlankSubtype(@Nullable String subtype) {
+			assertPreconditionViolationNotNullOrBlankFor("subtype", () -> MediaType.create("application", subtype));
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { "   ", " \t " })
+		@SuppressWarnings("DataFlowIssue") // MediaType.create() parameters are not @Nullable
+		void createWithNullOrBlankSubtypeAndCharset(@Nullable String subtype) {
+			assertPreconditionViolationNotNullOrBlankFor("subtype",
+				() -> MediaType.create("application", subtype, UTF_8));
 		}
 
 		@Test
@@ -78,14 +107,14 @@ class MediaTypeTests {
 		}
 
 		@ParameterizedTest
-		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
+		@ValueSource(strings = { "/", " / ", "type/", "/subtype" })
 		void createWithInvalidType(String type) {
 			assertPreconditionViolationFor(() -> MediaType.create(type, "json"))//
 					.withMessage("Invalid media type: '%s/json'", type.strip());
 		}
 
 		@ParameterizedTest
-		@ValueSource(strings = { "", "   ", "/", " / ", "type/", "/subtype" })
+		@ValueSource(strings = { "/", " / ", "type/", "/subtype" })
 		void createWithInvalidSubtype(String subtype) {
 			assertPreconditionViolationFor(() -> MediaType.create("application", subtype))//
 					.withMessage("Invalid media type: 'application/%s'", subtype.strip());

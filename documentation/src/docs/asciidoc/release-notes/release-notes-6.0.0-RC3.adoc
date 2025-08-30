@@ -50,6 +50,7 @@ JUnit repository on GitHub.
 
 * `MediaType` now strips leading and trailing whitespace from a supplied `value`, `type`,
   or `subtype`.
+* `MediaType` now eagerly rejects a _blank_ `value`, `type`, or `subtype`.
 
 
 [[release-notes-6.0.0-RC3-junit-vintage]]
