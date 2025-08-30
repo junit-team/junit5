@@ -137,11 +137,11 @@ public final class MediaType {
 	}
 
 	/**
-	 * {@return string representation of this media type}
+	 * {@return a string representation of this media type}
 	 */
 	@Override
 	public String toString() {
-		return value;
+		return this.value;
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public final class MediaType {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(value);
+		return Objects.hashCode(this.value);
 	}
 
 }
