@@ -23,6 +23,10 @@ repository on GitHub.
   with parallel execution, such dynamic tests could finish after their parent, e.g. when
   the arguments source of a `@ParameterizedTest` or `@ParameterizedClass` or the children
   stream of a `DynamicContainer` threw an exception.
+* The type parameters of `Try.andThen()`, `Try.andThenTry()`, and `Try.failure()` now
+  admit `@Nullable` types, so a nullness checker such as NullAway no longer reports a
+  bound violation when `andThen()` or `andThenTry()` produces a `Try` whose value may
+  be `null`.
 
 [[v6.2.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
