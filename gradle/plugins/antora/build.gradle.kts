@@ -19,7 +19,7 @@ dependencies {
 	constraints {
 		implementation("org.yaml:snakeyaml") {
 			version {
-				require("2.0")
+				require("2.7")
 			}
 			because("Workaround for CVE-2022-1471")
 		}
