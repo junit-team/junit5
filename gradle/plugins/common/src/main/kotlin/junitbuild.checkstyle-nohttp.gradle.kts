@@ -21,7 +21,7 @@ dependencies {
 		}
 		checkstyle("org.codehaus.plexus:plexus-utils") {
 			version {
-				require("3.6.2")
+				require("4.1.0")
 			}
 			because("Workaround for CVE-2025-67030")
 		}
