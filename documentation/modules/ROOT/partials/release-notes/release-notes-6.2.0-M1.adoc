@@ -23,6 +23,7 @@ repository on GitHub.
   with parallel execution, such dynamic tests could finish after their parent, e.g. when
   the arguments source of a `@ParameterizedTest` or `@ParameterizedClass` or the children
   stream of a `DynamicContainer` threw an exception.
+* The generic type parameters of `Try` methods now consistently allow nullable types.
 
 [[v6.2.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
