@@ -27,7 +27,7 @@ dependencies {
 		}
 		roseauDependencies("com.fasterxml.jackson.core:jackson-databind") {
 			version {
-				require("2.22.3")
+				require("2.22.4")
 			}
 			because("Workaround for CVE-2026-68497")
 		}
