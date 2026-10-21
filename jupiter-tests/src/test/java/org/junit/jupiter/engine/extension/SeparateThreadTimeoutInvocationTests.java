@@ -42,7 +42,10 @@ class SeparateThreadTimeoutInvocationTests {
 		AtomicReference<String> threadName = new AtomicReference<>();
 		var invocation = aSeparateThreadInvocation(() -> {
 			threadName.set(Thread.currentThread().getName());
-			Thread.sleep(PREEMPTIVE_TIMEOUT_MILLIS * 2);
+			// Sleep until interrupted after the timeout. Sleeping only slightly longer
+			// than the timeout lets the invocation complete before a delayed caller
+			// thread notices the timeout, e.g., on an overloaded CI machine.
+			Thread.sleep(PREEMPTIVE_TIMEOUT_MILLIS * 100);
 			return "ignored";
 		});
 
