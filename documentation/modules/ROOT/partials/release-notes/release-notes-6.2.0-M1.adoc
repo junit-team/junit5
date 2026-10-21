@@ -24,6 +24,11 @@ repository on GitHub.
   the arguments source of a `@ParameterizedTest` or `@ParameterizedClass` or the children
   stream of a `DynamicContainer` threw an exception.
 * The generic type parameters of `Try` methods now consistently allow nullable types.
+* `NamespacedHierarchicalStore.computeIfAbsent(...)` and `getOrComputeIfAbsent(...)` --
+  and thus the corresponding `ExtensionContext.Store` methods in JUnit Jupiter -- now
+  throw a `NamespacedHierarchicalStoreException` if the supplied `defaultCreator`
+  accesses the value for its own key. Previously, the calling thread waited for itself
+  forever and the test run hung.
 
 [[v6.2.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

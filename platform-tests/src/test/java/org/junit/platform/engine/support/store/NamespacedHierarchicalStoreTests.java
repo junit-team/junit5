@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 import static org.mockito.Mockito.doThrow;
@@ -27,8 +28,11 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.io.Serial;
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -515,6 +519,32 @@ public class NamespacedHierarchicalStoreTests {
 			}
 		}
 
+		@SuppressWarnings("deprecation")
+		@Test
+		void updateRecursivelyGetOrComputeIfAbsentForSameKeyIsRejected() {
+			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
+				var exception = assertTimeoutPreemptively(Duration.ofSeconds(10),
+					() -> assertThrows(NamespacedHierarchicalStoreException.class,
+						() -> localStore.getOrComputeIfAbsent(namespace, key, //
+							k -> requireNonNull(localStore.getOrComputeIfAbsent(namespace, key, //
+								__ -> "enigma")))));
+				assertThat(exception).hasMessageContaining("Recursive update");
+			}
+		}
+
+		@Test
+		void updateRecursivelyComputeIfAbsentForSameKeyIsRejected() {
+			try (var localStore = new NamespacedHierarchicalStore<>(null)) {
+				var exception = assertTimeoutPreemptively(Duration.ofSeconds(10),
+					() -> assertThrows(NamespacedHierarchicalStoreException.class,
+						() -> localStore.computeIfAbsent(namespace, key, //
+							k -> localStore.computeIfAbsent(namespace, key, //
+								__ -> "enigma"))));
+				assertThat(exception).hasMessageContaining("Recursive update");
+				assertEquals(value, localStore.computeIfAbsent(namespace, key, __ -> value));
+			}
+		}
+
 		private record CollidingKey(String value) {
 
 			@Override
@@ -840,6 +870,56 @@ public class NamespacedHierarchicalStoreTests {
 				supplier.getOrThrow();
 			});
 			assertTrue(Thread.interrupted());
+		}
+
+		@Test
+		void getRejectsRecursiveAccessWhileRunning() {
+			var supplier = new AtomicReference<NamespacedHierarchicalStore.DeferredSupplier>();
+			supplier.set(new NamespacedHierarchicalStore.DeferredSupplier(() -> supplier.get().get()));
+
+			assertTimeoutPreemptively(Duration.ofSeconds(10), () -> supplier.get().run());
+
+			var exception = assertThrows(NamespacedHierarchicalStoreException.class, () -> supplier.get().getOrThrow());
+			assertThat(exception).hasMessageContaining("Recursive update");
+		}
+
+		@Test
+		void getOrThrowRejectsRecursiveAccessWhileRunning() {
+			var supplier = new AtomicReference<NamespacedHierarchicalStore.DeferredSupplier>();
+			supplier.set(new NamespacedHierarchicalStore.DeferredSupplier(() -> supplier.get().getOrThrow()));
+
+			assertTimeoutPreemptively(Duration.ofSeconds(10), () -> supplier.get().run());
+
+			var exception = assertThrows(NamespacedHierarchicalStoreException.class, () -> supplier.get().getOrThrow());
+			assertThat(exception).hasMessageContaining("Recursive update");
+		}
+
+		@Test
+		void getAwaitsValueComputedByAnotherThread() throws Exception {
+			var started = new CountDownLatch(1);
+			var release = new CountDownLatch(1);
+			var supplier = new NamespacedHierarchicalStore.DeferredSupplier(() -> {
+				started.countDown();
+				awaitUninterruptibly(release);
+				return value;
+			});
+			var runner = new Thread(supplier::run);
+			runner.start();
+			started.await();
+
+			release.countDown();
+
+			assertEquals(value, assertTimeoutPreemptively(Duration.ofSeconds(10), supplier::get));
+			runner.join();
+		}
+
+		private static void awaitUninterruptibly(CountDownLatch latch) {
+			try {
+				latch.await();
+			}
+			catch (InterruptedException e) {
+				throw new ComputeException(e);
+			}
 		}
 	}
 
