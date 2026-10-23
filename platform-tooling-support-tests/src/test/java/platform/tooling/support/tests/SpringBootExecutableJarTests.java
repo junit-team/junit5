@@ -54,6 +54,10 @@ class SpringBootExecutableJarTests {
 		var javaResult = java(javaHome) //
 				.workingDir(workspace.resolve("app/target")) //
 				.addArguments("-jar", "app-1.0-SNAPSHOT.jar") //
+				// Selecting a package forces classpath scanning via `jar:nested:` URIs of both
+				// BOOT-INF/classes (ExampleTests) and BOOT-INF/lib/tests-1.0-SNAPSHOT.jar (LibraryTests)
+				.addArguments("execute", "--select-package=com.example", "--details=tree", "--details-theme=ascii",
+					"--disable-banner", "--disable-ansi-colors", "--fail-if-no-tests") //
 				.redirectOutput(javaOutput) //
 				.startAndWait();
 

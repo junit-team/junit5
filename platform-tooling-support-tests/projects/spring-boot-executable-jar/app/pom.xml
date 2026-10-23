@@ -35,7 +35,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>4.1.2</version>
                 <configuration>
-                    <mainClass>com.example.Main</mainClass>
+                    <mainClass>org.junit.platform.console.ConsoleLauncher</mainClass>
                 </configuration>
                 <executions>
                     <execution>
