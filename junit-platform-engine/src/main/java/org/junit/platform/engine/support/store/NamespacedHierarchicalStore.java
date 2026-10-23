@@ -678,16 +678,25 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		private final FutureTask<@Nullable Object> task;
 
+		private volatile @Nullable Thread runner;
+
 		DeferredSupplier(Supplier<?> delegate) {
 			this.task = new FutureTask<>(delegate::get);
 		}
 
 		void run() {
-			task.run();
+			runner = Thread.currentThread();
+			try {
+				task.run();
+			}
+			finally {
+				runner = null;
+			}
 		}
 
 		@Nullable
 		Object get() {
+			rejectRecursiveAccess();
 			try {
 				return task.get();
 			}
@@ -705,6 +714,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		@Nullable
 		Object getOrThrow() {
+			rejectRecursiveAccess();
 			try {
 				return task.get();
 			}
@@ -722,6 +732,17 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		boolean isDone() {
 			return task.isDone();
+		}
+
+		/**
+		 * Awaiting the task in the thread that is running it would never return,
+		 * e.g., if a {@code defaultCreator} accesses the value for its own key.
+		 */
+		private void rejectRecursiveAccess() {
+			if (Thread.currentThread().equals(runner) && !task.isDone()) {
+				throw new NamespacedHierarchicalStoreException(
+					"Recursive update: a value must not be accessed while it is being computed by the same thread");
+			}
 		}
 	}
 
