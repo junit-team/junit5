@@ -58,12 +58,12 @@ class SpringBootExecutableJarTests {
 				.startAndWait();
 
 		assertEquals(0, javaResult.exitCode());
-		assertThat(javaResult.stdOut()).contains("""
+		assertThat(javaResult.stdOutLines()).containsSequence("""
 				'-- JUnit Jupiter [OK]
 				  +-- ExampleTests [OK]
 				  | '-- test() [OK]
 				  '-- LibraryTests [OK]
 				    '-- test() [OK]
-				""");
+				""".lines().toList());
 	}
 }
