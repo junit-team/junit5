@@ -12,6 +12,7 @@ package org.junit.platform.suite.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.TemporaryClasspathExecutor.withAdditionalClasspathRoot;
 import static org.junit.platform.commons.test.PreconditionAssertions.assertPreconditionViolationFor;
 import static org.mockito.Mockito.mock;
 
@@ -20,10 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.MethodOrdererContext;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -77,18 +75,20 @@ class SuiteTestDescriptorTests {
 
 	@Test
 	void suitePassesSessionScopedStoreToNestedEngineDiscovery() {
-		var namespace = Namespace.create("suite-forwarding");
-		var suite = new SuiteTestDescriptor(suiteId, StoreAccessorSuite.class, configurationParameters,
-			outputDirectoryCreator, mock(), sessionScopedStore, discoveryIssueReporter);
-		suite.addDiscoveryRequestFrom(StoreAccessorSuite.class);
+		withAdditionalClasspathRoot("suite-store-engine/", () -> {
+			var namespace = Namespace.create("suite-forwarding");
+			var suite = new SuiteTestDescriptor(suiteId, StoreAccessorSuite.class, configurationParameters,
+				outputDirectoryCreator, mock(), sessionScopedStore, discoveryIssueReporter);
+			suite.addDiscoveryRequestFrom(StoreAccessorSuite.class);
 
-		var oldValue = UUID.randomUUID();
-		sessionScopedStore.put(namespace, StoreAccessorMethodOrderer.KEY, oldValue);
+			var oldValue = UUID.randomUUID();
+			sessionScopedStore.put(namespace, StoreAccessorTestEngine.KEY, oldValue);
 
-		suite.discover();
+			suite.discover();
 
-		assertThat(sessionScopedStore.get(namespace, StoreAccessorMethodOrderer.KEY)) //
-				.isEqualTo(oldValue + " (modified)");
+			assertThat(sessionScopedStore.get(namespace, StoreAccessorTestEngine.KEY)) //
+					.isEqualTo(oldValue + " (modified)");
+		});
 	}
 
 	@Test
@@ -122,27 +122,7 @@ class SuiteTestDescriptorTests {
 	}
 
 	@Suite
-	@org.junit.platform.suite.api.SelectClasses(StoreAccessorTestCase.class)
 	static class StoreAccessorSuite {
-	}
-
-	@TestMethodOrder(StoreAccessorMethodOrderer.class)
-	static class StoreAccessorTestCase {
-		@Test
-		void test() {
-		}
-	}
-
-	static class StoreAccessorMethodOrderer implements MethodOrderer {
-
-		public static final String KEY = "key";
-
-		@Override
-		public void orderMethods(MethodOrdererContext context) {
-			var accessor = context.getStoreAccessor("suite-forwarding");
-			var oldValue = accessor.get(KEY);
-			accessor.put(KEY, oldValue + " (modified)");
-		}
 	}
 
 	private static class EmptyConfigurationParameters implements ConfigurationParameters {
