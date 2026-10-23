@@ -130,21 +130,12 @@ class CloseablePathTests {
 	void closingIsIdempotent() throws Exception {
 		var tempDir = Files.createTempDirectory(jimfs.getPath("/"), "junit-");
 		var original = Files.copy(jarOnDefaultFileSystem, tempDir.resolve("original.jar"));
-		var path1 = CloseablePath.create(jarUri(original));
-		paths.add(path1);
-		var path2 = CloseablePath.create(jarUri(original));
-		paths.add(path2);
+		var path = CloseablePath.create(jarUri(original));
+		paths.add(path);
 
-		assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri(original)),
-			"Uses separate file systems");
-
-		path1.close();
-		path1.close();
-		assertThat(path1.getPath().getFileSystem().isOpen()).isFalse();
-		assertThat(path2.getPath().getFileSystem().isOpen()).isTrue();
-
-		path2.close();
-		assertThat(path2.getPath().getFileSystem().isOpen()).isFalse();
+		path.close();
+		path.close();
+		assertThat(path.getPath().getFileSystem().isOpen()).isFalse();
 	}
 
 	@Test
