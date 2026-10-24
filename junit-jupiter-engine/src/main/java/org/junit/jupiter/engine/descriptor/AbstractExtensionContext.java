@@ -34,6 +34,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.LauncherStoreFacade;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.engine.extension.ExtensionContextInternal;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
@@ -217,7 +218,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Store getStore(Namespace namespace) {
-		return launcherStoreFacade.getStoreAdapter(this.valuesStore, namespace);
+		return NamespaceAwareStore.createAdapter(this.valuesStore, namespace);
 	}
 
 	@Override

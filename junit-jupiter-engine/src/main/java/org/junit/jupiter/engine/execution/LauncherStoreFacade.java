@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
@@ -35,23 +34,12 @@ public class LauncherStoreFacade {
 		return this.requestScopedStore;
 	}
 
-	public ExtensionContext.Store getRequestScopedStore(ExtensionContext.Namespace namespace) {
-		return getStoreAdapter(this.requestScopedStore, namespace);
+	public ExtensionContext.Store getRequestScopedStore(org.junit.jupiter.api.store.Namespace namespace) {
+		return NamespaceAwareStore.createAdapter(this.requestScopedStore, namespace);
 	}
 
-	public ExtensionContext.Store getSessionScopedStore(ExtensionContext.Namespace namespace) {
-		return getStoreAdapter(this.sessionScopedStore, namespace);
+	public ExtensionContext.Store getSessionScopedStore(org.junit.jupiter.api.store.Namespace namespace) {
+		return NamespaceAwareStore.createAdapter(this.sessionScopedStore, namespace);
 	}
 
-	public NamespaceAwareStore getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
-			ExtensionContext.Namespace namespace) {
-		Preconditions.notNull(namespace, "Namespace must not be null");
-		return new NamespaceAwareStore(valuesStore, convert(namespace));
-	}
-
-	private Namespace convert(ExtensionContext.Namespace namespace) {
-		return namespace.equals(ExtensionContext.Namespace.GLOBAL) //
-				? Namespace.GLOBAL //
-				: Namespace.create(namespace.getParts());
-	}
 }

@@ -43,6 +43,7 @@ import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.jupiter.api.store.Namespace;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -248,7 +249,7 @@ class OrderedClassTests {
 
 		@Override
 		public void orderClasses(ClassOrdererContext context) {
-			var store = context.getStoreAccessor("class-orderer");
+			var store = context.getStore(Namespace.create("class-orderer"));
 			store.put("key", "stored by class orderer");
 			classOrdererStoreValue = requireNonNull((String) store.get("key"));
 		}

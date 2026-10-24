@@ -59,6 +59,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.store.Namespace;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -770,7 +771,7 @@ record OrderedMethodTests(ParallelExecutorServiceType executorServiceType) {
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			var store = context.getStoreAccessor("method-orderer");
+			var store = context.getStore(Namespace.create("method-orderer"));
 			store.put("key", "stored by method orderer");
 			methodOrdererStoreValue = requireNonNull((String) store.get("key"));
 		}

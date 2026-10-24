@@ -12,11 +12,11 @@ package org.junit.jupiter.engine.discovery;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DiscoveryContext;
+import org.junit.jupiter.api.store.Namespace;
+import org.junit.jupiter.api.store.Store;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.platform.engine.support.store.Namespace;
-import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 
 /**
  * @since 6.2
@@ -35,21 +35,8 @@ class DefaultDiscoveryContext implements DiscoveryContext {
 	}
 
 	@Override
-	public StoreAccessor getStoreAccessor(Object... namespaceParts) {
-		return new DefaultStoreAccessor(this.configuration.getSessionScopedStore(), Namespace.create(namespaceParts));
+	public Store getStore(Namespace namespace) {
+		return NamespaceAwareStore.createAdapter(this.configuration.getSessionScopedStore(), namespace);
 	}
 
-	private record DefaultStoreAccessor(NamespacedHierarchicalStore<Namespace> store, Namespace namespace)
-			implements StoreAccessor {
-
-		@Override
-		public @Nullable Object get(Object key) {
-			return store.get(namespace, key);
-		}
-
-		@Override
-		public void put(Object key, @Nullable Object value) {
-			store.put(namespace, key, value);
-		}
-	}
 }
